@@ -16,6 +16,7 @@ public class Menu_Left extends javax.swing.JPanel {
     public Menu_Left() {
         initComponents();
         init();
+        
     }
 
     private void init() {
@@ -39,8 +40,7 @@ public class Menu_Left extends javax.swing.JPanel {
         //  test data
         menuList.removeAll();
         for (Model_User_Account d : userAccount) {
-            userAccount.add(d);
-            menuList.add(new Item_People(d.getUserName()), " wrap");
+            menuList.add(new Item_People(d.getUserName()), "wrap");
         }
         refreshMenuList();
     }

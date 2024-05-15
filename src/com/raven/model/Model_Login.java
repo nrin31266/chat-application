@@ -30,7 +30,7 @@ public class Model_Login {
         this.userName = userName;
         this.password = password;
     }
-    public JSONObject toJSONObject(){
+    public JSONObject toJsonObject(){
         try {
             JSONObject obj= new JSONObject();
             obj.put("userName", userName);
