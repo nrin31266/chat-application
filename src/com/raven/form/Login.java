@@ -24,7 +24,7 @@ public class Login extends javax.swing.JPanel {
                     public void run() {
                         PublicEvent.getInstance().getEventMain().showLoading(true);
                         try {
-                            Thread.sleep(3000); //  for test
+                            Thread.sleep(500); //  for test
                         } catch (InterruptedException e) {
                         }
                         PublicEvent.getInstance().getEventMain().showLoading(false);
