@@ -45,6 +45,20 @@ public class Service {
                     PublicEvent.getInstance().getEventMenuLeft().newUser(users);
                 }
             });
+            client.on("user_status", new Emitter.Listener() {
+                @Override
+                public void call(Object... os) {
+                    int userID=(Integer) os[0];
+                    boolean status=(Boolean) os[1];
+                    if(status){
+                        //Ket noi
+                        PublicEvent.getInstance().getEventMenuLeft().userConnect(userID);
+                    }else{
+                        //Ngat ket noi
+                        PublicEvent.getInstance().getEventMenuLeft().userDisconnect(userID);
+                    }
+                }
+            });
             client.open();
         } catch (URISyntaxException e) {
             error(e);
