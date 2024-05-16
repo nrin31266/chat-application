@@ -24,7 +24,7 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Component id="layer" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="406" max="32767" attributes="0"/>
+              <EmptySpace pref="370" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -32,7 +32,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
-              <Component id="layer" pref="34" max="32767" attributes="0"/>
+              <Component id="layer" max="32767" attributes="0"/>
               <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -49,12 +49,12 @@
         <Component class="javax.swing.JLabel" name="lbName">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="sansserif" size="14" style="1"/>
+              <Font name="Georgia" size="14" style="1"/>
             </Property>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="42" green="42" red="42" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Name"/>
+            <Property name="text" type="java.lang.String" value="Hihihihihihi"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lbStatus">

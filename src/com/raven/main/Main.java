@@ -4,6 +4,8 @@ import com.formdev.flatlaf.intellijthemes.FlatArcIJTheme;
 import com.raven.event.EventImageView;
 import com.raven.event.EventMain;
 import com.raven.event.PublicEvent;
+import com.raven.form.Chat;
+import com.raven.model.Model_User_Account;
 import com.raven.service.Service;
 import com.raven.swing.ComponentResizer;
 import java.awt.Dimension;
@@ -50,6 +52,16 @@ public class Main extends javax.swing.JFrame {
                 
                 Service.getInstance().getClient().emit("list_user", Service.getInstance().getUser().getUserID());
                 
+            }
+
+            @Override
+            public void selectUser(Model_User_Account user) {
+                home.setUser(user);
+            }
+
+            @Override
+            public void updateUser(Model_User_Account user) {
+                home.updateUser(user);
             }
         });
         PublicEvent.getInstance().addEventImageView(new EventImageView() {

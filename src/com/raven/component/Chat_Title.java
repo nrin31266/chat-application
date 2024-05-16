@@ -1,23 +1,47 @@
 package com.raven.component;
 
+import com.raven.model.Model_User_Account;
 import java.awt.Color;
 
 public class Chat_Title extends javax.swing.JPanel {
+
+    private Model_User_Account user;
+
+    public Model_User_Account getUser() {
+        return user;
+    }
 
     public Chat_Title() {
         initComponents();
     }
 
-    public void setUserName(String userName) {
-        lbName.setText(userName);
+    public void setUserName(Model_User_Account user) {
+        this.user = user;
+        lbName.setText(user.getUserName());
+        if (user.isStatus()) {
+            statusActive();
+        } else {
+            setStatusText("Offline");
+        }
     }
 
-    public void statusActive() {
+    public void updateUser(Model_User_Account user) {
+        if (this.user == user) {
+            lbName.setText(user.getUserName());
+            if (user.isStatus()) {
+                statusActive();
+            } else {
+                setStatusText("Offline");
+            }
+        }
+    }
+
+    private void statusActive() {
         lbStatus.setText("Active now");
         lbStatus.setForeground(new java.awt.Color(40, 147, 59));
     }
 
-    public void setStatusText(String text) {
+    private void setStatusText(String text) {
         lbStatus.setText(text);
         lbStatus.setForeground(new Color(160, 160, 160));
     }
@@ -34,9 +58,9 @@ public class Chat_Title extends javax.swing.JPanel {
 
         layer.setLayout(new java.awt.GridLayout(0, 1));
 
-        lbName.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
+        lbName.setFont(new java.awt.Font("Georgia", 1, 14)); // NOI18N
         lbName.setForeground(new java.awt.Color(66, 66, 66));
-        lbName.setText("Name");
+        lbName.setText("Hihihihihihi");
         layer.add(lbName);
 
         lbStatus.setForeground(new java.awt.Color(40, 147, 59));
@@ -50,13 +74,13 @@ public class Chat_Title extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(layer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(406, Short.MAX_VALUE))
+                .addContainerGap(370, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(3, 3, 3)
-                .addComponent(layer, javax.swing.GroupLayout.PREFERRED_SIZE, 34, Short.MAX_VALUE)
+                .addComponent(layer)
                 .addGap(3, 3, 3))
         );
     }// </editor-fold>//GEN-END:initComponents

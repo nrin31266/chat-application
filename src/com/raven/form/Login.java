@@ -26,10 +26,11 @@ public class Login extends javax.swing.JPanel {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        PublicEvent.getInstance().getEventMain().showLoading(true);
+                        
                         Service.getInstance().getClient().emit("dangNhap", data.toJsonObject(), new Ack() {
                             @Override
                             public void call(Object... os) {
+                                PublicEvent.getInstance().getEventMain().showLoading(true);
                                 System.err.println("Da nhan dc phan hoi tu server");
                                 if (os.length > 0) {
                                     boolean action = (Boolean) os[0];

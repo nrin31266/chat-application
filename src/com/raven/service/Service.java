@@ -1,6 +1,7 @@
 package com.raven.service;
 
 import com.raven.event.PublicEvent;
+import com.raven.model.Model_Receive_Message;
 import com.raven.model.Model_User_Account;
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -59,6 +60,16 @@ public class Service {
                     }
                 }
             });
+            client.on("receive_ms", new Emitter.Listener() {
+                @Override
+                public void call(Object... os) {
+                    Model_Receive_Message message= new Model_Receive_Message(os[0]);
+                    System.out.println(message.toString());
+                    PublicEvent.getInstance().getEventChat().receiveMessage(message);
+                    
+                }
+            });
+            
             client.open();
         } catch (URISyntaxException e) {
             error(e);

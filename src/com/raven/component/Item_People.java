@@ -1,5 +1,6 @@
 package com.raven.component;
 
+import com.raven.event.PublicEvent;
 import com.raven.model.Model_User_Account;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
@@ -7,8 +8,8 @@ import java.awt.event.MouseEvent;
 
 public class Item_People extends javax.swing.JPanel {
 
-    private Model_User_Account user;
-    
+    private final Model_User_Account user;
+    private boolean mouseOver;     
     
     public Item_People(Model_User_Account user) {
         this.user=user;
@@ -30,12 +31,24 @@ public class Item_People extends javax.swing.JPanel {
             @Override
             public void mouseEntered(MouseEvent me) {
                 setBackground(new Color(230, 230, 230));
+                mouseOver=true;
             }
 
             @Override
             public void mouseExited(MouseEvent me) {
                 setBackground(new Color(242, 242, 242));
+                mouseOver=false;
             }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if(mouseOver){
+                    System.err.println("Press");
+                    System.out.println("Item people: "+user.getUserID());
+                    PublicEvent.getInstance().getEventMain().selectUser(user);
+                }
+            }
+            
         });
     }
 
@@ -54,13 +67,13 @@ public class Item_People extends javax.swing.JPanel {
         imageAvatar1.setImage(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/profile.png"))); // NOI18N
         imageAvatar1.setPreferredSize(new java.awt.Dimension(50, 50));
 
-        lbName.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
+        lbName.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         lbName.setText("Name");
 
         lbStatus.setBackground(new java.awt.Color(255, 255, 255));
         lbStatus.setFont(new java.awt.Font("sansserif", 2, 12)); // NOI18N
         lbStatus.setForeground(new java.awt.Color(153, 153, 153));
-        lbStatus.setText("Name");
+        lbStatus.setText("New");
 
         activeStatus.setActive(true);
 
@@ -76,11 +89,9 @@ public class Item_People extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lbStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(2, 2, 2)
-                        .addComponent(activeStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(102, 102, 102))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lbName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())))
+                        .addComponent(activeStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lbName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(102, 102, 102))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
