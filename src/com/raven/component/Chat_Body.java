@@ -1,5 +1,7 @@
 package com.raven.component;
 
+import com.raven.app.MessageType;
+import com.raven.emoji.Emoji;
 import com.raven.model.Model_Receive_Message;
 import com.raven.model.Model_Send_Message;
 import com.raven.swing.ScrollBar;
@@ -8,7 +10,9 @@ import java.awt.Color;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JScrollBar;
+import javax.swing.SwingUtilities;
 import net.miginfocom.swing.MigLayout;
 
 public class Chat_Body extends javax.swing.JPanel {
@@ -22,16 +26,32 @@ public class Chat_Body extends javax.swing.JPanel {
         body.setLayout(new MigLayout("fillx", "", "5[]5"));
         sp.setVerticalScrollBar(new ScrollBar());
         sp.getVerticalScrollBar().setBackground(Color.WHITE);
+
     }
 
     public void addItemLeft(Model_Receive_Message data) {
-        Chat_Left item = new Chat_Left();
-        item.setText(data.getText());
-        item.setTime();
-        body.add(item, "wrap, w 100::80%");
-        //  ::80% set max with 80%
+        if (data.getMessageType() == MessageType.TEXT) {
+            Chat_Left item = new Chat_Left();
+            item.setText(data.getText());
+            item.setTime();
+            body.add(item, "wrap, w 100::80%");
+            //  ::80% set max with 80%
+        } else if (data.getMessageType() == MessageType.EMOJI) {
+            Chat_Left item = new Chat_Left();
+            item.setEmoji(Emoji.getInstance().getImoji(Integer.valueOf(data.getText())).getIcon());
+
+            body.add(item, "wrap, w 5::80%");
+            //  ::80% set max with 80%
+            item.setTime();
+        }
         repaint();
         revalidate();
+
+        //sp to bottom
+        SwingUtilities.invokeLater(() -> {
+            JScrollBar verticalBar = sp.getVerticalScrollBar();
+            verticalBar.setValue(verticalBar.getMaximum());
+        });
     }
 
     public void addItemLeft(String text, String user, String[] image) {
@@ -41,7 +61,6 @@ public class Chat_Body extends javax.swing.JPanel {
         item.setTime();
         item.setUserProfile(user);
         body.add(item, "wrap, w 100::80%");
-        //  ::80% set max with 80%
         body.repaint();
         body.revalidate();
     }
@@ -59,14 +78,33 @@ public class Chat_Body extends javax.swing.JPanel {
     }
 
     public void addItemRight(Model_Send_Message data) {
-        Chat_Right item = new Chat_Right();
-        item.setText(data.getText());
-        body.add(item, "wrap, al right, w 100::80%");
-        //  ::80% set max with 80%
+        if (data.getMessageType() == MessageType.TEXT) {
+            Chat_Right item = new Chat_Right();
+            item.setText(data.getText());
+            body.add(item, "wrap, al right, w 100::80%");
+
+            item.setTime();
+        } else if (data.getMessageType() == MessageType.EMOJI) {
+            Chat_Right item = new Chat_Right();
+            item.setEmoji(Emoji.getInstance().getImoji(Integer.valueOf(data.getText())).getIcon());
+            body.add(item, "wrap, al right, w 100::80%");
+
+            item.setTime();
+        } else if (data.getMessageType() == MessageType.IMAGE) {
+            Chat_Right item = new Chat_Right();
+            item.setText("");
+            item.setImage(data.getFile());
+            body.add(item, "wrap, al right, w 100::80%");
+
+            item.setTime();
+        }
+
         repaint();
         revalidate();
-        item.setTime();
-        scrollToBottom();
+        SwingUtilities.invokeLater(() -> {
+            JScrollBar verticalBar = sp.getVerticalScrollBar();
+            verticalBar.setValue(verticalBar.getMaximum());
+        });
     }
 
     public void addItemFileRight(String text, String fileName, String fileSize) {
@@ -86,12 +124,13 @@ public class Chat_Body extends javax.swing.JPanel {
         body.repaint();
         body.revalidate();
     }
-    public void clearChat(){
+
+    public void clearChat() {
         body.removeAll();
         repaint();
         revalidate();
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

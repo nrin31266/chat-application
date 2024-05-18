@@ -9,7 +9,11 @@ import java.awt.event.MouseEvent;
 public class Item_People extends javax.swing.JPanel {
 
     private final Model_User_Account user;
-    private boolean mouseOver;     
+    private boolean mouseOver;    
+    private static Item_People selectedPanel = null;
+    private Color defaultColor = new Color(242, 242, 242);
+    private Color hoverColor = new Color(230, 230, 230);
+    private Color selectedColor = new Color(209, 243, 255);
     
     public Item_People(Model_User_Account user) {
         this.user=user;
@@ -30,22 +34,32 @@ public class Item_People extends javax.swing.JPanel {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent me) {
-                setBackground(new Color(230, 230, 230));
+                if (Item_People.this != selectedPanel) {
+                    setBackground(hoverColor);
+                }
                 mouseOver=true;
             }
 
             @Override
             public void mouseExited(MouseEvent me) {
-                setBackground(new Color(242, 242, 242));
-                mouseOver=false;
+                if (Item_People.this != selectedPanel) {
+                    setBackground(defaultColor);
+                }
+                mouseOver = false;
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
                 if(mouseOver){
-                    System.err.println("Press");
-                    System.out.println("Item people: "+user.getUserID());
+                    System.out.println("Item people Press: "+user.getUserID());
+                    
                     PublicEvent.getInstance().getEventMain().selectUser(user);
+                    
+                    if (selectedPanel != null) {
+                        selectedPanel.setBackground(defaultColor);
+                    }
+                    setBackground(selectedColor);
+                    selectedPanel = Item_People.this;
                 }
             }
             
@@ -61,6 +75,7 @@ public class Item_People extends javax.swing.JPanel {
         lbStatus = new javax.swing.JLabel();
         activeStatus = new com.raven.swing.ActiveStatus();
 
+        setBackground(new java.awt.Color(242, 241, 242));
         setPreferredSize(new java.awt.Dimension(200, 62));
 
         imageAvatar1.setBorderSize(0);

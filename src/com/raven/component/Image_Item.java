@@ -1,5 +1,6 @@
 package com.raven.component;
 
+import com.raven.model.Model_File_Sender;
 import com.raven.swing.blurHash.BlurHash;
 import java.awt.image.BufferedImage;
 import javax.swing.Icon;
@@ -9,6 +10,10 @@ public class Image_Item extends javax.swing.JLayeredPane {
 
     public Image_Item() {
         initComponents();
+    }
+    public void setImage(Icon image, Model_File_Sender fileSender) {
+        
+        pic.setImage(image);
     }
 
     public void setImage(String image) {
@@ -39,16 +44,16 @@ public class Image_Item extends javax.swing.JLayeredPane {
         picLayout.setHorizontalGroup(
             picLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(picLayout.createSequentialGroup()
-                .addContainerGap(35, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(progress1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(36, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         picLayout.setVerticalGroup(
             picLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(picLayout.createSequentialGroup()
-                .addContainerGap(40, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(progress1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(41, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         setLayer(pic, javax.swing.JLayeredPane.DEFAULT_LAYER);

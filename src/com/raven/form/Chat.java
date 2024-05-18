@@ -30,6 +30,7 @@ public class Chat extends javax.swing.JPanel {
             @Override
             public void sendMessage(Model_Send_Message data) {
                 chatBody.addItemRight(data);
+                
             }
 
             @Override

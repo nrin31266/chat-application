@@ -120,9 +120,7 @@ public class Menu_Left extends javax.swing.JPanel {
         sp = new javax.swing.JScrollPane();
         menuList = new javax.swing.JLayeredPane();
 
-        setBackground(new java.awt.Color(242, 242, 242));
-
-        menu.setBackground(new java.awt.Color(229, 229, 229));
+        menu.setBackground(new java.awt.Color(243, 243, 243));
         menu.setOpaque(true);
         menu.setLayout(new java.awt.GridLayout(1, 3));
 

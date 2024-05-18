@@ -1,5 +1,6 @@
 package com.raven.component;
 
+import com.raven.app.MessageType;
 import com.raven.event.PublicEvent;
 import com.raven.model.Model_Send_Message;
 import com.raven.model.Model_User_Account;
@@ -10,6 +11,7 @@ import io.socket.client.Ack;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -20,6 +22,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
+import jdk.jfr.Event;
 import net.miginfocom.swing.MigLayout;
 
 public class Chat_Bottom extends javax.swing.JPanel {
@@ -32,6 +35,7 @@ public class Chat_Bottom extends javax.swing.JPanel {
 
     public void setUser(Model_User_Account user) {
         this.user = user;
+        panelMore.setUser(user);
     }
     
     
@@ -41,8 +45,9 @@ public class Chat_Bottom extends javax.swing.JPanel {
     }
 
     private void init() {
-        mig = new MigLayout("fillx, filly", "0[fill]0[]0[]2", "2[fill]2[]0");
-        setLayout(mig);
+        mig = new MigLayout("fillx, filly", "2[fill]0[]0[]2", "2[fill]2[0]");
+        this.setLayout(mig);
+        
         JScrollPane scroll = new JScrollPane();
         scroll.setBorder(null);
         JIMSendTextPane txt = new JIMSendTextPane();
@@ -50,19 +55,27 @@ public class Chat_Bottom extends javax.swing.JPanel {
             @Override
             public void keyTyped(KeyEvent ke) {
                 refresh();
+                if(ke.getKeyChar()==10&&ke.isControlDown()){
+                    enventSend(txt);
+                }
             }
         });
         txt.setBorder(new EmptyBorder(5, 5, 5, 5));
+        
+        txt.setBackground(Color.WHITE);
+        txt.setForeground(Color.black);
         txt.setHintText("Write Message Here ...");
+        
         scroll.setViewportView(txt);
+        scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         ScrollBar sb = new ScrollBar();
-        sb.setBackground(new Color(229, 229, 229));
+        sb.setBackground(Color.white);
         sb.setPreferredSize(new Dimension(2, 10));
         scroll.setVerticalScrollBar(sb);
         add(sb);
         add(scroll, "w 100%");
         JPanel panel = new JPanel();
-        panel.setLayout(new MigLayout("filly", "0[]3[]0", "0[bottom]0"));
+        panel.setLayout(new MigLayout("filly", "2[]10[]0", "0[bottom]0"));
         panel.setPreferredSize(new Dimension(30, 28));
         panel.setBackground(Color.WHITE);
         JButton cmd = new JButton();
@@ -73,19 +86,7 @@ public class Chat_Bottom extends javax.swing.JPanel {
         cmd.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                System.out.println("Bottom select id: "+user.getUserID());
-                String text = txt.getText().trim();
-                if (!text.equals("")) {
-                    Model_Send_Message message= new Model_Send_Message(Service.getInstance().getUser().getUserID(), user.getUserID(), text); 
-                    System.out.println("Noi dung gui server: "+Service.getInstance().getUser().getUserID()+" "+user.getUserID()+" "+text);
-                    PublicEvent.getInstance().getEventChat().sendMessage(message);
-                    send(message);
-                    txt.setText("");
-                    txt.grabFocus();
-                    refresh();
-                } else {
-                    txt.grabFocus();
-                }
+                enventSend(txt);
             }
         });
         
@@ -133,12 +134,28 @@ public class Chat_Bottom extends javax.swing.JPanel {
     private void refresh() {
         revalidate();
     }
+    private void enventSend(JIMSendTextPane txt){
+        System.out.println("Bottom select id: "+user.getUserID());
+                String text = txt.getText().trim();
+                if (!text.equals("")) {
+                    Model_Send_Message message= new Model_Send_Message(MessageType.TEXT,Service.getInstance().getUser().getUserID(), user.getUserID(), text); 
+                    System.out.println("Noi dung txt gui: "+message.toString());
+                    
+                    PublicEvent.getInstance().getEventChat().sendMessage(message);
+                    send(message);
+                    txt.setText("");
+                    txt.grabFocus();
+                    refresh();
+                } else {
+                    txt.grabFocus();
+                }
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setBackground(new java.awt.Color(229, 229, 229));
+        setBackground(new java.awt.Color(238, 238, 238));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);

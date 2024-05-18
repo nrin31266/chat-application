@@ -54,7 +54,7 @@ public class Chat_Title extends javax.swing.JPanel {
         lbName = new javax.swing.JLabel();
         lbStatus = new javax.swing.JLabel();
 
-        setBackground(new java.awt.Color(229, 229, 229));
+        setBackground(new java.awt.Color(243, 243, 243));
 
         layer.setLayout(new java.awt.GridLayout(0, 1));
 

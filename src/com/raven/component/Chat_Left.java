@@ -19,8 +19,13 @@ public class Chat_Left extends javax.swing.JLayeredPane {
 
     }
 
+    public void setEmoji(Icon icon) {
+        txt.hideText();
+        txt.setEmoji(true, icon);
+    }
+
     public void setImage(Icon... image) {
-        txt.setImage(false, image);
+//        txt.setImage(false, image);
     }
 
     public void setImage(String... image) {
@@ -41,6 +46,8 @@ public class Chat_Left extends javax.swing.JLayeredPane {
 
         txt = new com.raven.component.Chat_Item();
 
+        setLayer(txt, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -49,9 +56,7 @@ public class Chat_Left extends javax.swing.JLayeredPane {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(txt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
+            .addComponent(txt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
     }// </editor-fold>//GEN-END:initComponents
 

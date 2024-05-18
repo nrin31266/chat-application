@@ -1,11 +1,15 @@
 package com.raven.service;
 
 import com.raven.event.PublicEvent;
+import com.raven.model.Model_File_Sender;
 import com.raven.model.Model_Receive_Message;
+import com.raven.model.Model_Send_Message;
 import com.raven.model.Model_User_Account;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
+import java.io.File;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +21,7 @@ public class Service {
     private Model_User_Account user;
     private final int PORT_NUMBER = 9999;
     private final String IP = "localhost";
+    private List<Model_File_Sender>  fileSender;
 
     public static Service getInstance() {
         if (instance == null) {
@@ -26,6 +31,7 @@ public class Service {
     }
 
     private Service() {
+        fileSender=  new ArrayList<>();
     }
 
     public void startServer() {
@@ -64,7 +70,7 @@ public class Service {
                 @Override
                 public void call(Object... os) {
                     Model_Receive_Message message= new Model_Receive_Message(os[0]);
-                    System.out.println(message.toString());
+                    System.out.println("Nhan: "+message.toString());
                     PublicEvent.getInstance().getEventChat().receiveMessage(message);
                     
                 }
@@ -75,6 +81,26 @@ public class Service {
             error(e);
         }
     }
+    
+    public Model_File_Sender addFile(File file, Model_Send_Message message) throws IOException{
+        Model_File_Sender data= new Model_File_Sender(file, client, message);
+        message.setFile(data);
+        fileSender.add(data);
+        //Gửi file từng cái một 
+        if(fileSender.size() ==1){
+            data.initSend();
+        }
+        return data;
+        
+    }
+    public void fileSendFinish(Model_File_Sender data) throws  IOException{
+        fileSender.remove(data);
+        if(fileSender.isEmpty()){
+            //bắt đầu gửi một file mới khi file cũ hoàn thành
+            fileSender.get(0).initSend();
+        }
+    }
+    
 
     public Model_User_Account getUser() {
         return user;

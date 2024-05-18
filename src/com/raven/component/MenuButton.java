@@ -46,7 +46,7 @@ public class MenuButton extends JButton {
         super.paintComponent(grphcs);
         if (isSelected()) {
             grphcs.setColor(new Color(110, 213, 255));
-            grphcs.fillRect(0, getHeight() - 3, getWidth(), getHeight());
+            grphcs.fillRect(0, getHeight() - 3, getWidth(), getHeight()); // Chỉ vẽ một dải màu nhỏ phía dưới
         }
     }
 }
