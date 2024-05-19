@@ -8,61 +8,45 @@ import java.awt.event.MouseEvent;
 
 public class Item_People extends javax.swing.JPanel {
 
+    public Model_User_Account getUser() {
+        return user;
+    }
+    private boolean mouseOver;
     private final Model_User_Account user;
-    private boolean mouseOver;    
-    private static Item_People selectedPanel = null;
-    private Color defaultColor = new Color(242, 242, 242);
-    private Color hoverColor = new Color(230, 230, 230);
-    private Color selectedColor = new Color(209, 243, 255);
-    
+
     public Item_People(Model_User_Account user) {
-        this.user=user;
+        this.user = user;
         initComponents();
-        lbName.setText(user.getUserName());
+        lb.setText(user.getUserName());
         activeStatus.setActive(user.isStatus());
         init();
     }
-    public  void updateStatus(){
+
+    public void updateStatus() {
         activeStatus.setActive(user.isStatus());
-    }
-    
-    public Model_User_Account getUser() {
-        return user;
+        repaint();
     }
 
     private void init() {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent me) {
-                if (Item_People.this != selectedPanel) {
-                    setBackground(hoverColor);
-                }
-                mouseOver=true;
+                setBackground(new Color(230, 230, 230));
+                mouseOver = true;
             }
 
             @Override
             public void mouseExited(MouseEvent me) {
-                if (Item_People.this != selectedPanel) {
-                    setBackground(defaultColor);
-                }
+                setBackground(new Color(242, 242, 242));
                 mouseOver = false;
             }
 
             @Override
-            public void mouseReleased(MouseEvent e) {
-                if(mouseOver){
-                    System.out.println("Item people Press: "+user.getUserID());
-                    
+            public void mouseReleased(MouseEvent me) {
+                if (mouseOver) {
                     PublicEvent.getInstance().getEventMain().selectUser(user);
-                    
-                    if (selectedPanel != null) {
-                        selectedPanel.setBackground(defaultColor);
-                    }
-                    setBackground(selectedColor);
-                    selectedPanel = Item_People.this;
                 }
             }
-            
         });
     }
 
@@ -71,24 +55,21 @@ public class Item_People extends javax.swing.JPanel {
     private void initComponents() {
 
         imageAvatar1 = new com.raven.swing.ImageAvatar();
-        lbName = new javax.swing.JLabel();
+        lb = new javax.swing.JLabel();
         lbStatus = new javax.swing.JLabel();
         activeStatus = new com.raven.swing.ActiveStatus();
 
-        setBackground(new java.awt.Color(242, 241, 242));
-        setPreferredSize(new java.awt.Dimension(200, 62));
+        setBackground(new java.awt.Color(242, 242, 242));
 
         imageAvatar1.setBorderSize(0);
         imageAvatar1.setImage(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/profile.png"))); // NOI18N
-        imageAvatar1.setPreferredSize(new java.awt.Dimension(50, 50));
 
-        lbName.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        lbName.setText("Name");
+        lb.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
+        lb.setText("Name");
 
-        lbStatus.setBackground(new java.awt.Color(255, 255, 255));
         lbStatus.setFont(new java.awt.Font("sansserif", 2, 12)); // NOI18N
-        lbStatus.setForeground(new java.awt.Color(153, 153, 153));
-        lbStatus.setText("New");
+        lbStatus.setForeground(new java.awt.Color(117, 117, 117));
+        lbStatus.setText("New User");
 
         activeStatus.setActive(true);
 
@@ -97,32 +78,30 @@ public class Item_People extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(imageAvatar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(imageAvatar1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lb, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(lbStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(2, 2, 2)
-                        .addComponent(activeStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(lbName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(102, 102, 102))
+                        .addComponent(lbStatus)
+                        .addGap(3, 3, 3)
+                        .addComponent(activeStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(3, 3, 3)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(imageAvatar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(lbName)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(2, 2, 2)
-                                .addComponent(activeStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(lbStatus))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(lb)
+                        .addGap(6, 6, 6)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(activeStatus, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lbStatus, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(imageAvatar1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(3, 3, 3))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -130,7 +109,7 @@ public class Item_People extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.raven.swing.ActiveStatus activeStatus;
     private com.raven.swing.ImageAvatar imageAvatar1;
-    private javax.swing.JLabel lbName;
+    private javax.swing.JLabel lb;
     private javax.swing.JLabel lbStatus;
     // End of variables declaration//GEN-END:variables
 }

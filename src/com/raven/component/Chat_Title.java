@@ -54,11 +54,11 @@ public class Chat_Title extends javax.swing.JPanel {
         lbName = new javax.swing.JLabel();
         lbStatus = new javax.swing.JLabel();
 
-        setBackground(new java.awt.Color(243, 243, 243));
+        setBackground(new java.awt.Color(204, 204, 204));
 
         layer.setLayout(new java.awt.GridLayout(0, 1));
 
-        lbName.setFont(new java.awt.Font("Georgia", 1, 14)); // NOI18N
+        lbName.setFont(new java.awt.Font("Georgia", 1, 18)); // NOI18N
         lbName.setForeground(new java.awt.Color(66, 66, 66));
         lbName.setText("Hihihihihihi");
         layer.add(lbName);
@@ -73,15 +73,15 @@ public class Chat_Title extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(layer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(370, Short.MAX_VALUE))
+                .addComponent(layer, javax.swing.GroupLayout.PREFERRED_SIZE, 109, Short.MAX_VALUE)
+                .addGap(380, 380, 380))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addGap(3, 3, 3)
-                .addComponent(layer)
-                .addGap(3, 3, 3))
+                .addComponent(layer, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 

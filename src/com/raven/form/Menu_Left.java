@@ -17,7 +17,6 @@ public class Menu_Left extends javax.swing.JPanel {
     public Menu_Left() {
         initComponents();
         init();
-        
     }
 
     private void init() {
@@ -29,24 +28,24 @@ public class Menu_Left extends javax.swing.JPanel {
             public void newUser(List<Model_User_Account> users) {
                 for (Model_User_Account d : users) {
                     userAccount.add(d);
-                    menuList.add(new Item_People(d), " wrap");
+                    menuList.add(new Item_People(d), "wrap");
                     refreshMenuList();
                 }
             }
 
             @Override
             public void userConnect(int userID) {
-                for(Model_User_Account u: userAccount){
-                    if(u.getUserID()==userID){
+                for (Model_User_Account u : userAccount) {
+                    if (u.getUserID() == userID) {
                         u.setStatus(true);
                         PublicEvent.getInstance().getEventMain().updateUser(u);
                         break;
                     }
                 }
-                if(menuMessage.isSelected()){
-                    for(Component com:menuList.getComponents()){
-                        Item_People item=(Item_People) com;
-                        if(item.getUser().getUserID()==userID){
+                if (menuMessage.isSelected()) {
+                    for (Component com : menuList.getComponents()) {
+                        Item_People item = (Item_People) com;
+                        if (item.getUser().getUserID() == userID) {
                             item.updateStatus();
                             break;
                         }
@@ -56,17 +55,17 @@ public class Menu_Left extends javax.swing.JPanel {
 
             @Override
             public void userDisconnect(int userID) {
-                 for(Model_User_Account u: userAccount){
-                    if(u.getUserID()==userID){
+                for (Model_User_Account u : userAccount) {
+                    if (u.getUserID() == userID) {
                         u.setStatus(false);
                         PublicEvent.getInstance().getEventMain().updateUser(u);
                         break;
                     }
                 }
-                if(menuMessage.isSelected()){
-                    for(Component com:menuList.getComponents()){
-                        Item_People item=(Item_People) com;
-                        if(item.getUser().getUserID()==userID){
+                if (menuMessage.isSelected()) {
+                    for (Component com : menuList.getComponents()) {
+                        Item_People item = (Item_People) com;
+                        if (item.getUser().getUserID() == userID) {
                             item.updateStatus();
                             break;
                         }
@@ -89,18 +88,14 @@ public class Menu_Left extends javax.swing.JPanel {
     private void showGroup() {
         //  test data
         menuList.removeAll();
-//        for (int i = 0; i < 5; i++) {
-//            menuList.add(new Item_People(null), "wrap");
-//        }
+
         refreshMenuList();
     }
 
     private void showBox() {
         //  test data
         menuList.removeAll();
-//        for (int i = 0; i < 10; i++) {
-//            menuList.add(new Item_People(null), "wrap");
-//        }
+
         refreshMenuList();
     }
 
@@ -116,7 +111,6 @@ public class Menu_Left extends javax.swing.JPanel {
         menu = new javax.swing.JLayeredPane();
         menuMessage = new com.raven.component.MenuButton();
         menuGroup = new com.raven.component.MenuButton();
-        menuBox = new com.raven.component.MenuButton();
         sp = new javax.swing.JScrollPane();
         menuList = new javax.swing.JLayeredPane();
 
@@ -134,7 +128,6 @@ public class Menu_Left extends javax.swing.JPanel {
         });
         menu.add(menuMessage);
 
-        menuGroup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/group.png"))); // NOI18N
         menuGroup.setIconSelected(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/group_selected.png"))); // NOI18N
         menuGroup.setIconSimple(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/group.png"))); // NOI18N
         menuGroup.addActionListener(new java.awt.event.ActionListener() {
@@ -143,16 +136,6 @@ public class Menu_Left extends javax.swing.JPanel {
             }
         });
         menu.add(menuGroup);
-
-        menuBox.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/box.png"))); // NOI18N
-        menuBox.setIconSelected(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/box_selected.png"))); // NOI18N
-        menuBox.setIconSimple(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/box.png"))); // NOI18N
-        menuBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuBoxActionPerformed(evt);
-            }
-        });
-        menu.add(menuBox);
 
         sp.setBackground(new java.awt.Color(242, 242, 242));
         sp.setBorder(null);
@@ -187,9 +170,9 @@ public class Menu_Left extends javax.swing.JPanel {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(menu, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(menu, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sp)
+                .addComponent(sp, javax.swing.GroupLayout.DEFAULT_SIZE, 564, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -198,32 +181,24 @@ public class Menu_Left extends javax.swing.JPanel {
         if (!menuMessage.isSelected()) {
             menuMessage.setSelected(true);
             menuGroup.setSelected(false);
-            menuBox.setSelected(false);
+//            menuBox.setSelected(false);
             showMessage();
         }
     }//GEN-LAST:event_menuMessageActionPerformed
 
     private void menuGroupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuGroupActionPerformed
+        // TODO add your handling code here:
         if (!menuGroup.isSelected()) {
             menuMessage.setSelected(false);
             menuGroup.setSelected(true);
-            menuBox.setSelected(false);
+//            menuBox.setSelected(false);
             showGroup();
         }
     }//GEN-LAST:event_menuGroupActionPerformed
 
-    private void menuBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuBoxActionPerformed
-        if (!menuBox.isSelected()) {
-            menuMessage.setSelected(false);
-            menuGroup.setSelected(false);
-            menuBox.setSelected(true);
-            showBox();
-        }
-    }//GEN-LAST:event_menuBoxActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLayeredPane menu;
-    private com.raven.component.MenuButton menuBox;
     private com.raven.component.MenuButton menuGroup;
     private javax.swing.JLayeredPane menuList;
     private com.raven.component.MenuButton menuMessage;

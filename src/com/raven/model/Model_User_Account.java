@@ -1,35 +1,9 @@
-
 package com.raven.model;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Model_User_Account {
-    private int userID;
-    private String userName;
-    private String gender;
-    private String image;
-    private boolean status;
-
-    public Model_User_Account(Object json) {
-        JSONObject obj= (JSONObject) json;
-        try {
-            userID=obj.getInt("userID");
-            userName= obj.getString("userName");
-            gender=obj.getString("gender");
-            image=obj.getString("image");
-            status=obj.getBoolean("status");
-        } catch (Exception e) {
-            System.err.println("e");
-        }
-    }
-
-    public Model_User_Account(int userID, String userName, String gender, String image, boolean status) {
-        this.userID = userID;
-        this.userName = userName;
-        this.gender = gender;
-        this.image = image;
-        this.status = status;
-    }
 
     public int getUserID() {
         return userID;
@@ -70,7 +44,31 @@ public class Model_User_Account {
     public void setStatus(boolean status) {
         this.status = status;
     }
-    
-    
-    
+
+    public Model_User_Account(int userID, String userName, String gender, String image, boolean status) {
+        this.userID = userID;
+        this.userName = userName;
+        this.gender = gender;
+        this.image = image;
+        this.status = status;
+    }
+
+    public Model_User_Account(Object json) {
+        JSONObject obj = (JSONObject) json;
+        try {
+            userID = obj.getInt("userID");
+            userName = obj.getString("userName");
+            gender = obj.getString("gender");
+            image = obj.getString("image");
+            status = obj.getBoolean("status");
+        } catch (JSONException e) {
+            System.err.println(e);
+        }
+    }
+
+    private int userID;
+    private String userName;
+    private String gender;
+    private String image;
+    private boolean status;
 }

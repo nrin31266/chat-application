@@ -19,6 +19,8 @@ import javax.swing.BoxLayout;
 import javax.swing.Icon;
 import com.raven.swing.ScrollBar;
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.ImageIcon;
@@ -42,6 +44,7 @@ public class Panel_More extends javax.swing.JPanel {
     private void init() {
         setLayout(new MigLayout("fillx"));
         panelHeader = new JPanel();
+        panelHeader.setLayout(new GridLayout());
         panelHeader.add(getButtonImage());
         panelHeader.add(getButtonFile());
 
@@ -63,7 +66,7 @@ public class Panel_More extends javax.swing.JPanel {
 
     private JButton getButtonImage() {
         OptionButton cmd = new OptionButton();
-        cmd.setIcon(new ImageIcon(getClass().getResource("/com/raven/icon/image.png")));
+        cmd.setIconSelected(new ImageIcon(getClass().getResource("/com/raven/icon/image.png")));
         cmd.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -100,7 +103,7 @@ public class Panel_More extends javax.swing.JPanel {
 
     private JButton getButtonFile() {
         OptionButton cmd = new OptionButton();
-        cmd.setIcon(new ImageIcon(getClass().getResource("/com/raven/icon/link.png")));
+        cmd.setIconSelected(new ImageIcon(getClass().getResource("/com/raven/icon/link.png")));
         cmd.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -115,7 +118,7 @@ public class Panel_More extends javax.swing.JPanel {
 
     private JButton getEmojiStyle1() {
         OptionButton cmd = new OptionButton();
-        cmd.setIcon(Emoji.getInstance().getImoji(1).toSize(25, 25).getIcon());
+        cmd.setIconSelected(Emoji.getInstance().getImoji(1).toSize(25, 25).getIcon());
         cmd.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -135,7 +138,7 @@ public class Panel_More extends javax.swing.JPanel {
 
     private JButton getEmojiStyle2() {
         OptionButton cmd = new OptionButton();
-        cmd.setIcon(Emoji.getInstance().getImoji(21).toSize(25, 25).getIcon());
+        cmd.setIconSelected(Emoji.getInstance().getImoji(21).toSize(25, 25).getIcon());
         cmd.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -155,8 +158,10 @@ public class Panel_More extends javax.swing.JPanel {
     }
 
     private JButton getButton(Model_Emoji dataEmoji) {
-        JButton cmd = new JButton(dataEmoji.getIcon());
+        OptionButton cmd = new OptionButton();
         cmd.setName(dataEmoji.getId() + "");
+        cmd.setIconSelected(dataEmoji.getIcon());
+        cmd.setPreferredSize(new Dimension(50, 50));
         cmd.setBorder(new EmptyBorder(3, 3, 3, 3));
         cmd.setCursor(new Cursor(Cursor.HAND_CURSOR));
         cmd.setContentAreaFilled(false);

@@ -1,8 +1,10 @@
 package com.raven.component;
 
 import com.raven.model.Model_File_Sender;
+import com.raven.swing.PictureBox;
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -86,14 +88,25 @@ public class Chat_Item extends javax.swing.JLayeredPane {
         add(layer);
     }
 
-    public void setEmoji(boolean right, Icon icon) {
-        JLayeredPane layer = new JLayeredPane();
-        layer.setLayout(new FlowLayout(right ? FlowLayout.RIGHT : FlowLayout.LEFT));
-        layer.setBorder(new EmptyBorder(0, 5, 0, 5));
-        layer.add(new JLabel(icon), JLabel.RIGHT);
-        add(layer);
-        setBackground(null);
-    }
+ public void setEmoji(boolean right, Icon icon) {
+    JLayeredPane layer = new JLayeredPane();
+    layer.setLayout(new FlowLayout(right ? FlowLayout.RIGHT : FlowLayout.LEFT));
+    layer.setBorder(new EmptyBorder(0, 5, 0, 5));
+
+    PictureBox p = new PictureBox();
+    p.setImage(icon);
+    p.setPreferredSize(new Dimension(icon.getIconWidth(), icon.getIconHeight()));
+
+    layer.add(p);
+
+    add(layer);
+    setBackground(null);
+
+//    // Gọi lại phương thức revalidate() và repaint() để đảm bảo giao diện người dùng được cập nhật
+//    revalidate();
+//    repaint();
+}
+
 
     public void sendSuccess() {
         if (label != null) {

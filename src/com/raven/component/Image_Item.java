@@ -25,6 +25,8 @@ public class Image_Item extends javax.swing.JLayeredPane {
         Icon icon = new ImageIcon(img);
         pic.setImage(icon);
     }
+    
+
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

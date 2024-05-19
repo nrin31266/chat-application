@@ -21,9 +21,9 @@ public class Chat_Image extends javax.swing.JLayeredPane {
     }
 
     public void addImage(Model_File_Sender fileSender) {
-        Icon image= new ImageIcon(fileSender.getFile().getAbsolutePath());
+        Icon image = new ImageIcon(fileSender.getFile().getAbsolutePath());
         Image_Item pic = new Image_Item();
-        
+
         pic.setPreferredSize(getAutoSize(image, 200, 200));
         pic.setImage(image, fileSender);
         addEvent(pic, image);
@@ -39,6 +39,8 @@ public class Chat_Image extends javax.swing.JLayeredPane {
             add(pic, "wrap");
         }
     }
+
+    
 
     private void addEvent(Component com, Icon image) {
         com.setCursor(new Cursor(Cursor.HAND_CURSOR));
