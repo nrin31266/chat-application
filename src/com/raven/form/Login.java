@@ -9,6 +9,8 @@ import com.raven.model.Model_Register;
 import com.raven.model.Model_User_Account;
 import com.raven.service.Service;
 import io.socket.client.Ack;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.print.attribute.standard.Severity;
 
 public class Login extends javax.swing.JPanel {
@@ -30,22 +32,27 @@ public class Login extends javax.swing.JPanel {
                         Service.getInstance().getClient().emit("login", data.toJsonObject(), new Ack() {
                             @Override
                             public void call(Object... os) {
-                                PublicEvent.getInstance().getEventMain().showLoading(true);
-                                System.err.println("Da nhan dc phan hoi tu server");
-                                if (os.length > 0) {
-                                    boolean action = (Boolean) os[0];
-
-                                    if (action) {
-                                        Service.getInstance().setUser(new Model_User_Account(os[1]));
-                                        PublicEvent.getInstance().getEventMain().showLoading(false);
-                                        PublicEvent.getInstance().getEventMain().initChat();
+                                try {
+                                    PublicEvent.getInstance().getEventMain().showLoading(true);
+                                    Thread.sleep(400);
+                                    System.err.println("Da nhan dc phan hoi tu server");
+                                    if (os.length > 0) {
+                                        boolean action = (Boolean) os[0];
+                                        
+                                        if (action) {
+                                            Service.getInstance().setUser(new Model_User_Account(os[1]));
+                                            PublicEvent.getInstance().getEventMain().showLoading(false);
+                                            PublicEvent.getInstance().getEventMain().initChat();
+                                        } else {
+                                            //  password wrong
+                                            PublicEvent.getInstance().getEventMain().showLoading(false);
+                                        }
                                     } else {
-                                        //  password wrong
                                         PublicEvent.getInstance().getEventMain().showLoading(false);
+                                        System.err.println("Ko nhan dc phan hoi tu server");
                                     }
-                                } else {
-                                    PublicEvent.getInstance().getEventMain().showLoading(false);
-                                    System.err.println("Ko nhan dc phan hoi tu server");
+                                } catch (InterruptedException ex) {
+                                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
                                 }
                             }
                         });

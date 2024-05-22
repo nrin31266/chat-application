@@ -1,6 +1,8 @@
 package com.raven.service;
 
+import com.raven.event.EventFileReceiver;
 import com.raven.event.PublicEvent;
+import com.raven.model.Model_File_Receiver;
 import com.raven.model.Model_File_Sender;
 import com.raven.model.Model_Receive_Message;
 import com.raven.model.Model_Send_Message;
@@ -22,6 +24,7 @@ public class Service {
     private final int PORT_NUMBER = 9999;
     private final String IP = "localhost";
     private List<Model_File_Sender> fileSender;
+    private List<Model_File_Receiver> fileReceiver;
 
     public static Service getInstance() {
         if (instance == null) {
@@ -32,6 +35,7 @@ public class Service {
 
     private Service() {
         fileSender = new ArrayList<>();
+        fileReceiver = new ArrayList<>();
     }
 
     public void startServer() {
@@ -96,6 +100,21 @@ public class Service {
         if (!fileSender.isEmpty()) {
             // bắt đầu gửi một file mới khi file cũ hoàn thành
             fileSender.get(0).initSend();
+        }
+    }
+    public void fileReceiverFinish(Model_File_Receiver data) throws  IOException{
+        fileReceiver.remove(data);
+        if(!fileReceiver.isEmpty()){
+            fileReceiver.get(0).initReques();
+            
+        }
+    }
+    
+    public void addFileReceiver(int fileID, EventFileReceiver evnet)throws IOException{
+        Model_File_Receiver data= new Model_File_Receiver(fileID, client, evnet);
+        fileReceiver.add(data);
+        if(fileReceiver.size()==1){
+            data.initReques();
         }
     }
 
