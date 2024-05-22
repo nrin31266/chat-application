@@ -110,7 +110,6 @@ public class Menu_Left extends javax.swing.JPanel {
 
         menu = new javax.swing.JLayeredPane();
         menuMessage = new com.raven.component.MenuButton();
-        menuGroup = new com.raven.component.MenuButton();
         sp = new javax.swing.JScrollPane();
         menuList = new javax.swing.JLayeredPane();
 
@@ -127,15 +126,6 @@ public class Menu_Left extends javax.swing.JPanel {
             }
         });
         menu.add(menuMessage);
-
-        menuGroup.setIconSelected(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/group_selected.png"))); // NOI18N
-        menuGroup.setIconSimple(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/group.png"))); // NOI18N
-        menuGroup.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuGroupActionPerformed(evt);
-            }
-        });
-        menu.add(menuGroup);
 
         sp.setBackground(new java.awt.Color(242, 242, 242));
         sp.setBorder(null);
@@ -180,26 +170,15 @@ public class Menu_Left extends javax.swing.JPanel {
     private void menuMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuMessageActionPerformed
         if (!menuMessage.isSelected()) {
             menuMessage.setSelected(true);
-            menuGroup.setSelected(false);
+//            menuGroup.setSelected(false);
 //            menuBox.setSelected(false);
             showMessage();
         }
     }//GEN-LAST:event_menuMessageActionPerformed
 
-    private void menuGroupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuGroupActionPerformed
-        // TODO add your handling code here:
-        if (!menuGroup.isSelected()) {
-            menuMessage.setSelected(false);
-            menuGroup.setSelected(true);
-//            menuBox.setSelected(false);
-            showGroup();
-        }
-    }//GEN-LAST:event_menuGroupActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLayeredPane menu;
-    private com.raven.component.MenuButton menuGroup;
     private javax.swing.JLayeredPane menuList;
     private com.raven.component.MenuButton menuMessage;
     private javax.swing.JScrollPane sp;

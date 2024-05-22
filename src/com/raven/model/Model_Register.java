@@ -42,4 +42,10 @@ public class Model_Register {
             return null;
         }
     }
+
+    @Override
+    public String toString() {
+        return "Model_Register{" + "userName=" + userName + ", password=" + password + '}';
+    }
+    
 }

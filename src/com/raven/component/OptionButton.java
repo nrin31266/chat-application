@@ -2,6 +2,7 @@ package com.raven.component;
 
 import com.raven.swing.PictureBox;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Graphics;
 import javax.swing.Icon;
@@ -17,6 +18,7 @@ public class OptionButton extends JButton {
         setContentAreaFilled(false);
         setCursor(new Cursor(Cursor.HAND_CURSOR));
         setBorder(null); // Bỏ đường viền
+        setAlignmentX(Component.LEFT_ALIGNMENT);
         pictureBox = new PictureBox();
         add(pictureBox);
     }

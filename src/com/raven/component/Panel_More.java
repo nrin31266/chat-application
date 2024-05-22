@@ -26,6 +26,7 @@ import java.io.IOException;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
@@ -43,14 +44,15 @@ public class Panel_More extends javax.swing.JPanel {
 
     private void init() {
         setLayout(new MigLayout("fillx"));
-        panelHeader = new JPanel();
-        panelHeader.setLayout(new GridLayout());
+        panelHeader = new JLayeredPane();
+        
         panelHeader.add(getButtonImage());
         panelHeader.add(getButtonFile());
 
         panelHeader.add(getEmojiStyle1());
         panelHeader.add(getEmojiStyle2());
-        panelHeader.setLayout(new BoxLayout(panelHeader, BoxLayout.LINE_AXIS));
+        panelHeader.setLayout(new BoxLayout(panelHeader, BoxLayout.X_AXIS));
+        panelHeader.setAlignmentX(Component.LEFT_ALIGNMENT);
         add(panelHeader, "w 100%, h 30!, wrap");
         panelDetail = new JPanel();
         JScrollPane ch = new JScrollPane(panelDetail);
@@ -98,6 +100,7 @@ public class Panel_More extends javax.swing.JPanel {
                 }
             }
         });
+        
         return cmd;
     }
 
@@ -113,6 +116,7 @@ public class Panel_More extends javax.swing.JPanel {
             }
 
         });
+        
         return cmd;
     }
 
@@ -133,12 +137,13 @@ public class Panel_More extends javax.swing.JPanel {
             }
 
         });
+        
         return cmd;
     }
 
     private JButton getEmojiStyle2() {
         OptionButton cmd = new OptionButton();
-        cmd.setIconSelected(Emoji.getInstance().getImoji(21).toSize(25, 25).getIcon());
+        cmd.setIconSelected(Emoji.getInstance().getImoji(34).toSize(25, 25).getIcon());
         cmd.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -154,6 +159,7 @@ public class Panel_More extends javax.swing.JPanel {
             }
 
         });
+        
         return cmd;
     }
 
@@ -209,7 +215,7 @@ public class Panel_More extends javax.swing.JPanel {
     return name.endsWith(".jpg") || name.endsWith(".png") || name.endsWith(".jpeg") || name.endsWith(".gif");
 
 }
-    private JPanel panelHeader;
+    private JLayeredPane panelHeader;
     private JPanel panelDetail;
     private Model_User_Account user;
 

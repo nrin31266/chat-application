@@ -43,6 +43,14 @@ public class Chat_Body extends javax.swing.JPanel {
             body.add(item, "wrap, w 5::80%");
             //  ::80% set max with 80%
             item.setTime();
+        }else if(data.getMessageType()==MessageType.IMAGE){
+            Chat_Left item = new Chat_Left();
+            item.setText("");
+            item.setImage(data.getDataImage());
+
+            body.add(item, "wrap, w 5::80%");
+            //  ::80% set max with 80%
+            item.setTime();
         }
         repaint();
         revalidate();

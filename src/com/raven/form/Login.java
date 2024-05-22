@@ -27,7 +27,7 @@ public class Login extends javax.swing.JPanel {
                     @Override
                     public void run() {
                         
-                        Service.getInstance().getClient().emit("dangNhap", data.toJsonObject(), new Ack() {
+                        Service.getInstance().getClient().emit("login", data.toJsonObject(), new Ack() {
                             @Override
                             public void call(Object... os) {
                                 PublicEvent.getInstance().getEventMain().showLoading(true);

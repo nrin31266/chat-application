@@ -1,5 +1,6 @@
 package com.raven.component;
 
+import com.raven.model.Model_Receive_Image;
 import java.awt.Color;
 import javax.swing.Icon;
 
@@ -24,13 +25,11 @@ public class Chat_Left extends javax.swing.JLayeredPane {
         txt.setEmoji(true, icon);
     }
 
-    public void setImage(Icon... image) {
-//        txt.setImage(false, image);
+    public void setImage(Model_Receive_Image dataImage) {
+        txt.setImage(false, dataImage);
     }
 
-    public void setImage(String... image) {
-        txt.setImage(false, image);
-    }
+   
 
     public void setFile(String fileName, String fileSize) {
         txt.setFile(fileName, fileSize);

@@ -2,6 +2,7 @@ package com.raven.component;
 
 import com.raven.event.PublicEvent;
 import com.raven.model.Model_File_Sender;
+import com.raven.model.Model_Receive_Image;
 import com.raven.swing.PictureBox;
 import java.awt.Component;
 import java.awt.Cursor;
@@ -30,17 +31,12 @@ public class Chat_Image extends javax.swing.JLayeredPane {
         add(pic, "wrap");
     }
 
-    public void addImage(String... images) {
-        for (String image : images) {
-            Image_Item pic = new Image_Item();
-            pic.setPreferredSize(new Dimension(200, 200));  //  for test update next
-            pic.setImage(image);
-            //  addEvent(pic, image);
-            add(pic, "wrap");
-        }
+    public void addImage(Model_Receive_Image dataImage) {
+        Image_Item pic = new Image_Item();
+        pic.setPreferredSize(new Dimension(dataImage.getWidth(), dataImage.getHeight()));  //  for test update next
+        pic.setImage(dataImage);
+        add(pic, "wrap");
     }
-
-    
 
     private void addEvent(Component com, Icon image) {
         com.setCursor(new Cursor(Cursor.HAND_CURSOR));

@@ -128,6 +128,7 @@ public class P_Register extends javax.swing.JPanel {
             txtPass.grabFocus();
         } else {
             Model_Register data = new Model_Register(userName, password);
+            System.out.println("TK dang ki: "+data.toString());
             PublicEvent.getInstance().getEventLogin().register(data, new EventMessage() {
                 @Override
                 public void callMessage(Model_Message message) {
