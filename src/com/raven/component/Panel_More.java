@@ -1,4 +1,3 @@
-
 package com.raven.component;
 
 import com.raven.app.MessageType;
@@ -23,6 +22,8 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -34,7 +35,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileFilter;
 import net.miginfocom.swing.MigLayout;
 
-
 public class Panel_More extends javax.swing.JPanel {
 
     public Panel_More() {
@@ -45,7 +45,7 @@ public class Panel_More extends javax.swing.JPanel {
     private void init() {
         setLayout(new MigLayout("fillx"));
         panelHeader = new JLayeredPane();
-        
+
         panelHeader.add(getButtonImage());
         panelHeader.add(getButtonFile());
 
@@ -84,6 +84,7 @@ public class Panel_More extends javax.swing.JPanel {
                     public String getDescription() {
                         return "Image File";
                     }
+
                 });
                 int option = ch.showOpenDialog(Main.getFrames()[0]);
                 if (option == JFileChooser.APPROVE_OPTION) {
@@ -100,7 +101,7 @@ public class Panel_More extends javax.swing.JPanel {
                 }
             }
         });
-        
+
         return cmd;
     }
 
@@ -109,14 +110,27 @@ public class Panel_More extends javax.swing.JPanel {
         cmd.setIconSelected(new ImageIcon(getClass().getResource("/com/raven/icon/link.png")));
         cmd.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent ape) {
                 JFileChooser ch = new JFileChooser();
-                ch.showOpenDialog(Main.getFrames()[0]);
-                //Cap nhap sau
+                ch.setMultiSelectionEnabled(true);
+                int option = ch.showOpenDialog(Main.getFrames()[0]);
+                if (option == JFileChooser.APPROVE_OPTION) {
+                    File files[] = ch.getSelectedFiles();
+                    for (File file : files) {
+                        try {
+                            Model_Send_Message message = new Model_Send_Message(MessageType.FILE, Service.getInstance().getUser().getUserID(), user.getUserID(), "");
+                            Service.getInstance().addFile(file, message);
+                            PublicEvent.getInstance().getEventChat().sendMessage(message);
+                        } catch (IOException ex) {
+                            Logger.getLogger(Panel_More.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+
             }
 
         });
-        
+
         return cmd;
     }
 
@@ -137,7 +151,7 @@ public class Panel_More extends javax.swing.JPanel {
             }
 
         });
-        
+
         return cmd;
     }
 
@@ -159,7 +173,7 @@ public class Panel_More extends javax.swing.JPanel {
             }
 
         });
-        
+
         return cmd;
     }
 
@@ -191,6 +205,7 @@ public class Panel_More extends javax.swing.JPanel {
             if (c instanceof OptionButton) {
                 ((OptionButton) c).setSelected(false);
             }
+
         }
     }
 
@@ -211,21 +226,20 @@ public class Panel_More extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private boolean isImageFile(File file) {
-    String name = file.getName().toLowerCase();
-    return name.endsWith(".jpg") || name.endsWith(".png") || name.endsWith(".jpeg") || name.endsWith(".gif");
-
-}
+        String name = file.getName().toLowerCase();
+        return name.endsWith(".jpg") || name.endsWith(".png") || name.endsWith(".jpeg") || name.endsWith(".gif");
+    }
     private JLayeredPane panelHeader;
     private JPanel panelDetail;
     private Model_User_Account user;
 
     public Model_User_Account getUser() {
-    return user;
-}
+        return user;
+    }
 
     public void setUser(Model_User_Account user) {
-    this.user = user;
-}
+        this.user = user;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables

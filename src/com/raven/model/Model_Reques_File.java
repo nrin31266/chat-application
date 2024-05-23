@@ -5,8 +5,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Model_Reques_File {
-    int fileID;
-    private long currentLength;
+    int fileID;//ID của tệp cần được yêu cầu từ máy chủ
+    private long currentLength;//Độ dài hiện tại của tệp.
 
     public int getFileID() {
         return fileID;

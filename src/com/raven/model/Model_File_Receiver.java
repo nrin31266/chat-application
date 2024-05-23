@@ -14,14 +14,14 @@ import org.w3c.dom.events.Event;
 
 
 public class Model_File_Receiver {
-    int fileID;
-    File file;
-    long fileSize;
-    String fileExtention;
-    RandomAccessFile accFile;
-    Socket socket;
-    EventFileReceiver event;
-    private final String PATH_FILE="client_data/";
+    int fileID; //ID của tệp.
+    File file; // Đối tượng File đại diện cho tệp nhận được.
+    long fileSize;//Kích thước của tệp.
+    String fileExtention;//Phần mở rộng của tên tệp.
+    RandomAccessFile accFile;//Đối tượng RandomAccessFile để ghi dữ liệu vào tệp nhận được.
+    Socket socket;//Đối tượng Socket để giao tiếp với máy chủ.
+    EventFileReceiver event; //Sự kiện để theo dõi quá trình nhận tệp.
+    public final String PATH_FILE="client_data/";
 
     public int getFileID() {
         return fileID;
@@ -88,7 +88,7 @@ public class Model_File_Receiver {
         this.socket = socket;
         this.event = event;
     }
-    public void initReques(){
+    public void initReques(){//Khởi tạo yêu cầu nhận tệp từ máy chủ bằng cách gửi một yêu cầu đến máy chủ thông qua kết nối socket.
         socket.emit("get_file", fileID, new Ack() {
             @Override
             public void call(Object... os) {
@@ -108,7 +108,7 @@ public class Model_File_Receiver {
             }
         });
     }
-    public void startSaveFile() throws IOException, JSONException{
+    public void startSaveFile() throws IOException, JSONException{//Bắt đầu lưu trữ dữ liệu tệp nhận được từ máy chủ.
         Model_Reques_File data= new Model_Reques_File(fileID, accFile.length());
         socket.emit("reques_file", data.toJsonObject(), new Ack() {
             @Override
@@ -132,12 +132,12 @@ public class Model_File_Receiver {
             }
         });
     }
-    private  synchronized  long writeFile(byte[] data)throws IOException{
+    private  synchronized  long writeFile(byte[] data)throws IOException{//Ghi dữ liệu nhận được vào tệp.
         accFile.seek(accFile.length());
         accFile.write(data);
         return accFile.length();
     }
-    public double getPrecentage() throws IOException{
+    public double getPrecentage() throws IOException{// Tính toán phần trăm dữ liệu đã nhận được.
         double precentage;
         long filePointer= accFile.getFilePointer();
         precentage=filePointer*100/fileSize;

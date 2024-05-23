@@ -4,9 +4,9 @@ package com.raven.model;
 import org.json.JSONObject;
 
 public class Model_Package_Sender {
-    int fileID;
-    byte[] data;
-    boolean finish;
+    int fileID;//ID của tệp.
+    byte[] data;//Mảng byte chứa dữ liệu của gói tin.
+    boolean finish;// Biến boolean chỉ ra liệu gói tin đã hoàn thành hay chưa.
 
     public Model_Package_Sender() {
     }

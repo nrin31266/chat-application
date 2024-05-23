@@ -83,7 +83,11 @@ public class Service {
             error(e);
         }
     }
-
+//addFile(File file, Model_Send_Message message): Phương thức này được sử dụng để
+//thêm một tệp tin vào danh sách gửi. Nó tạo một Model_File_Sender mới để quản
+//lý việc gửi tệp tin. Sau đó, nó gán đối tượng Model_File_Sender này cho tin nhắn và 
+//thêm vào danh sách fileSender. Nếu đây là tệp tin đầu tiên trong danh sách, 
+//nó bắt đầu gửi tệp tin bằng cách gọi initSend().
     public Model_File_Sender addFile(File file, Model_Send_Message message) throws IOException {
         Model_File_Sender data = new Model_File_Sender(file, client, message);
         message.setFile(data);
@@ -94,7 +98,10 @@ public class Service {
         }
         return data;
     }
-
+//fileSendFinish(Model_File_Sender data): Phương thức này được gọi khi 
+//việc gửi một tệp tin đã hoàn thành. Nó loại bỏ Model_File_Sender đã hoàn thành khỏi 
+//anh sách fileSender. Nếu danh sách không trống, nó bắt đầu gửi tệp tin tiếp theo bằng 
+//cách gọi initSend() cho tệp tin tiếp theo trong danh sách.
     public void fileSendFinish(Model_File_Sender data) throws IOException {
         fileSender.remove(data);
         if (!fileSender.isEmpty()) {

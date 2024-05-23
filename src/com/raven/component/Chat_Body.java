@@ -46,6 +46,7 @@ public class Chat_Body extends javax.swing.JPanel {
         }else if(data.getMessageType()==MessageType.IMAGE){
             Chat_Left item = new Chat_Left();
             item.setText("");
+            System.out.println("Huhu "+data.getDataImage());
             item.setImage(data.getDataImage());
 
             body.add(item, "wrap, w 5::80%");
@@ -105,8 +106,12 @@ public class Chat_Body extends javax.swing.JPanel {
             body.add(item, "wrap, al right, w 100::80%");
 
             item.setTime();
+        }else if(data.getMessageType()==MessageType.FILE){
+            Chat_Right item = new Chat_Right();
+            item.setText("");
+            item.setFile("file name", "file size");
+            body.add(item, "wrap, al right, w 100::80%");
         }
-
         repaint();
         revalidate();
         SwingUtilities.invokeLater(() -> {

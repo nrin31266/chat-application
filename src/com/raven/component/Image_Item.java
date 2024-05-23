@@ -5,6 +5,7 @@ import com.raven.event.EventFileSender;
 import com.raven.model.Model_File_Sender;
 import com.raven.model.Model_Receive_Image;
 import com.raven.service.Service;
+import com.raven.swing.PictureBox;
 import com.raven.swing.blurHash.BlurHash;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -17,6 +18,17 @@ public class Image_Item extends javax.swing.JLayeredPane {
     public Image_Item() {
         initComponents();
     }
+
+//    Icon iconReQ;
+//
+//    public Icon getIconReQ() {
+//        return iconReQ;
+//        
+//    }
+
+    
+    
+    
     public void setImage(Icon image, Model_File_Sender fileSender) {
         fileSender.addEvent(new EventFileSender(){
             @Override
@@ -61,7 +73,12 @@ public class Image_Item extends javax.swing.JLayeredPane {
                 @Override
                 public void onFinish(File file) {
                     progress.setVisible(false);
-                    pic.setImage(new ImageIcon(file.getAbsolutePath()));
+                    Icon icon= new ImageIcon(file.getAbsolutePath());
+                    //đoạn :))
+                    pic.setImage(icon);
+//                    iconReQ=icon;
+////                    repaint();
+////                    revalidate();
                 }
             });
         } catch (IOException e) {
@@ -78,7 +95,7 @@ public class Image_Item extends javax.swing.JLayeredPane {
         pic = new com.raven.swing.PictureBox();
         progress = new com.raven.swing.Progress();
 
-        progress.setForeground(new java.awt.Color(255, 255, 255));
+        progress.setForeground(new java.awt.Color(153, 204, 255));
         progress.setProgressType(com.raven.swing.Progress.ProgressType.CANCEL);
 
         pic.setLayer(progress, javax.swing.JLayeredPane.DEFAULT_LAYER);

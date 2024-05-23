@@ -78,16 +78,19 @@ public class Model_File_Sender {
     public Model_File_Sender() {
     }
 
-    private Model_Send_Message message;
-    private int fileID;
-    private String fileExtensions;
-    private File file;
-    private long fileSize;
-    private RandomAccessFile accFile;
-    private Socket socket;
-    private EventFileSender event;
+    private Model_Send_Message message; //Đối tượng chứa thông điệp cần gửi.
+    private int fileID; //ID của tệp trên máy chủ sau khi được lưu trữ.
+    private String fileExtensions; //Phần mở rộng của tên tệp.
+    private File file; //Đối tượng File đại diện cho tệp cần gửi.
+    private long fileSize; //Kích thước của tệp.
+    private RandomAccessFile accFile; //Đối tượng RandomAccessFile để đọc dữ liệu từ tệp.
+    private Socket socket; // Đối tượng Socket để gửi dữ liệu qua mạng.
+    private EventFileSender event; //Sự kiện để theo dõi quá trình gửi tệp.
 
-    public synchronized byte[] readFile() throws IOException {
+//readFile(): Phương thức này có chức năng đọc một phần của tệp và trả về dưới dạng 
+//mảng byte. Điều này cho phép dữ liệu của tệp được chia nhỏ thành các phần nhỏ hơn để gửi đi một cách 
+//hiệu quả và đồng thời tránh việc tải toàn bộ nội dung của tệp vào bộ nhớ.
+    public synchronized byte[] readFile() throws IOException { //Đọc một phần của tệp và trả về dưới dạng mảng byte.
         long filepointer = accFile.getFilePointer();
         if (filepointer != fileSize) {
             int max = 2000;
@@ -100,31 +103,41 @@ public class Model_File_Sender {
         }
     }
 
-    public void initSend() throws IOException {
+    public void initSend() throws IOException { //Khởi tạo quá trình gửi tệp bằng cách gửi thông điệp đến máy chủ.
         socket.emit("send_to_user", message.toJsonObject(), new Ack() {
             @Override
             public void call(Object... os) {
                 if (os.length > 0) {
                     int fileID = (int) os[0];
-                    try {
-                        startSend(fileID);
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    int type = (int) os[1];
+                    if (type == 4) {
+                        try {
+                            startSend(fileID);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }else if(type==3){
+                        //Updata sau
                     }
+
                 }
             }
         });
     }
+//startSend(int fileID): Phương thức này bắt đầu gửi tệp sau khi nhận được ID của tệp từ máy chủ. 
+//Sau khi nhận được ID, tệp sẽ được chia thành các gói dữ liệu nhỏ và gửi lần lượt đến máy chủ.
 
-    public void startSend(int fileID) throws IOException {
+    public void startSend(int fileID) throws IOException { //Bắt đầu gửi tệp sau khi nhận được ID của tệp từ máy chủ.
         this.fileID = fileID;
         if (event != null) {
             event.onStartSending();
         }
         sendingFile();
     }
+//sendingFile(): Phương thức này có nhiệm vụ gửi dữ liệu tệp cho máy chủ dưới dạng các gói dữ liệu. 
+//Quá trình này sẽ diễn ra cho đến khi toàn bộ tệp được gửi hoàn tất.
 
-    private void sendingFile() throws IOException {
+    private void sendingFile() throws IOException { //Gửi dữ liệu tệp cho máy chủ dưới dạng các gói dữ liệu.
         Model_Package_Sender data = new Model_Package_Sender();
         data.setFileID(fileID);
         byte[] bytes = readFile();
@@ -163,22 +176,22 @@ public class Model_File_Sender {
         });
     }
 
-    public double getPercentage() throws IOException {
+    public double getPercentage() throws IOException { //Tính toán phần trăm đã gửi của tệp.
         double percentage;
         long filePointer = accFile.getFilePointer();
         percentage = filePointer * 100 / fileSize;
         return percentage;
     }
 
-    public void close() throws IOException {
+    public void close() throws IOException { //Đóng tệp sau khi gửi hoàn tất.
         accFile.close();
     }
 
-    private String getExtensions(String fileName) {
+    private String getExtensions(String fileName) { //Trích xuất phần mở rộng của tên tệp.
         return fileName.substring(fileName.lastIndexOf("."), fileName.length());
     }
 
-    public void addEvent(EventFileSender event) {
+    public void addEvent(EventFileSender event) {//Thêm một sự kiện để theo dõi quá trình gửi tệp.
         this.event = event;
     }
 }

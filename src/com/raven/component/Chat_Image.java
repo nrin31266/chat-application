@@ -32,9 +32,13 @@ public class Chat_Image extends javax.swing.JLayeredPane {
     }
 
     public void addImage(Model_Receive_Image dataImage) {
+        
+
         Image_Item pic = new Image_Item();
         pic.setPreferredSize(new Dimension(dataImage.getWidth(), dataImage.getHeight()));  //  for test update next
         pic.setImage(dataImage);
+        
+//        addEvent(pic, pic.getIconReQ());
         add(pic, "wrap");
     }
 
