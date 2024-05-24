@@ -26,7 +26,7 @@ public class Chat_File extends javax.swing.JPanel {
         cmdLocation.setVisible(false);
     }
 
-    public void setFile(String a, String b, Model_File_Sender fileSender) {
+    public void setFile(Model_File_Sender fileSender) {
         fileSender.addEvent(new EventFileSender() {
             @Override
             public void onSending(double percentage) {
@@ -57,8 +57,6 @@ public class Chat_File extends javax.swing.JPanel {
             }
 
         });
-        lbName.setText(a);
-        lbFileSize.setText(b);
     }
 
     public void setFile(Model_Receive_File data) {

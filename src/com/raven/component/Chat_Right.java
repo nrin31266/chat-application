@@ -33,11 +33,11 @@ public class Chat_Right extends javax.swing.JLayeredPane {
     }
 
     public void setFile(String fileName, String fileSize, Model_File_Sender fileSender) {
-        txt.setFile(true ,fileName, fileSize, fileSender);
+        txt.setFile(true ,fileSender);
     }
 
     public void setTime() {
-        txt.setTime("10:30 PM");    //  Testing
+        txt.setTime("");    //  Testing
     }
 
     @SuppressWarnings("unchecked")

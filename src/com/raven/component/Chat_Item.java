@@ -80,12 +80,12 @@ public class Chat_Item extends javax.swing.JLayeredPane {
         add(layer);
     }
 
-    public void setFile(boolean right, String fileName, String fileSize, Model_File_Sender fileSender) {
+    public void setFile(boolean right, Model_File_Sender fileSender) {
         JLayeredPane layer = new JLayeredPane();
         layer.setLayout(new FlowLayout(right ? FlowLayout.RIGHT : FlowLayout.LEFT));
         layer.setBorder(new EmptyBorder(0, 5, 0, 5));
         Chat_File chatFile = new Chat_File();
-        chatFile.setFile(fileName, fileSize, fileSender);
+        chatFile.setFile(fileSender);
         layer.add(chatFile);
         add(layer);
     }
@@ -113,7 +113,7 @@ public class Chat_Item extends javax.swing.JLayeredPane {
     add(layer);
     setBackground(null);
 
-//    // Gọi lại phương thức revalidate() và repaint() để đảm bảo giao diện người dùng được cập nhật
+    // Gọi lại phương thức revalidate() và repaint() để đảm bảo giao diện người dùng được cập nhật
 //    revalidate();
 //    repaint();
 }

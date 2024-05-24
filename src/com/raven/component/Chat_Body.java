@@ -56,7 +56,7 @@ public class Chat_Body extends javax.swing.JPanel {
             Chat_Left item = new Chat_Left();
             item.setText("");
             item.setFile(data.getDataFile());
-            body.add(item, "wrap, al right, w 100::80%");
+            body.add(item, "wrap, w 5::80%");
         }
         repaint();
         revalidate();
