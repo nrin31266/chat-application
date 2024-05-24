@@ -14,6 +14,8 @@ import org.w3c.dom.events.Event;
 
 
 public class Model_File_Receiver {
+    private String fileName;
+    
     int fileID; //ID của tệp.
     File file; // Đối tượng File đại diện cho tệp nhận được.
     long fileSize;//Kích thước của tệp.

@@ -62,7 +62,7 @@ public class Image_Item extends javax.swing.JLayeredPane {
             Service.getInstance().addFileReceiver(dataImage.getFileID(), new EventFileReceiver() {
                 @Override
                 public void onReceiving(double percentage) {
-                     progress.setValue(0);
+                     progress.setValue(((int) percentage));
                 }
 
                 @Override

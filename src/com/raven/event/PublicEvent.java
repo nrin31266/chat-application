@@ -8,6 +8,7 @@ public class PublicEvent {
     private EventChat eventChat;
     private EventLogin eventLogin;
     private EventMenuLeft eventMenuLeft;
+    private EventDownFile eventDownFile;
 
     public static PublicEvent getInstance() {
         if (instance == null) {
@@ -19,7 +20,10 @@ public class PublicEvent {
     private PublicEvent() {
 
     }
-
+    public void addEventDownFile(EventDownFile event) {
+        this.eventDownFile = event;
+    }
+    
     public void addEventMain(EventMain event) {
         this.eventMain = event;
     }
@@ -59,5 +63,7 @@ public class PublicEvent {
     public void addEventMenuLeft(EventMenuLeft eventMenuLeft) {
         this.eventMenuLeft = eventMenuLeft;
     }
-    
+    public EventDownFile getEventDownFile() {
+        return eventDownFile;
+    }
 }

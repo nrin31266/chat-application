@@ -52,6 +52,11 @@ public class Chat_Body extends javax.swing.JPanel {
             body.add(item, "wrap, w 5::80%");
             //  ::80% set max with 80%
             item.setTime();
+        }else if(data.getMessageType()==MessageType.FILE){
+            Chat_Left item = new Chat_Left();
+            item.setText("");
+            item.setFile(data.getDataFile());
+            body.add(item, "wrap, al right, w 100::80%");
         }
         repaint();
         revalidate();
@@ -109,7 +114,7 @@ public class Chat_Body extends javax.swing.JPanel {
         }else if(data.getMessageType()==MessageType.FILE){
             Chat_Right item = new Chat_Right();
             item.setText("");
-            item.setFile("file name", "file size");
+            item.setFile("file name", "file size", data.getFile());
             body.add(item, "wrap, al right, w 100::80%");
         }
         repaint();
@@ -120,15 +125,6 @@ public class Chat_Body extends javax.swing.JPanel {
         });
     }
 
-    public void addItemFileRight(String text, String fileName, String fileSize) {
-        Chat_Right item = new Chat_Right();
-        item.setText(text);
-        item.setFile(fileName, fileSize);
-        body.add(item, "wrap, al right, w 100::80%");
-        //  ::80% set max with 80%
-        body.repaint();
-        body.revalidate();
-    }
 
     public void addDate(String date) {
         Chat_Date item = new Chat_Date();

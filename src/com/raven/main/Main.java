@@ -1,17 +1,27 @@
 package com.raven.main;
 
 import com.formdev.flatlaf.intellijthemes.FlatArcIJTheme;
+import com.raven.event.EventDownFile;
 import com.raven.event.EventImageView;
 import com.raven.event.EventMain;
 import com.raven.event.PublicEvent;
 import com.raven.form.Chat;
+import com.raven.model.Model_File_Sender;
+import com.raven.model.Model_Receive_File;
 import com.raven.model.Model_User_Account;
 import com.raven.service.Service;
 import com.raven.swing.ComponentResizer;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 
 public class Main extends javax.swing.JFrame {
@@ -47,11 +57,11 @@ public class Main extends javax.swing.JFrame {
             @Override
             public void initChat() {
                 home.setVisible(true);
-                
+
                 login.setVisible(false);
-                
+
                 Service.getInstance().getClient().emit("list_user", Service.getInstance().getUser().getUserID());
-                
+
             }
 
             @Override
@@ -73,6 +83,100 @@ public class Main extends javax.swing.JFrame {
             @Override
             public void saveImage(Icon image) {
                 System.out.println("Save Image next update");
+            }
+
+        });
+        PublicEvent.getInstance().addEventDownFile(new EventDownFile() {
+            @Override
+            public void downFile(Model_Receive_File data) {
+                String filePath = "client_data/" + data.getFileID() + data.getFileExtension();
+
+                // Tạo đối tượng JFileChooser
+                JFileChooser fileChooser = new JFileChooser();
+
+                // Thiết lập chế độ hộp thoại lưu tệp
+                fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
+
+                // Lấy tên file từ model và đặt làm tên file mặc định
+                String defaultFileName = data.getFileName(); // Đổi thành tên file từ model của bạn
+
+                // Đặt tên file mặc định cho hộp thoại lưu tệp
+                fileChooser.setSelectedFile(new File(defaultFileName));
+
+                // Hiển thị hộp thoại và lấy kết quả
+                int result = fileChooser.showSaveDialog(Main.this);
+
+                // Xử lý kết quả
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    File selectedFile = fileChooser.getSelectedFile();
+
+                    // Thực hiện kiểm tra và tạo tên tệp duy nhất trong thư mục được chọn
+                    selectedFile = getUniqueFileName(selectedFile);
+
+                    // Thực hiện các thao tác lưu tệp tại selectedFile
+                    try {
+                        Files.copy(new File(filePath).toPath(), selectedFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                        System.out.println("File saved successfully: " + selectedFile.getAbsolutePath());
+                    } catch (IOException ex) {
+                        System.err.println("Error saving file: " + ex.getMessage());
+                    }
+                }
+            }
+
+// Hàm để kiểm tra và tạo tên tệp duy nhất trong thư mục được chọn
+            private File getUniqueFileName(File selectedFile) {
+                File directory = selectedFile.getParentFile();
+                String fileName = selectedFile.getName();
+                String baseName = fileName.substring(0, fileName.lastIndexOf('.'));
+                String extension = fileName.substring(fileName.lastIndexOf('.'));
+                int counter = 1;
+                while (selectedFile.exists()) {
+                    String uniqueFileName = baseName + " (" + counter + ")" + extension;
+                    selectedFile = new File(directory, uniqueFileName);
+                    counter++;
+                }
+                return selectedFile;
+            }
+
+            @Override
+            public void localFileReceiver(Model_Receive_File data) {
+                String filePath = "client_data/";
+                filePath += data.getFileID() + data.getFileExtension();
+                //
+                System.out.println("FilePath=" + filePath);
+                File file = new File(filePath).getAbsoluteFile();
+                String absolutePath = file.getAbsolutePath();
+
+                // Tạo lệnh để mở File Explorer và chọn tệp
+                String command = "explorer.exe /select," + absolutePath;
+
+                try {
+                    // Chạy lệnh
+                    Process process = Runtime.getRuntime().exec(command);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void localFileSender(Model_File_Sender data) {
+                System.out.println("update sauuuu");
+
+                String filePath = data.getFile().getAbsolutePath();
+                //
+                System.out.println("FilePath=" + filePath);
+                File file = new File(filePath).getAbsoluteFile();
+                String absolutePath = file.getAbsolutePath();
+
+                // Tạo lệnh để mở File Explorer và chọn tệp
+                String command = "explorer.exe /select," + absolutePath;
+
+                try {
+                    // Chạy lệnh
+                    Process process = Runtime.getRuntime().exec(command);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
         });
@@ -114,14 +218,14 @@ public class Main extends javax.swing.JFrame {
             backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(backgroundLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(body, javax.swing.GroupLayout.DEFAULT_SIZE, 691, Short.MAX_VALUE)
+                .addComponent(body, javax.swing.GroupLayout.DEFAULT_SIZE, 710, Short.MAX_VALUE)
                 .addContainerGap())
         );
         backgroundLayout.setVerticalGroup(
             backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(body, javax.swing.GroupLayout.DEFAULT_SIZE, 613, Short.MAX_VALUE)
+                .addComponent(body, javax.swing.GroupLayout.DEFAULT_SIZE, 517, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -159,6 +263,7 @@ public class Main extends javax.swing.JFrame {
 
     private int pX;
     private int pY;
+
     public static void main(String args[]) {
         FlatArcIJTheme.setup();
         java.awt.EventQueue.invokeLater(new Runnable() {

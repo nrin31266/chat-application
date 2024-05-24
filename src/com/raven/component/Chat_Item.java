@@ -1,6 +1,7 @@
 package com.raven.component;
 
 import com.raven.model.Model_File_Sender;
+import com.raven.model.Model_Receive_File;
 import com.raven.model.Model_Receive_Image;
 import com.raven.swing.PictureBox;
 import java.awt.Color;
@@ -79,12 +80,21 @@ public class Chat_Item extends javax.swing.JLayeredPane {
         add(layer);
     }
 
-    public void setFile(String fileName, String fileSize) {
+    public void setFile(boolean right, String fileName, String fileSize, Model_File_Sender fileSender) {
         JLayeredPane layer = new JLayeredPane();
-        layer.setLayout(new FlowLayout(FlowLayout.LEFT));
+        layer.setLayout(new FlowLayout(right ? FlowLayout.RIGHT : FlowLayout.LEFT));
         layer.setBorder(new EmptyBorder(0, 5, 0, 5));
         Chat_File chatFile = new Chat_File();
-        chatFile.setFile(fileName, fileSize);
+        chatFile.setFile(fileName, fileSize, fileSender);
+        layer.add(chatFile);
+        add(layer);
+    }
+    public void setFile(boolean right, Model_Receive_File data) {
+        JLayeredPane layer = new JLayeredPane();
+        layer.setLayout(new FlowLayout(right ? FlowLayout.RIGHT : FlowLayout.LEFT));
+        layer.setBorder(new EmptyBorder(0, 5, 0, 5));  
+        Chat_File chatFile= new Chat_File();
+        chatFile.setFile(data);
         layer.add(chatFile);
         add(layer);
     }

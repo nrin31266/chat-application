@@ -36,7 +36,7 @@ public class Chat_Left_With_Profile extends javax.swing.JLayeredPane {
     }
 
     public void setFile(String fileName, String fileSize) {
-        txt.setFile(fileName, fileSize);
+//        txt.setFile(fileName, fileSize);
     }
 
     public void setTime() {

@@ -1,5 +1,6 @@
 package com.raven.model;
 
+import com.raven.app.MessageType;
 import com.raven.event.EventFileSender;
 import com.raven.service.Service;
 import io.socket.client.Ack;
@@ -77,6 +78,7 @@ public class Model_File_Sender {
 
     public Model_File_Sender() {
     }
+    private String fileName;
 
     private Model_Send_Message message; //Đối tượng chứa thông điệp cần gửi.
     private int fileID; //ID của tệp trên máy chủ sau khi được lưu trữ.
@@ -110,14 +112,20 @@ public class Model_File_Sender {
                 if (os.length > 0) {
                     int fileID = (int) os[0];
                     int type = (int) os[1];
-                    if (type == 4) {
+                    if (type == MessageType.IMAGE.getValue()) {
                         try {
-                            startSend(fileID);
+                            startSend(fileID, 4);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                    }else if(type==3){
+                    }else if(type== MessageType.FILE.getValue()){
                         //Updata sau
+                        System.out.println("File will update ");
+                        try {
+                            startSend(fileID, 3);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
 
                 }
@@ -127,19 +135,23 @@ public class Model_File_Sender {
 //startSend(int fileID): Phương thức này bắt đầu gửi tệp sau khi nhận được ID của tệp từ máy chủ. 
 //Sau khi nhận được ID, tệp sẽ được chia thành các gói dữ liệu nhỏ và gửi lần lượt đến máy chủ.
 
-    public void startSend(int fileID) throws IOException { //Bắt đầu gửi tệp sau khi nhận được ID của tệp từ máy chủ.
+    public void startSend(int fileID, int type) throws IOException { //Bắt đầu gửi tệp sau khi nhận được ID của tệp từ máy chủ.
         this.fileID = fileID;
         if (event != null) {
             event.onStartSending();
         }
-        sendingFile();
+        sendingFile(type);
     }
 //sendingFile(): Phương thức này có nhiệm vụ gửi dữ liệu tệp cho máy chủ dưới dạng các gói dữ liệu. 
 //Quá trình này sẽ diễn ra cho đến khi toàn bộ tệp được gửi hoàn tất.
 
-    private void sendingFile() throws IOException { //Gửi dữ liệu tệp cho máy chủ dưới dạng các gói dữ liệu.
+    private void sendingFile(int type) throws IOException { //Gửi dữ liệu tệp cho máy chủ dưới dạng các gói dữ liệu.
         Model_Package_Sender data = new Model_Package_Sender();
+        data.setType(type);
         data.setFileID(fileID);
+        data.setFileName(file.getName());
+        data.setFileSize(fileSize+"");
+        data.setFileExtension(fileExtensions);
         byte[] bytes = readFile();
         if (bytes != null) {
             data.setData(bytes);
@@ -159,7 +171,7 @@ public class Model_File_Sender {
                                 if (event != null) {
                                     event.onSending(getPercentage());
                                 }
-                                sendingFile();
+                                sendingFile(type);
                             } else {
                                 //  File send finish
                                 Service.getInstance().fileSendFinish(Model_File_Sender.this);
@@ -190,8 +202,17 @@ public class Model_File_Sender {
     private String getExtensions(String fileName) { //Trích xuất phần mở rộng của tên tệp.
         return fileName.substring(fileName.lastIndexOf("."), fileName.length());
     }
+    public String getFileName() { //Trích xuất phần mở rộng của tên tệp.
+        return file.getName();
+    }
 
     public void addEvent(EventFileSender event) {//Thêm một sự kiện để theo dõi quá trình gửi tệp.
         this.event = event;
     }
+
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+    
 }

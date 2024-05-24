@@ -1,5 +1,7 @@
 package com.raven.component;
 
+import com.raven.model.Model_File_Sender;
+import com.raven.model.Model_Receive_File;
 import com.raven.model.Model_Receive_Image;
 import java.awt.Color;
 import javax.swing.Icon;
@@ -31,8 +33,8 @@ public class Chat_Left extends javax.swing.JLayeredPane {
 
    
 
-    public void setFile(String fileName, String fileSize) {
-        txt.setFile(fileName, fileSize);
+    public void setFile(Model_Receive_File data) {
+        txt.setFile(false ,data);
     }
 
     public void setTime() {

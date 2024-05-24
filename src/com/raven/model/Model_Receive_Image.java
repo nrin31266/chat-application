@@ -18,17 +18,7 @@ public class Model_Receive_Image {
     int width;
     int height;
 
-    public Model_Receive_Image(Object json) {
-        JSONObject obj=(JSONObject) json;
-        try {
-            fileID=obj.getInt("fileID");
-            image=obj.getString("image");
-            width=obj.getInt("width");
-            height=obj.getInt("height");
-        } catch (JSONException e) {
-            System.err.println(e);
-        }
-    }
+    
 
     public Model_Receive_Image(int fileID,String image, int width, int height) {
         this.fileID = fileID;
@@ -59,6 +49,17 @@ public class Model_Receive_Image {
 
     public void setHeight(int height) {
         this.height = height;
+    }
+    public Model_Receive_Image(Object json) {
+        JSONObject obj=(JSONObject) json;
+        try {
+            fileID=obj.getInt("fileID");
+            image=obj.getString("image");
+            width=obj.getInt("width");
+            height=obj.getInt("height");
+        } catch (JSONException e) {
+            System.err.println(e);
+        }
     }
     public JSONObject toJsonObject(){
         try {

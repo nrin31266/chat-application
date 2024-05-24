@@ -32,8 +32,8 @@ public class Chat_Right extends javax.swing.JLayeredPane {
         //txt.setImage(false, image);
     }
 
-    public void setFile(String fileName, String fileSize) {
-        txt.setFile(fileName, fileSize);
+    public void setFile(String fileName, String fileSize, Model_File_Sender fileSender) {
+        txt.setFile(true ,fileName, fileSize, fileSender);
     }
 
     public void setTime() {
