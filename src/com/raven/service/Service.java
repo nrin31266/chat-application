@@ -46,12 +46,14 @@ public class Service {
                 public void call(Object... os) {
                     // list_user
                     List<Model_User_Account> users = new ArrayList<>();
-                    System.err.println(user.getUserID());
                     for (Object o : os) {
                         Model_User_Account u = new Model_User_Account(o);
-                        if (u.getUserID() != user.getUserID()) {
-                            users.add(u);
+                        if (user!=null) {
+                            if (u.getUserID() != user.getUserID()) {
+                                users.add(u);
+                            }
                         }
+
                     }
                     PublicEvent.getInstance().getEventMenuLeft().newUser(users);
                 }
@@ -88,6 +90,7 @@ public class Service {
 //lý việc gửi tệp tin. Sau đó, nó gán đối tượng Model_File_Sender này cho tin nhắn và 
 //thêm vào danh sách fileSender. Nếu đây là tệp tin đầu tiên trong danh sách, 
 //nó bắt đầu gửi tệp tin bằng cách gọi initSend().
+
     public Model_File_Sender addFile(File file, Model_Send_Message message) throws IOException {
         Model_File_Sender data = new Model_File_Sender(file, client, message);
         message.setFile(data);
@@ -102,6 +105,7 @@ public class Service {
 //việc gửi một tệp tin đã hoàn thành. Nó loại bỏ Model_File_Sender đã hoàn thành khỏi 
 //anh sách fileSender. Nếu danh sách không trống, nó bắt đầu gửi tệp tin tiếp theo bằng 
 //cách gọi initSend() cho tệp tin tiếp theo trong danh sách.
+
     public void fileSendFinish(Model_File_Sender data) throws IOException {
         fileSender.remove(data);
         if (!fileSender.isEmpty()) {
@@ -109,18 +113,19 @@ public class Service {
             fileSender.get(0).initSend();
         }
     }
-    public void fileReceiverFinish(Model_File_Receiver data) throws  IOException{
+
+    public void fileReceiverFinish(Model_File_Receiver data) throws IOException {
         fileReceiver.remove(data);
-        if(!fileReceiver.isEmpty()){
+        if (!fileReceiver.isEmpty()) {
             fileReceiver.get(0).initReques();
-            
+
         }
     }
-    
-    public void addFileReceiver(int fileID, EventFileReceiver evnet)throws IOException{
-        Model_File_Receiver data= new Model_File_Receiver(fileID, client, evnet);
+
+    public void addFileReceiver(int fileID, EventFileReceiver evnet) throws IOException {
+        Model_File_Receiver data = new Model_File_Receiver(fileID, client, evnet);
         fileReceiver.add(data);
-        if(fileReceiver.size()==1){
+        if (fileReceiver.size() == 1) {
             data.initReques();
         }
     }

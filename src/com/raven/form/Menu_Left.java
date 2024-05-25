@@ -132,7 +132,7 @@ public class Menu_Left extends javax.swing.JPanel {
         });
         menu.add(menuMessage);
 
-        sp.setBackground(new java.awt.Color(242, 242, 242));
+        sp.setBackground(new java.awt.Color(255, 255, 255));
         sp.setBorder(null);
         sp.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
