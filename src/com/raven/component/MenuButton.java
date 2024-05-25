@@ -14,6 +14,8 @@ public class MenuButton extends JButton {
     private PictureBox pictureBox;
 
     public MenuButton() {
+        setBorder(null); // Bỏ đường viền
+        
         setContentAreaFilled(false);
         setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         pictureBox = new PictureBox();
@@ -56,7 +58,7 @@ public class MenuButton extends JButton {
     protected void paintComponent(Graphics grphcs) {
         super.paintComponent(grphcs);
         if (isSelected()) {
-            grphcs.setColor(new Color(190, 217, 240));
+            grphcs.setColor(new Color(109, 206, 255));
             grphcs.fillRect(0, getHeight() - 3, getWidth(), 3); // Chỉ vẽ một dải màu nhỏ phía dưới
         }
     }

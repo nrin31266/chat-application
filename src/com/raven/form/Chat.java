@@ -30,15 +30,16 @@ public class Chat extends javax.swing.JPanel {
             @Override
             public void sendMessage(Model_Send_Message data) {
                 chatBody.addItemRight(data);
-                
+
             }
 
             @Override
             public void receiveMessage(Model_Receive_Message data) {
-                if(chatBottom.getUser().getUserID()==data.getFromUserID()){
-                    chatBody.addItemLeft(data);
+                if (chatBottom.getUser() != null) {
+                    if (chatBottom.getUser().getUserID() == data.getFromUserID()) {
+                        chatBody.addItemLeft(data);
+                    }
                 }
-                
             }
         });
         add(chatTitle, "wrap");
@@ -49,16 +50,18 @@ public class Chat extends javax.swing.JPanel {
     }
 
     public void setUser(Model_User_Account user) {
-        System.out.println("Chat select id: "+user.getUserID());
+        System.out.println("Chat select id: " + user.getUserID());
         chatTitle.setUserName(user);
         chatBottom.setUser(user);
         chatBody.setUser(user);
         chatBody.clearChat();
-        
+
     }
-    public void  updateUser(Model_User_Account user){
+
+    public void updateUser(Model_User_Account user) {
         chatTitle.updateUser(user);
     }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

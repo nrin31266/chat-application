@@ -57,6 +57,8 @@ public class Chat_Bottom extends javax.swing.JPanel {
                 }
             }
         });
+        txt.setBackground(Color.WHITE);
+        txt.setForeground(Color.BLACK);
         txt.setBorder(new EmptyBorder(5, 5, 5, 5));
         txt.setHintText("Write Message Here ...");
         scroll.setViewportView(txt);
@@ -71,8 +73,6 @@ public class Chat_Bottom extends javax.swing.JPanel {
         panel.setPreferredSize(new Dimension(30, 28));
         panel.setBackground(Color.WHITE);
         OptionButton cmd = new OptionButton();
-//        cmd.setBorder(null);
-//        cmd.setContentAreaFilled(false);
         cmd.setIconSelected(new ImageIcon(getClass().getResource("/com/raven/icon/send.png")));
         cmd.setMinimumSize(new Dimension(28, 28));
         cmd.addActionListener(new ActionListener() {
@@ -82,9 +82,6 @@ public class Chat_Bottom extends javax.swing.JPanel {
             }
         });
         OptionButton cmdMore = new OptionButton();
-//        cmdMore.setBorder(null);
-//        cmdMore.setContentAreaFilled(false);
-//        cmdMore.setCursor(new Cursor(Cursor.HAND_CURSOR));
         cmdMore.setIconSelected(new ImageIcon(getClass().getResource("/com/raven/icon/more_disable.png")));
         cmdMore.setMinimumSize(new Dimension(28, 28));
         cmdMore.addActionListener(new ActionListener() {

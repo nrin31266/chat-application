@@ -11,6 +11,8 @@ import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -49,11 +51,11 @@ public class Chat_Item extends javax.swing.JLayeredPane {
         txt.setText(text);
     }
 
-    public void setTime(String time) {
+    public void setTime() {
         JLayeredPane layer = new JLayeredPane();
         layer.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
         layer.setBorder(new EmptyBorder(0, 5, 10, 5));
-        label = new JLabel(time);
+        label = new JLabel(getCurrentTime());
         label.setForeground(new Color(110, 110, 110));
         label.setHorizontalTextPosition(JLabel.LEFT);
         layer.add(label);
@@ -89,35 +91,40 @@ public class Chat_Item extends javax.swing.JLayeredPane {
         layer.add(chatFile);
         add(layer);
     }
+
     public void setFile(boolean right, Model_Receive_File data) {
         JLayeredPane layer = new JLayeredPane();
         layer.setLayout(new FlowLayout(right ? FlowLayout.RIGHT : FlowLayout.LEFT));
-        layer.setBorder(new EmptyBorder(0, 5, 0, 5));  
-        Chat_File chatFile= new Chat_File();
+        layer.setBorder(new EmptyBorder(0, 5, 0, 5));
+        Chat_File chatFile = new Chat_File();
         chatFile.setFile(data);
         layer.add(chatFile);
         add(layer);
     }
 
- public void setEmoji(boolean right, Icon icon) {
-    JLayeredPane layer = new JLayeredPane();
-    layer.setLayout(new FlowLayout(right ? FlowLayout.RIGHT : FlowLayout.LEFT));
-    layer.setBorder(new EmptyBorder(0, 5, 0, 5));
+    public void setEmoji(boolean right, Icon icon) {
+        JLayeredPane layer = new JLayeredPane();
+        layer.setLayout(new FlowLayout(right ? FlowLayout.RIGHT : FlowLayout.LEFT));
+        layer.setBorder(new EmptyBorder(0, 5, 0, 5));
 
-    PictureBox p = new PictureBox();
-    p.setImage(icon);
-    p.setPreferredSize(new Dimension(icon.getIconWidth(), icon.getIconHeight()));
+        PictureBox p = new PictureBox();
+        p.setImage(icon);
+        p.setPreferredSize(new Dimension(icon.getIconWidth(), icon.getIconHeight()));
 
-    layer.add(p);
+        layer.add(p);
 
-    add(layer);
-    setBackground(null);
+        add(layer);
+        setBackground(null);
 
-    // Gọi lại phương thức revalidate() và repaint() để đảm bảo giao diện người dùng được cập nhật
+        // Gọi lại phương thức revalidate() và repaint() để đảm bảo giao diện người dùng được cập nhật
 //    revalidate();
 //    repaint();
-}
-
+    }
+    public String getCurrentTime() {
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        return now.format(formatter);
+    }
 
     public void sendSuccess() {
         if (label != null) {

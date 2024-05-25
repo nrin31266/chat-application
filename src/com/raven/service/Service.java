@@ -74,7 +74,7 @@ public class Service {
                 @Override
                 public void call(Object... os) {
                     Model_Receive_Message message = new Model_Receive_Message(os[0]);
-                    System.out.println("Nhận: " + message.toString());
+                    System.out.println("Service, Nhận: " + message.toString());
                     PublicEvent.getInstance().getEventChat().receiveMessage(message);
                 }
             });

@@ -38,7 +38,7 @@ public class Chat_Left extends javax.swing.JLayeredPane {
     }
 
     public void setTime() {
-        txt.setTime("");    //  Testing
+        txt.setTime();    //  Testing
     }
 
     @SuppressWarnings("unchecked")

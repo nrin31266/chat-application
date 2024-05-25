@@ -82,6 +82,7 @@ public class Chat_Body extends javax.swing.JPanel {
             item.setText("");
             item.setFile(data.getDataFile());
             body.add(item, "wrap, w 5::80%");
+            item.setTime();
         }
         repaint();
         revalidate();
@@ -149,6 +150,7 @@ public class Chat_Body extends javax.swing.JPanel {
             item.setText("");
             item.setFile("file name", "file size", data.getFile());
             body.add(item, "wrap, al right, w 100::80%");
+            item.setTime();
              //
             Model_HistoryChat dataHs=new Model_HistoryChat(Service.getInstance().getUser().getUserID(), user.getUserID(), 4,"",data.getFile().getFile().getAbsolutePath(), "client_data/"+data.getFile().getFileID()+data.getFile().getFileExtensions());
             PublicEvent.getInstance().getEventBody().sendChatToHistoryChat(dataHs);

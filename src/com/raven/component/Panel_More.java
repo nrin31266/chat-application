@@ -9,7 +9,6 @@ import com.raven.model.Model_Send_Message;
 import com.raven.model.Model_User_Account;
 import com.raven.service.Service;
 import com.raven.swing.WrapLayout;
-import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -17,6 +16,7 @@ import java.awt.event.ActionListener;
 import javax.swing.BoxLayout;
 import javax.swing.Icon;
 import com.raven.swing.ScrollBar;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -40,6 +40,7 @@ public class Panel_More extends javax.swing.JPanel {
     public Panel_More() {
         initComponents();
         init();
+        this.setBackground(new Color(220, 205, 223));
     }
 
     private void init() {
@@ -47,14 +48,18 @@ public class Panel_More extends javax.swing.JPanel {
         panelHeader = new JLayeredPane();
 
         panelHeader.add(getButtonImage());
+//        panelHeader.setBackground(new Color(220, 205, 223));
         panelHeader.add(getButtonFile());
+        
 
         panelHeader.add(getEmojiStyle1());
         panelHeader.add(getEmojiStyle2());
         panelHeader.setLayout(new BoxLayout(panelHeader, BoxLayout.X_AXIS));
         panelHeader.setAlignmentX(Component.LEFT_ALIGNMENT);
         add(panelHeader, "w 100%, h 30!, wrap");
+        
         panelDetail = new JPanel();
+        panelDetail.setBackground(new Color(235, 235, 235));
         JScrollPane ch = new JScrollPane(panelDetail);
         ch.setBorder(null);
         ch.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);

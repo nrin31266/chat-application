@@ -1,6 +1,12 @@
 package com.raven.main;
 
+import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.intellijthemes.FlatArcIJTheme;
+import com.formdev.flatlaf.intellijthemes.FlatCobalt2IJTheme;
+import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatAtomOneDarkContrastIJTheme;
+import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatAtomOneLightContrastIJTheme;
+import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatAtomOneLightIJTheme;
+import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatDraculaContrastIJTheme;
 import com.raven.event.EventDownFile;
 import com.raven.event.EventImageView;
 import com.raven.event.EventMain;
@@ -8,6 +14,7 @@ import com.raven.event.PublicEvent;
 import com.raven.form.Chat;
 import com.raven.model.Model_File_Sender;
 import com.raven.model.Model_Receive_File;
+import com.raven.model.Model_Receive_Image;
 import com.raven.model.Model_User_Account;
 import com.raven.service.Service;
 import com.raven.swing.ComponentResizer;
@@ -23,6 +30,8 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.UIManager;
+import javax.swing.plaf.basic.BasicLookAndFeel;
 
 public class Main extends javax.swing.JFrame {
 
@@ -76,25 +85,14 @@ public class Main extends javax.swing.JFrame {
         });
         PublicEvent.getInstance().addEventImageView(new EventImageView() {
             @Override
-            public void viewImage(Icon image) {
-                vIew_Image.viewImage(image);
+            public void viewImage(Icon image, String mode, Model_Receive_Image data) {
+                vIew_Image.viewImage(image, mode, data);
             }
 
             @Override
-            public void saveImage(Icon image) {
-                System.out.println("Save Image next update");
-            }
-
-        });
-        PublicEvent.getInstance().addEventDownFile(new EventDownFile() {
-            @Override
-            public void downFile(Model_Receive_File data) {
+            public void saveImage(Icon image, String mode, Model_Receive_Image data) {
                 String filePath = "client_data/" + data.getFileID() + data.getFileExtension();
-
-                // Tạo đối tượng JFileChooser
                 JFileChooser fileChooser = new JFileChooser();
-
-                // Thiết lập chế độ hộp thoại lưu tệp
                 fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
 
                 // Lấy tên file từ model và đặt làm tên file mặc định
@@ -123,19 +121,76 @@ public class Main extends javax.swing.JFrame {
                 }
             }
 
-// Hàm để kiểm tra và tạo tên tệp duy nhất trong thư mục được chọn
-            private File getUniqueFileName(File selectedFile) {
-                File directory = selectedFile.getParentFile();
-                String fileName = selectedFile.getName();
-                String baseName = fileName.substring(0, fileName.lastIndexOf('.'));
-                String extension = fileName.substring(fileName.lastIndexOf('.'));
-                int counter = 1;
-                while (selectedFile.exists()) {
-                    String uniqueFileName = baseName + " (" + counter + ")" + extension;
-                    selectedFile = new File(directory, uniqueFileName);
-                    counter++;
+            @Override
+            public void viewLocation(Icon image, String mode, Model_Receive_Image data) {
+                if (mode.equals("sender")) {
+                    String filePath = data.getFile().getAbsolutePath();
+                    //
+                    System.out.println("FilePath=" + filePath);
+                    File file = new File(filePath).getAbsoluteFile();
+                    String absolutePath = file.getAbsolutePath();
+
+                    // Tạo lệnh để mở File Explorer và chọn tệp
+                    String command = "explorer.exe /select," + absolutePath;
+
+                    try {
+                        // Chạy lệnh
+                        Process process = Runtime.getRuntime().exec(command);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    String filePath = "client_data/";
+                    filePath += data.getFileID() + data.getFileExtension();
+                    //
+                    System.out.println("FilePath_Relative=" + filePath);
+                    File file = new File(filePath).getAbsoluteFile();
+                    String absolutePath = file.getAbsolutePath();
+
+                    // Tạo lệnh để mở File Explorer và chọn tệp
+                    String command = "explorer.exe /select," + absolutePath;
+
+                    try {
+                        // Chạy lệnh
+                        Process process = Runtime.getRuntime().exec(command);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
-                return selectedFile;
+            }
+
+        });
+        PublicEvent.getInstance().addEventDownFile(new EventDownFile() {
+            @Override
+            public void downFile(Model_Receive_File data) {
+                String filePath = "client_data/" + data.getFileID() + data.getFileExtension();
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
+
+                // Lấy tên file từ model và đặt làm tên file mặc định
+                String defaultFileName = data.getFileName(); // Đổi thành tên file từ model của bạn
+
+                // Đặt tên file mặc định cho hộp thoại lưu tệp
+                fileChooser.setSelectedFile(new File(defaultFileName));
+
+                // Hiển thị hộp thoại và lấy kết quả
+                int result = fileChooser.showSaveDialog(Main.this);
+
+                // Xử lý kết quả
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    File selectedFile = fileChooser.getSelectedFile();
+
+                    // Thực hiện kiểm tra và tạo tên tệp duy nhất trong thư mục được chọn
+                    selectedFile = getUniqueFileName(selectedFile);
+
+                    // Thực hiện các thao tác lưu tệp tại selectedFile
+                    try {
+                        Files.copy(new File(filePath).toPath(), selectedFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                        System.out.println("File saved successfully: " + selectedFile.getAbsolutePath());
+                    } catch (IOException ex) {
+                        System.err.println("Error saving file: " + ex.getMessage());
+                    }
+                }
             }
 
             @Override
@@ -181,11 +236,21 @@ public class Main extends javax.swing.JFrame {
         });
     }
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
+    // Hàm để kiểm tra và tạo tên tệp duy nhất trong thư mục được chọn
+    private File getUniqueFileName(File selectedFile) {
+        File directory = selectedFile.getParentFile();
+        String fileName = selectedFile.getName();
+        String baseName = fileName.substring(0, fileName.lastIndexOf('.'));
+        String extension = fileName.substring(fileName.lastIndexOf('.'));
+        int counter = 1;
+        while (selectedFile.exists()) {
+            String uniqueFileName = baseName + " (" + counter + ")" + extension;
+            selectedFile = new File(directory, uniqueFileName);
+            counter++;
+        }
+        return selectedFile;
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -217,7 +282,7 @@ public class Main extends javax.swing.JFrame {
             backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(backgroundLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(body, javax.swing.GroupLayout.DEFAULT_SIZE, 710, Short.MAX_VALUE)
+                .addComponent(body, javax.swing.GroupLayout.DEFAULT_SIZE, 722, Short.MAX_VALUE)
                 .addContainerGap())
         );
         backgroundLayout.setVerticalGroup(
@@ -268,6 +333,12 @@ public class Main extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
+                try {
+                    // Thiết lập giao diện FlatLaf Dark
+                    UIManager.setLookAndFeel(new FlatAtomOneLightIJTheme());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 new Main().setVisible(true);
             }
         });

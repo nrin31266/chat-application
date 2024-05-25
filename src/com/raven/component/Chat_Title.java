@@ -50,22 +50,24 @@ public class Chat_Title extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        layer = new javax.swing.JLayeredPane();
+        imageAvatar = new com.raven.swing.ImageAvatar();
         lbName = new javax.swing.JLabel();
         lbStatus = new javax.swing.JLabel();
 
-        setBackground(new java.awt.Color(249, 249, 249));
+        setBackground(new java.awt.Color(239, 239, 239));
 
-        layer.setLayout(new java.awt.GridLayout(0, 1));
+        imageAvatar.setForeground(new java.awt.Color(255, 255, 255));
+        imageAvatar.setBorderColor(new java.awt.Color(255, 255, 255));
+        imageAvatar.setBorderSize(0);
+        imageAvatar.setImage(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/testing/meme1.jpg"))); // NOI18N
+        imageAvatar.setPreferredSize(new java.awt.Dimension(38, 38));
 
         lbName.setFont(new java.awt.Font("Georgia", 1, 18)); // NOI18N
         lbName.setForeground(new java.awt.Color(66, 66, 66));
-        lbName.setText("Hihihihihihi");
-        layer.add(lbName);
+        lbName.setText("Name");
 
         lbStatus.setForeground(new java.awt.Color(40, 147, 59));
         lbStatus.setText("Active now");
-        layer.add(lbStatus);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -73,21 +75,30 @@ public class Chat_Title extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(layer, javax.swing.GroupLayout.PREFERRED_SIZE, 109, Short.MAX_VALUE)
-                .addGap(380, 380, 380))
+                .addComponent(imageAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbName, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(54, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(3, 3, 3)
-                .addComponent(layer, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(8, 8, 8)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(imageAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lbName, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(lbStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(9, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLayeredPane layer;
+    private com.raven.swing.ImageAvatar imageAvatar;
     private javax.swing.JLabel lbName;
     private javax.swing.JLabel lbStatus;
     // End of variables declaration//GEN-END:variables

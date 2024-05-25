@@ -36,7 +36,7 @@ public class OptionButton extends JButton {
     protected void paintComponent(Graphics grphcs) {
         super.paintComponent(grphcs);
         if (isSelected()) {
-            grphcs.setColor(new Color(190,217,240));
+            grphcs.setColor(new Color(109, 206, 255));
             grphcs.fillRect(0, getHeight() - 3, getWidth(), getHeight());
         }
     }

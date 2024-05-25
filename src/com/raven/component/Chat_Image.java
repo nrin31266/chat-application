@@ -27,7 +27,10 @@ public class Chat_Image extends javax.swing.JLayeredPane {
 
         pic.setPreferredSize(getAutoSize(image, 200, 200));
         pic.setImage(image, fileSender);
-        addEvent(pic, image);
+        Model_Receive_Image dataReceiver=
+                new Model_Receive_Image(fileSender.getFileID(), null, 0, 0, fileSender.getFileExtensions(), fileSender.getFileName());
+        dataReceiver.setFile(fileSender.getFile());
+        addEvent(pic, image, "sender", dataReceiver);
         add(pic, "wrap");
     }
 
@@ -37,18 +40,18 @@ public class Chat_Image extends javax.swing.JLayeredPane {
         Image_Item pic = new Image_Item();
         pic.setPreferredSize(new Dimension(dataImage.getWidth(), dataImage.getHeight()));  //  for test update next
         pic.setImage(dataImage);
-        
-//        addEvent(pic, pic.getIconReQ());
+        pic.setChatImage(this);
         add(pic, "wrap");
+        
     }
 
-    private void addEvent(Component com, Icon image) {
+    void addEvent(Component com, Icon image, String mode, Model_Receive_Image data) {
         com.setCursor(new Cursor(Cursor.HAND_CURSOR));
         com.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent me) {
                 if (SwingUtilities.isLeftMouseButton(me)) {
-                    PublicEvent.getInstance().getEventImageView().viewImage(image);
+                    PublicEvent.getInstance().getEventImageView().viewImage(image, mode, data);
                 }
             }
         });

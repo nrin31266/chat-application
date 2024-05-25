@@ -17,7 +17,7 @@ public class Item_People extends javax.swing.JPanel {
     public Item_People(Model_User_Account user) {
         this.user = user;
         initComponents();
-        lb.setText(user.getUserName());
+        lbName.setText(user.getUserName());
         activeStatus.setActive(user.isStatus());
         init();
     }
@@ -37,7 +37,7 @@ public class Item_People extends javax.swing.JPanel {
 
             @Override
             public void mouseExited(MouseEvent me) {
-                setBackground(new Color(242, 242, 242));
+                setBackground(Color.white);
                 mouseOver = false;
             }
 
@@ -54,62 +54,67 @@ public class Item_People extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        imageAvatar1 = new com.raven.swing.ImageAvatar();
-        lb = new javax.swing.JLabel();
-        lbStatus = new javax.swing.JLabel();
+        imageAvatar = new com.raven.swing.ImageAvatar();
         activeStatus = new com.raven.swing.ActiveStatus();
+        lbName = new javax.swing.JLabel();
+        lbStatus = new javax.swing.JLabel();
 
-        setBackground(new java.awt.Color(242, 242, 242));
+        setBackground(new java.awt.Color(255, 255, 255));
+        setPreferredSize(new java.awt.Dimension(200, 62));
 
-        imageAvatar1.setBorderSize(0);
-        imageAvatar1.setImage(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/profile.png"))); // NOI18N
-
-        lb.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
-        lb.setText("Name");
-
-        lbStatus.setFont(new java.awt.Font("sansserif", 2, 12)); // NOI18N
-        lbStatus.setForeground(new java.awt.Color(117, 117, 117));
-        lbStatus.setText("New User");
+        imageAvatar.setForeground(new java.awt.Color(255, 255, 255));
+        imageAvatar.setBorderColor(new java.awt.Color(255, 255, 255));
+        imageAvatar.setBorderSize(0);
+        imageAvatar.setImage(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/testing/meme1.jpg"))); // NOI18N
+        imageAvatar.setPreferredSize(new java.awt.Dimension(50, 50));
 
         activeStatus.setActive(true);
+        imageAvatar.add(activeStatus);
+        activeStatus.setBounds(40, 40, 10, 10);
+
+        lbName.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        lbName.setText("Name");
+
+        lbStatus.setBackground(new java.awt.Color(255, 255, 255));
+        lbStatus.setFont(new java.awt.Font("sansserif", 2, 12)); // NOI18N
+        lbStatus.setForeground(new java.awt.Color(153, 153, 153));
+        lbStatus.setText("  ");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(imageAvatar1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap()
+                .addComponent(imageAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lb, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(lbStatus)
-                        .addGap(3, 3, 3)
-                        .addComponent(activeStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addComponent(lbStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(10, 10, 10))
+                    .addComponent(lbName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(102, 102, 102))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(3, 3, 3)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(imageAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(lb)
                         .addGap(6, 6, 6)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(activeStatus, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lbStatus, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(imageAvatar1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(3, 3, 3))
+                        .addComponent(lbName)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lbStatus)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.raven.swing.ActiveStatus activeStatus;
-    private com.raven.swing.ImageAvatar imageAvatar1;
-    private javax.swing.JLabel lb;
+    private com.raven.swing.ImageAvatar imageAvatar;
+    private javax.swing.JLabel lbName;
     private javax.swing.JLabel lbStatus;
     // End of variables declaration//GEN-END:variables
 }

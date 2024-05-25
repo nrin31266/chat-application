@@ -17,14 +17,10 @@ public class Image_Item extends javax.swing.JLayeredPane {
 
     public Image_Item() {
         initComponents();
+        progress.setBorder(null);
     }
 
-//    Icon iconReQ;
-//
-//    public Icon getIconReQ() {
-//        return iconReQ;
-//        
-//    }
+
 
     
     
@@ -74,18 +70,23 @@ public class Image_Item extends javax.swing.JLayeredPane {
                 public void onFinish(File file) {
                     progress.setVisible(false);
                     Icon icon= new ImageIcon(file.getAbsolutePath());
-                    //đoạn :))
                     pic.setImage(icon);
-//                    iconReQ=icon;
-////                    repaint();
-////                    revalidate();
+                    getChat_Image().addEvent(Image_Item.this, icon, "receiver",dataImage );
                 }
             });
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+    public Chat_Image getChat_Image(){
+        return chatImage;
+    }
+
+    public void setChatImage(Chat_Image chatImage) {
+        this.chatImage = chatImage;
+    }
     
+    private Chat_Image chatImage;
 
 
     @SuppressWarnings("unchecked")
@@ -95,7 +96,7 @@ public class Image_Item extends javax.swing.JLayeredPane {
         pic = new com.raven.swing.PictureBox();
         progress = new com.raven.swing.Progress();
 
-        progress.setForeground(new java.awt.Color(153, 204, 255));
+        progress.setForeground(new java.awt.Color(0, 51, 204));
         progress.setProgressType(com.raven.swing.Progress.ProgressType.CANCEL);
 
         pic.setLayer(progress, javax.swing.JLayeredPane.DEFAULT_LAYER);

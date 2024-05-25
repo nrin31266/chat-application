@@ -40,7 +40,7 @@ public class Chat_Left_With_Profile extends javax.swing.JLayeredPane {
     }
 
     public void setTime() {
-        txt.setTime("");    //  Testing
+        txt.setTime();    //  Testing
     }
 
     @SuppressWarnings("unchecked")
