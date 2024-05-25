@@ -111,6 +111,7 @@ public class Model_File_Sender {
             public void call(Object... os) {
                 if (os.length > 0) {
                     int fileID = (int) os[0];
+                    setFileID(fileID);
                     int type = (int) os[1];
                     if (type == MessageType.IMAGE.getValue()) {
                         try {

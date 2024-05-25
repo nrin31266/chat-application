@@ -160,7 +160,6 @@ public class Main extends javax.swing.JFrame {
 
             @Override
             public void localFileSender(Model_File_Sender data) {
-                System.out.println("update sauuuu");
 
                 String filePath = data.getFile().getAbsolutePath();
                 //

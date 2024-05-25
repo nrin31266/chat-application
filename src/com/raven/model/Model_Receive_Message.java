@@ -3,6 +3,7 @@ package com.raven.model;
 
 import com.raven.app.MessageType;
 import java.awt.TrayIcon;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Model_Receive_Message {
@@ -30,7 +31,7 @@ public class Model_Receive_Message {
                 json.put("dataFile", dataFile.toJsonObject());
             }
             return json;
-        } catch (Exception e) {
+        } catch (JSONException e) {
             return null;
         }
     }
@@ -47,7 +48,7 @@ public class Model_Receive_Message {
                 dataFile= new Model_Receive_File(obj.get("dataFile"));
             }
             
-        } catch (Exception e) {
+        } catch (JSONException e) {
             System.err.println(e);
         }
     }

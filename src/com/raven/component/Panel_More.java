@@ -108,7 +108,7 @@ public class Panel_More extends javax.swing.JPanel {
     private JButton getButtonFile() {
         OptionButton cmd = new OptionButton();
         cmd.setIconSelected(new ImageIcon(getClass().getResource("/com/raven/icon/link.png")));
-        cmd.addActionListener(new ActionListener() {
+        cmd.addActionListener(new ActionListener() { 
             @Override
             public void actionPerformed(ActionEvent ape) {
                 JFileChooser ch = new JFileChooser();

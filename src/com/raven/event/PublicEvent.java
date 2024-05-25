@@ -9,6 +9,16 @@ public class PublicEvent {
     private EventLogin eventLogin;
     private EventMenuLeft eventMenuLeft;
     private EventDownFile eventDownFile;
+    private EventBody eventBody;
+     
+    public EventBody getEventBody() {
+        return eventBody;
+    }
+
+    public void addEventBody(EventBody eventBody) {
+        this.eventBody = eventBody;
+    }
+   
 
     public static PublicEvent getInstance() {
         if (instance == null) {

@@ -2,9 +2,17 @@ package com.raven.component;
 
 import com.raven.app.MessageType;
 import com.raven.emoji.Emoji;
+import com.raven.event.EventBody;
+import com.raven.event.PublicEvent;
+import com.raven.model.Model_HistoryChat;
+import com.raven.model.Model_Login;
 import com.raven.model.Model_Receive_Message;
 import com.raven.model.Model_Send_Message;
+import com.raven.model.Model_User_Account;
+import com.raven.service.Service;
 import com.raven.swing.ScrollBar;
+import io.socket.client.Ack;
+import io.socket.client.Socket;
 import java.awt.Adjustable;
 import java.awt.Color;
 import java.awt.event.AdjustmentEvent;
@@ -17,6 +25,16 @@ import net.miginfocom.swing.MigLayout;
 
 public class Chat_Body extends javax.swing.JPanel {
 
+    private Model_User_Account user;
+
+    public Model_User_Account getUser() {
+        return user;
+    }
+
+    public void setUser(Model_User_Account user) {
+        this.user = user;
+    }
+    
     public Chat_Body() {
         initComponents();
         init();
@@ -26,6 +44,13 @@ public class Chat_Body extends javax.swing.JPanel {
         body.setLayout(new MigLayout("fillx", "", "5[]5"));
         sp.setVerticalScrollBar(new ScrollBar());
         sp.getVerticalScrollBar().setBackground(Color.WHITE);
+        PublicEvent.getInstance().addEventBody(new EventBody(){
+            @Override
+            public void sendChatToHistoryChat(Model_HistoryChat data) {
+                Service.getInstance().getClient().emit("history", data.toJsonObject());
+            }
+            
+        });
 
     }
 
@@ -96,26 +121,37 @@ public class Chat_Body extends javax.swing.JPanel {
             Chat_Right item = new Chat_Right();
             item.setText(data.getText());
             body.add(item, "wrap, al right, w 100::80%");
-
             item.setTime();
+            //
+            Model_HistoryChat dataHs=new Model_HistoryChat(Service.getInstance().getUser().getUserID(), user.getUserID(), 1, data.getText(), "", "");
+            PublicEvent.getInstance().getEventBody().sendChatToHistoryChat(dataHs);
+            
+            
         } else if (data.getMessageType() == MessageType.EMOJI) {
             Chat_Right item = new Chat_Right();
             item.setEmoji(Emoji.getInstance().getImoji(Integer.valueOf(data.getText())).getIcon());
             body.add(item, "wrap, al right, w 100::80%");
-
-            item.setTime();
+            item.setTime();//
+            Model_HistoryChat dataHs=new Model_HistoryChat(Service.getInstance().getUser().getUserID(), user.getUserID(), 2, data.getText(), "","");
+            PublicEvent.getInstance().getEventBody().sendChatToHistoryChat(dataHs);
+            
         } else if (data.getMessageType() == MessageType.IMAGE) {
             Chat_Right item = new Chat_Right();
             item.setText("");
             item.setImage(data.getFile());
             body.add(item, "wrap, al right, w 100::80%");
-
             item.setTime();
+            //
+            Model_HistoryChat dataHs=new Model_HistoryChat(Service.getInstance().getUser().getUserID(), user.getUserID(), 3,"",data.getFile().getFile().getAbsolutePath(), "client_data/"+data.getFile().getFileID()+data.getFile().getFileExtensions());
+            PublicEvent.getInstance().getEventBody().sendChatToHistoryChat(dataHs);
         }else if(data.getMessageType()==MessageType.FILE){
             Chat_Right item = new Chat_Right();
             item.setText("");
             item.setFile("file name", "file size", data.getFile());
             body.add(item, "wrap, al right, w 100::80%");
+             //
+            Model_HistoryChat dataHs=new Model_HistoryChat(Service.getInstance().getUser().getUserID(), user.getUserID(), 4,"",data.getFile().getFile().getAbsolutePath(), "client_data/"+data.getFile().getFileID()+data.getFile().getFileExtensions());
+            PublicEvent.getInstance().getEventBody().sendChatToHistoryChat(dataHs);
         }
         repaint();
         revalidate();
@@ -139,6 +175,7 @@ public class Chat_Body extends javax.swing.JPanel {
         repaint();
         revalidate();
     }
+    
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

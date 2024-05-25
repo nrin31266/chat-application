@@ -52,6 +52,7 @@ public class Chat extends javax.swing.JPanel {
         System.out.println("Chat select id: "+user.getUserID());
         chatTitle.setUserName(user);
         chatBottom.setUser(user);
+        chatBody.setUser(user);
         chatBody.clearChat();
         
     }
