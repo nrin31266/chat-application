@@ -118,7 +118,7 @@ public class Menu_Left extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(204, 204, 204));
 
-        menu.setBackground(new java.awt.Color(247, 247, 247));
+        menu.setBackground(new java.awt.Color(255, 255, 255));
         menu.setOpaque(true);
         menu.setLayout(new java.awt.GridLayout(1, 3));
 
@@ -156,9 +156,10 @@ public class Menu_Left extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(menu, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(sp)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(menu, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
+                    .addComponent(sp))
                 .addGap(1, 1, 1))
         );
         layout.setVerticalGroup(
