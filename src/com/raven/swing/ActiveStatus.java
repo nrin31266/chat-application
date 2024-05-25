@@ -31,13 +31,15 @@ public class ActiveStatus extends  Component{
 
     @Override
     public void paint(Graphics g) {
-        if(active){
-            Graphics2D g2 = (Graphics2D) g;
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2.setColor(new Color(62, 165, 49));
-            g2.fillOval(0, (getHeight()/2)-4, 8, 8);
-        }
+    if(active){
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setColor(new Color(62, 165, 49));
+        int diameter = 8; // Kích thước đường kính mới
+        g2.fillOval(0, (getHeight()/2) - diameter/2, diameter, diameter);
     }
+}
+
     
     
 }

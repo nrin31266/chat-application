@@ -37,6 +37,7 @@ public class P_Register extends javax.swing.JPanel {
 
         jLabel2.setText("Password");
 
+        cmdRegister.setForeground(new java.awt.Color(0, 0, 0));
         cmdRegister.setText("Register");
         cmdRegister.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

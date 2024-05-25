@@ -32,6 +32,7 @@ public class P_Login extends javax.swing.JPanel {
 
         jLabel2.setText("Password");
 
+        cmdLogin.setForeground(new java.awt.Color(0, 0, 0));
         cmdLogin.setText("Login");
         cmdLogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
