@@ -2,6 +2,7 @@ package com.raven.component;
 
 import com.raven.event.PublicEvent;
 import com.raven.model.Model_User_Account;
+import com.raven.swing.ImageAvatar;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -11,15 +12,21 @@ public class Item_People extends javax.swing.JPanel {
     public Model_User_Account getUser() {
         return user;
     }
+
+    
     private boolean mouseOver;
     private final Model_User_Account user;
 
     public Item_People(Model_User_Account user) {
         this.user = user;
+        
+        
         initComponents();
         lbName.setText(user.getUserName());
         activeStatus.setActive(user.isStatus());
         init();
+        
+   
     }
 
     public void updateStatus() {
@@ -28,6 +35,11 @@ public class Item_People extends javax.swing.JPanel {
     }
 
     private void init() {
+        if(user.getImage()!=null && !user.getImage().equals("")){
+            imageAvatar.setImage(PublicEvent.getInstance().getEventProfile().createImage(user.getImage()));
+            imageAvatar.repaint();
+        }
+        
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent me) {
@@ -65,7 +77,7 @@ public class Item_People extends javax.swing.JPanel {
         imageAvatar.setForeground(new java.awt.Color(255, 255, 255));
         imageAvatar.setBorderColor(new java.awt.Color(255, 255, 255));
         imageAvatar.setBorderSize(0);
-        imageAvatar.setImage(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/testing/meme1.jpg"))); // NOI18N
+        imageAvatar.setImage(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/profile.png"))); // NOI18N
         imageAvatar.setPreferredSize(new java.awt.Dimension(50, 50));
 
         activeStatus.setActive(true);

@@ -96,7 +96,7 @@ public class Main extends javax.swing.JFrame {
         PublicEvent.getInstance().addEventProfile(new EventProfile() {
             @Override
             public Model_Profile getProfileMe(Model_User_Account data) {
-                System.err.println(data.toString());
+                
                 Service.getInstance().getClient().emit("get_info", data.toJsonObject(), new Ack() {
                     @Override
                     public void call(Object... os) {
@@ -133,6 +133,7 @@ public class Main extends javax.swing.JFrame {
                     return imageIcon;
                 } catch (IllegalArgumentException e) {
                     // Xử lý nếu có lỗi trong quá trình giải mã Base64
+                    System.out.println("String anh loi gi r");
                     e.printStackTrace(); // Hoặc thực hiện xử lý lỗi khác phù hợp
                     return null;
                 }
