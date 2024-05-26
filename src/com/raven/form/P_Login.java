@@ -2,6 +2,8 @@ package com.raven.form;
 
 import com.raven.event.PublicEvent;
 import com.raven.model.Model_Login;
+import java.awt.Color;
+import javax.swing.border.Border;
 
 public class P_Login extends javax.swing.JPanel {
 

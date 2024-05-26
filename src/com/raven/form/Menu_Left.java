@@ -3,6 +3,7 @@ package com.raven.form;
 import com.raven.component.Item_People;
 import com.raven.event.EventMenuLeft;
 import com.raven.event.PublicEvent;
+import com.raven.model.Model_Profile;
 import com.raven.model.Model_User_Account;
 import com.raven.swing.ScrollBar;
 import java.awt.Component;
@@ -14,6 +15,15 @@ public class Menu_Left extends javax.swing.JPanel {
 
     private List<Model_User_Account> userAccount;
 
+    private Model_Profile model_profile;
+
+    public Model_Profile getModel_profile() {
+        return model_profile;
+    }
+
+    public void setModel_profile(Model_Profile model_profile) {
+        this.model_profile = model_profile;
+    }
     public Menu_Left() {
         initComponents();
         init();

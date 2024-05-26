@@ -21,7 +21,7 @@ public class Chat_Title extends javax.swing.JPanel {
         if (user.isStatus()) {
             statusActive();
         } else {
-            setStatusText("Offline");
+            setStatusText("Ngoại tuyến");
         }
     }
 
@@ -31,13 +31,13 @@ public class Chat_Title extends javax.swing.JPanel {
             if (user.isStatus()) {
                 statusActive();
             } else {
-                setStatusText("Offline");
+                setStatusText("Ngoại tuyến");
             }
         }
     }
 
     private void statusActive() {
-        lbStatus.setText("Active now");
+        lbStatus.setText("Trực tuyến");
         lbStatus.setForeground(new java.awt.Color(40, 147, 59));
     }
 

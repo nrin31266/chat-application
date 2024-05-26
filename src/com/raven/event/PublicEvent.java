@@ -10,6 +10,25 @@ public class PublicEvent {
     private EventMenuLeft eventMenuLeft;
     private EventDownFile eventDownFile;
     private EventBody eventBody;
+    private EventProfile eventProfile;
+    private EventViewProfile eventViewProfile;
+
+    public EventViewProfile getEventViewProfile() {
+        return eventViewProfile;
+    }
+
+    public void addEventViewProfile(EventViewProfile eventViewProfile) {
+        this.eventViewProfile = eventViewProfile;
+    }
+    
+    
+    public EventProfile getEventProfile() {
+        return eventProfile;
+    }
+
+    public void addEventProfile(EventProfile eventProfile) {
+        this.eventProfile = eventProfile;
+    }
      
     public EventBody getEventBody() {
         return eventBody;

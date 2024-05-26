@@ -66,9 +66,30 @@ public class Model_User_Account {
         }
     }
 
+    public JSONObject toJsonObject() {
+        try {
+            JSONObject json = new JSONObject();
+            json.put("userID", userID);
+            json.put("userName", userName);
+            json.put("gender", gender);
+            json.put("image", image);
+            json.put("status", status);
+            return json;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     private int userID;
     private String userName;
     private String gender;
     private String image;
     private boolean status;
+
+    @Override
+    public String toString() {
+        return "Model_User_Account{" + "userID=" + userID + ", userName=" + userName + ", gender=" + gender + ", image=" + image + ", status=" + status + '}';
+    }
+    
 }

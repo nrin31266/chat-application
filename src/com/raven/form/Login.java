@@ -34,13 +34,18 @@ public class Login extends javax.swing.JPanel {
                             public void call(Object... os) {
                                 try {
                                     PublicEvent.getInstance().getEventMain().showLoading(true);
-                                    Thread.sleep(400);
+                                    Thread.sleep(300);
                                     System.err.println("Da nhan dc phan hoi tu server");
                                     if (os.length > 0) {
                                         boolean action = (Boolean) os[0];
                                         
                                         if (action) {
-                                            Service.getInstance().setUser(new Model_User_Account(os[1]));
+                                            Model_User_Account user= new Model_User_Account(os[1]);
+                                            Service.getInstance().setUser(user);
+                                            
+                                            PublicEvent.getInstance().getEventProfile().getProfileMe(user);
+                                            System.err.println("Da chay qu cau lenh goi profile");
+                                            
                                             PublicEvent.getInstance().getEventMain().showLoading(false);
                                             PublicEvent.getInstance().getEventMain().initChat();
                                         } else {

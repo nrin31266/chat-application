@@ -32,7 +32,7 @@ public class Chat extends javax.swing.JPanel {
                 chatBody.addItemRight(data);
 
             }
-
+            
             @Override
             public void receiveMessage(Model_Receive_Message data) {
                 if (chatBottom.getUser() != null) {
@@ -72,11 +72,11 @@ public class Chat extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 727, Short.MAX_VALUE)
+            .addGap(0, 379, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 681, Short.MAX_VALUE)
+            .addGap(0, 353, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 

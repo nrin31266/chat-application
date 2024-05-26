@@ -47,13 +47,21 @@ public class Chat_Bottom extends javax.swing.JPanel {
         JScrollPane scroll = new JScrollPane();
         scroll.setBorder(null);
         JIMSendTextPane txt = new JIMSendTextPane();
+
         txt.addKeyListener(new KeyAdapter() {
             @Override
-            public void keyTyped(KeyEvent ke) {
+            public void keyPressed(KeyEvent ke) {
                 refresh();
-                if (ke.getKeyChar() == 10 && ke.isControlDown()) {
-                    //  user press controll + enter
-                    eventSend(txt);
+                if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
+                    if (ke.isShiftDown()) {
+                        // Add a new line when Shift + Enter is pressed
+                        txt.replaceSelection("\n");
+                        ke.consume(); // Prevent the default action of Enter key
+                    } else {
+                        // Send the message when Enter is pressed
+                        eventSend(txt);
+                        ke.consume(); // Prevent the default action of Enter key
+                    }
                 }
             }
         });
@@ -103,9 +111,10 @@ public class Chat_Bottom extends javax.swing.JPanel {
         panel.add(cmdMore);
         panel.add(cmd);
         add(panel, "wrap");
+        ////
         panelMore = new Panel_More();
         panelMore.setVisible(false);
-        add(panelMore, "dock south,h 0!");  //  set height 0
+         add(panelMore, "dock south,h 0!");  //  set height 0
     }
 
     private void eventSend(JIMSendTextPane txt) {

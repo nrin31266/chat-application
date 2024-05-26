@@ -10,14 +10,17 @@ import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatDraculaContras
 import com.raven.event.EventDownFile;
 import com.raven.event.EventImageView;
 import com.raven.event.EventMain;
+import com.raven.event.EventProfile;
 import com.raven.event.PublicEvent;
 import com.raven.form.Chat;
 import com.raven.model.Model_File_Sender;
+import com.raven.model.Model_Profile;
 import com.raven.model.Model_Receive_File;
 import com.raven.model.Model_Receive_Image;
 import com.raven.model.Model_User_Account;
 import com.raven.service.Service;
 import com.raven.swing.ComponentResizer;
+import io.socket.client.Ack;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
@@ -27,6 +30,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Base64;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
@@ -47,13 +51,16 @@ public class Main extends javax.swing.JFrame {
         setIconImage(new ImageIcon(getClass().getResource("/com/raven/icon/icon.png")).getImage());
         ComponentResizer com = new ComponentResizer();
         com.registerComponent(this);
-        com.setMinimumSize(new Dimension(100, 100));
+        com.setMinimumSize(new Dimension(660, 460));
         com.setMaximumSize(Toolkit.getDefaultToolkit().getScreenSize());
         com.setSnapSize(new Dimension(10, 10));
         login.setVisible(true);
         loading.setVisible(false);
         vIew_Image.setVisible(false);
         home.setVisible(false);
+        cmdMaximize.setVisible(false);
+        view_Profile.setVisible(false);
+
         initEvent();
         Service.getInstance().startServer();
     }
@@ -86,6 +93,54 @@ public class Main extends javax.swing.JFrame {
                 home.updateUser(user);
             }
         });
+        PublicEvent.getInstance().addEventProfile(new EventProfile() {
+            @Override
+            public Model_Profile getProfileMe(Model_User_Account data) {
+                System.err.println(data.toString());
+                Service.getInstance().getClient().emit("get_info", data.toJsonObject(), new Ack() {
+                    @Override
+                    public void call(Object... os) {
+                        if (os.length > 0) {
+                            Model_Profile dataPro = (Model_Profile) new Model_Profile(os[0]);
+                            home.setModelProfile(dataPro);
+                            System.out.println("Nhan profile thanh cong");
+                        } else {
+                            System.out.println("Ko nhan dc thong tin ca nhan");
+                        }
+                    }
+
+                });
+                return null;
+            }
+
+            @Override
+            public void viewProfile(Model_Profile data) {
+                view_Profile.viewProfile();
+            }
+
+            @Override
+            public Icon createImage(String imageBase64) {
+                if (imageBase64 == null || imageBase64.isEmpty()) {
+                    // Xử lý trường hợp không có dữ liệu hình ảnh
+                    return null;
+                }
+                try {
+                    // Chuyển từ chuỗi Base64 thành mảng byte
+                    byte[] decodedImageBytes = Base64.getDecoder().decode(imageBase64);
+
+                    // Tạo một ImageIcon từ mảng byte
+                    ImageIcon imageIcon = new ImageIcon(decodedImageBytes);
+                    return imageIcon;
+                } catch (IllegalArgumentException e) {
+                    // Xử lý nếu có lỗi trong quá trình giải mã Base64
+                    e.printStackTrace(); // Hoặc thực hiện xử lý lỗi khác phù hợp
+                    return null;
+                }
+
+            }
+
+        });
+
         PublicEvent.getInstance().addEventImageView(new EventImageView() {
             @Override
             public void viewImage(Icon image, String mode, Model_Receive_Image data) {
@@ -97,24 +152,16 @@ public class Main extends javax.swing.JFrame {
                 String filePath = "client_data/" + data.getFileID() + data.getFileExtension();
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
+                String defaultFileName = data.getFileName();
 
-                // Lấy tên file từ model và đặt làm tên file mặc định
-                String defaultFileName = data.getFileName(); // Đổi thành tên file từ model của bạn
-
-                // Đặt tên file mặc định cho hộp thoại lưu tệp
                 fileChooser.setSelectedFile(new File(defaultFileName));
 
-                // Hiển thị hộp thoại và lấy kết quả
                 int result = fileChooser.showSaveDialog(Main.this);
 
-                // Xử lý kết quả
                 if (result == JFileChooser.APPROVE_OPTION) {
                     File selectedFile = fileChooser.getSelectedFile();
 
-                    // Thực hiện kiểm tra và tạo tên tệp duy nhất trong thư mục được chọn
                     selectedFile = getUniqueFileName(selectedFile);
-
-                    // Thực hiện các thao tác lưu tệp tại selectedFile
                     try {
                         Files.copy(new File(filePath).toPath(), selectedFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
                         System.out.println("File saved successfully: " + selectedFile.getAbsolutePath());
@@ -133,7 +180,6 @@ public class Main extends javax.swing.JFrame {
                     File file = new File(filePath).getAbsoluteFile();
                     String absolutePath = file.getAbsolutePath();
 
-                    // Tạo lệnh để mở File Explorer và chọn tệp
                     String command = "explorer.exe /select," + absolutePath;
 
                     try {
@@ -263,9 +309,11 @@ public class Main extends javax.swing.JFrame {
         body = new javax.swing.JLayeredPane();
         loading = new com.raven.form.Loading();
         login = new com.raven.form.Login();
+        view_Profile = new com.raven.form.View_Profile();
         vIew_Image = new com.raven.form.VIew_Image();
         home = new com.raven.form.Home();
         title_a = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
         title_m = new javax.swing.JPanel();
         cmdClose = new com.raven.component.OptionButton();
         cmdMaximize = new com.raven.component.OptionButton();
@@ -281,21 +329,32 @@ public class Main extends javax.swing.JFrame {
         body.setLayout(new java.awt.CardLayout());
         body.add(loading, "card5");
         body.add(login, "card4");
+        body.add(view_Profile, "card6");
         body.setLayer(vIew_Image, javax.swing.JLayeredPane.POPUP_LAYER);
         body.add(vIew_Image, "card3");
         body.add(home, "card2");
 
         title_a.setBackground(new java.awt.Color(219, 232, 249));
+        title_a.setMinimumSize(new java.awt.Dimension(50, 0));
+        title_a.setPreferredSize(new java.awt.Dimension(50, 20));
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 10)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("Chat App");
+        jLabel1.setPreferredSize(new java.awt.Dimension(50, 20));
 
         javax.swing.GroupLayout title_aLayout = new javax.swing.GroupLayout(title_a);
         title_a.setLayout(title_aLayout);
         title_aLayout.setHorizontalGroup(
             title_aLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 50, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, title_aLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         title_aLayout.setVerticalGroup(
             title_aLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         title_m.setBackground(new java.awt.Color(219, 232, 249));
@@ -373,15 +432,15 @@ public class Main extends javax.swing.JFrame {
             title_mLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, title_mLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(cmdMinimize, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
                 .addComponent(cmdMaximize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cmdMinimize, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cmdClose, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         title_mLayout.setVerticalGroup(
             title_mLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(cmdMaximize, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(cmdMaximize, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 22, Short.MAX_VALUE)
             .addComponent(cmdMinimize, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(cmdClose, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -389,8 +448,8 @@ public class Main extends javax.swing.JFrame {
         javax.swing.GroupLayout backgroundLayout = new javax.swing.GroupLayout(background);
         background.setLayout(backgroundLayout);
         backgroundLayout.setHorizontalGroup(
-            backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(body, javax.swing.GroupLayout.DEFAULT_SIZE, 722, Short.MAX_VALUE)
+            backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+            .addComponent(body, javax.swing.GroupLayout.DEFAULT_SIZE, 690, Short.MAX_VALUE)
             .addGroup(backgroundLayout.createSequentialGroup()
                 .addComponent(title_a, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
@@ -401,9 +460,9 @@ public class Main extends javax.swing.JFrame {
             .addGroup(backgroundLayout.createSequentialGroup()
                 .addGroup(backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(title_m, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(title_a, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(title_a, javax.swing.GroupLayout.DEFAULT_SIZE, 22, Short.MAX_VALUE))
                 .addGap(0, 0, 0)
-                .addComponent(body, javax.swing.GroupLayout.DEFAULT_SIZE, 457, Short.MAX_VALUE)
+                .addComponent(body, javax.swing.GroupLayout.DEFAULT_SIZE, 438, Short.MAX_VALUE)
                 .addGap(0, 0, 0))
         );
 
@@ -485,7 +544,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_cmdMinimizeActionPerformed
 
     private void cmdMaximizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdMaximizeActionPerformed
-        
+
         if (this.getExtendedState() == JFrame.NORMAL) {
             this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         } else {
@@ -517,10 +576,12 @@ public class Main extends javax.swing.JFrame {
     private com.raven.component.OptionButton cmdMaximize;
     private com.raven.component.OptionButton cmdMinimize;
     private com.raven.form.Home home;
+    private javax.swing.JLabel jLabel1;
     private com.raven.form.Loading loading;
     private com.raven.form.Login login;
     private javax.swing.JPanel title_a;
     private javax.swing.JPanel title_m;
     private com.raven.form.VIew_Image vIew_Image;
+    private com.raven.form.View_Profile view_Profile;
     // End of variables declaration//GEN-END:variables
 }

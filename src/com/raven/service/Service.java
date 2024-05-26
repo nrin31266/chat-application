@@ -80,6 +80,7 @@ public class Service {
                     PublicEvent.getInstance().getEventChat().receiveMessage(message);
                 }
             });
+            
             client.open();
         } catch (URISyntaxException e) {
             error(e);
