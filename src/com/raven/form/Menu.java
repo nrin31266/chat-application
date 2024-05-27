@@ -65,6 +65,13 @@ public class Menu extends javax.swing.JPanel {
         if(modelProfile==null){
             modelProfile= new Model_Profile();
             modelProfile.setUserID(Service.getInstance().getUser().getUserID());
+            modelProfile.setUserName(Service.getInstance().getUser().getUserName());
+            modelProfile.setName("");
+            modelProfile.setAddress("");
+            modelProfile.setEmail("");
+            modelProfile.setGender("");
+            modelProfile.setPhoneNumber("");
+            modelProfile.setDate("");
         }
         PublicEvent.getInstance().getEventViewProfile().setProfile(modelProfile, 1);
         PublicEvent.getInstance().getEventProfile().viewProfile();

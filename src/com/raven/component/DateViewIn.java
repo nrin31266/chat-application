@@ -4,16 +4,43 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.Calendar;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
 
 public class DateViewIn extends javax.swing.JPanel {
+
+    public JComboBox<String> getComBoxDay() {
+        return comBoxDay;
+    }
+
+    public void setComBoxDay(JComboBox<String> comBoxDay) {
+        this.comBoxDay = comBoxDay;
+    }
+
+    public JComboBox<String> getComboBoxMon() {
+        return comboBoxMon;
+    }
+
+    public void setComboBoxMon(JComboBox<String> comboBoxMon) {
+        this.comboBoxMon = comboBoxMon;
+    }
+
+    public JComboBox<String> getComboBoxYear() {
+        return comboBoxYear;
+    }
+
+    public void setComboBoxYear(JComboBox<String> comboBoxYear) {
+        this.comboBoxYear = comboBoxYear;
+    }
+    
     public DateViewIn() {
         initComponents();
         init();
     }
+    
     private void init() {
         // Khởi tạo comboBoxMon với các tháng
-        String[] months = new String[] {"Jan", "Feb", "Mar", "Apr", "May", "Jun",
-                "July", "Aug", "Sept", "Oct", "Nov", "Dec"};
+        String[] months = new String[] {"01", "02", "03", "04", "05", "06",
+                "07", "08", "09", "10", "11", "12"};
         comboBoxMon.setModel(new DefaultComboBoxModel<>(months));
         
         // Khởi tạo comboBoxYear với các năm từ 1900 đến năm hiện tại
@@ -22,6 +49,7 @@ public class DateViewIn extends javax.swing.JPanel {
         for (int i = currentYear; i >= 1900; i--) {
             yearModel.addElement(String.valueOf(i));
         }
+        
         comboBoxYear.setModel(yearModel);
 
         // Khởi tạo comboBoxDay với các ngày
@@ -61,6 +89,7 @@ public class DateViewIn extends javax.swing.JPanel {
         for (int i = 1; i <= daysInMonth; i++) {
             dayModel.addElement(String.valueOf(i));
         }
+        
         comBoxDay.setModel(dayModel);
     }
     
@@ -76,6 +105,7 @@ public class DateViewIn extends javax.swing.JPanel {
         Year = new javax.swing.JLabel();
         comboBoxYear = new javax.swing.JComboBox<>();
 
+        setBackground(new java.awt.Color(255, 255, 255));
         setMinimumSize(new java.awt.Dimension(296, 30));
         setPreferredSize(new java.awt.Dimension(266, 30));
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.X_AXIS));

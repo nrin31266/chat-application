@@ -1,35 +1,89 @@
+
 package com.raven.form;
 
+import com.raven.app.MessageType;
 import com.raven.event.EventViewProfile;
 import com.raven.event.PublicEvent;
+import com.raven.main.Main;
+import com.raven.model.Model_Image_Update;
+import com.raven.model.Model_Name_Update;
 import com.raven.model.Model_Profile;
+import com.raven.model.Model_Profile_Update;
+import com.raven.model.Model_Receive_Image;
+import com.raven.model.Model_Send_Message;
+import com.raven.service.Service;
 import com.raven.swing.ScrollBar;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Label;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
+import java.util.Base64;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
+import javax.swing.filechooser.FileFilter;
+import java.io.FileInputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class View_Profile extends javax.swing.JPanel {
-    private final String pathAvatarBasic="/com/raven/icon/profile.png";
-    private final String pathCoverArtBasic="/com/raven/icon/testing/dog.jpg";
-    
+
+    private final String pathAvatarBasic = "/com/raven/icon/profile.png";
+    private final String pathCoverArtBasic = "/com/raven/icon/testing/dog.jpg";
+    private Model_Profile modelProfile;
+
+    public Model_Profile getModelProfile() {
+        return modelProfile;
+    }
+
+    public void setModelProfile(Model_Profile modelProfile) {
+        this.modelProfile = modelProfile;
+    }
+
     public View_Profile() {
         initComponents();
-        initEdit();
-        scroll.setVerticalScrollBar(new ScrollBar());
-        setOpaque(false);
-        stackAvatarOnCoverArt();
-        info2.setVisible(false);
-        info1.setVisible(true);
-        
+        init();
+
         PublicEvent.getInstance().addEventViewProfile(new EventViewProfile() {
             @Override
             public void setProfile(Model_Profile dataPr, int mode) {
+                modelProfile = dataPr;
+                //System.out.println(dataPr.toString());        
                 refreshView();
+                setDataView();
+                //setView
+                info2.setVisible(false);
+                info1.setVisible(true);
+                panelName2.setVisible(false);
+                panelName1.setVisible(true);
+                cmdEditProfileClose.setVisible(false);
+                cmdEditProfileOk.setVisible(false);
+                //
+
+                //
+                if (dataPr.getName() != null && !dataPr.getName().equals("")) {
+                    lbSetName.setText(dataPr.getName());
+                    txtSetName.setText(dataPr.getName());
+                }
                 if (mode == 1) {
+
+                    //
+                    setDataViewEdit();
+                    cmdSetCoverArt.setVisible(true);
+                    cmdEditName.setVisible(true);
+                    cmdEditProfile.setVisible(true);
+                    //setEdit
+                    //
                     if (dataPr.getImage() != null && !dataPr.getImage().isEmpty()) {
                         avt.setImage(PublicEvent.getInstance().getEventProfile().createImage(dataPr.getImage()));
                         avt.repaint();
@@ -38,7 +92,15 @@ public class View_Profile extends javax.swing.JPanel {
                         coverArt.setImage(PublicEvent.getInstance().getEventProfile().createImage(dataPr.getCoverArt()));
                         coverArt.repaint();
                     }
-                }else if(mode==2){
+                } else if (mode == 2) {
+                    //Loại bỏ những thứ khi xem
+                    cmdSetCoverArt.setVisible(false);
+                    cmdEditName.setVisible(false);
+                    cmdEditProfile.setVisible(false);
+                    cmdEditProfileClose.setVisible(false);
+                    cmdEditProfileOk.setVisible(false);
+                    //
+
                     if (dataPr.getImage() != null && !dataPr.getImage().isEmpty()) {
                         avt.setImage(PublicEvent.getInstance().getEventProfile().createImage(dataPr.getImage()));
                         avt.repaint();
@@ -52,10 +114,43 @@ public class View_Profile extends javax.swing.JPanel {
 
         });
     }
-    public void initEdit(){
+
+    public void refreshView() {
+        avt.setImage(new ImageIcon(getClass().getResource(pathAvatarBasic)));
+        coverArt.setImage(new ImageIcon(getClass().getResource(pathCoverArtBasic)));
+        lbSetName.setText("Chưa đặt tên");
+        viewOutAddress.getLbContent().setText("Chưa cập nhập");
+        viewOutDate.getLbContent().setText("Chưa cập nhập");
+        viewOutEmail.getLbContent().setText("Chưa cập nhập");
+        viewOutGender.getLbContent().setText("Chưa cập nhập");
+        viewOutPhone.getLbContent().setText("Chưa cập nhập");
+
+    }
+
+    public void init() {
+        scroll.setVerticalScrollBar(new ScrollBar());
+        setOpaque(false);
+        stackAvatarOnCoverArt();
+        info2.setVisible(false);
+        info1.setVisible(true);
+        panelName2.setVisible(false);
+        panelName1.setVisible(true);
+        cmdEditProfileClose.setVisible(false);
+        cmdEditProfileOk.setVisible(false);
+        //
         viewPhone.getLbName().setText("Sđt");
         viewEmail.getLbName().setText("Email");
         viewAddress.getLbName().setText("Địa chỉ");
+        viewUserName.getLbName().setText("Tài khoản");
+        viewUserName.setVisible(false);
+        //
+        viewOutAddress.getLbTitle().setText("Địa chỉ");
+        viewOutDate.getLbTitle().setText("Ngày sinh");
+        viewOutPhone.getLbTitle().setText("Số đt");
+        viewOutEmail.getLbTitle().setText("Email");
+        viewOutGender.getLbTitle().setText("Giới tính");
+        //
+        lbError.setVisible(false);
     }
 
     public void stackAvatarOnCoverArt() {
@@ -74,10 +169,128 @@ public class View_Profile extends javax.swing.JPanel {
     public void viewProfile() {
         setVisible(true);
     }
-    public void refreshView(){
-        avt.setImage(new ImageIcon(getClass().getResource(pathAvatarBasic)));
-        coverArt.setImage(new ImageIcon(getClass().getResource(pathCoverArtBasic)));
-        
+
+    private void setDataViewEdit() {
+        if (modelProfile == null) {
+            return;
+        }
+        viewUserName.getTxtContent().setText(modelProfile.getUserName());
+        //
+        if (modelProfile.getGender() != null && !modelProfile.getGender().isEmpty()) {
+            String gender = modelProfile.getGender();
+            if (gender.equals("Nam")) {
+                genderViewIn.getComboBoxGender().setSelectedItem("Nam");
+            } else if (gender.equals("Nữ")) {
+                genderViewIn.getComboBoxGender().setSelectedItem("Nữ");
+            } else {
+                genderViewIn.getComboBoxGender().setSelectedItem("Khác");
+            }
+        } else {
+            genderViewIn.getComboBoxGender().setSelectedItem("Không");
+        }
+        //
+        if (modelProfile.getDate() != null && !modelProfile.getDate().isEmpty()) {
+            String dateStr = modelProfile.getDate();
+            // Sử dụng split để tách chuỗi thành các phần tử năm, tháng, ngày
+            String[] dateParts = dateStr.split("-");
+
+            // Gán các phần tử trong mảng vào các biến tương ứng
+            String year = dateParts[0];
+            String month = dateParts[1];
+            String day = dateParts[2];
+
+            // Đặt giá trị mặc định cho comboBoxMon
+            dateViewIn.getComboBoxMon().setSelectedItem(month);
+            // Đặt giá trị mặc định cho comboBoxYear
+            dateViewIn.getComboBoxYear().setSelectedItem(year);
+            // Đặt giá trị mặc định cho comboBoxDay
+            dateViewIn.getComBoxDay().setSelectedItem(day);
+        }
+        viewPhone.getTxtContent().setText(modelProfile.getPhoneNumber());
+        viewEmail.getTxtContent().setText(modelProfile.getEmail());
+        viewAddress.getTxtContent().setText(modelProfile.getAddress());
+
+    }
+
+    private void setDataView() {
+        if (modelProfile == null) {
+            return;
+        }
+        //
+        if (modelProfile.getGender() != null && !modelProfile.getGender().isEmpty()) {
+            if (modelProfile.getGender().equals("Không")) {
+                viewOutGender.getLbContent().setText("Chưa cập nhập");
+            } else {
+                viewOutGender.getLbContent().setText(modelProfile.getGender());
+            }
+        } else {
+            viewOutGender.getLbContent().setText("Chưa cập nhập");
+        }
+        //
+        if (modelProfile.getDate() != null && !modelProfile.getDate().isEmpty()) {
+            String dateStr = modelProfile.getDate();
+            // Sử dụng split để tách chuỗi thành các phần tử năm, tháng, ngày
+            String[] dateParts = dateStr.split("-");
+
+            // Gán các phần tử trong mảng vào các biến tương ứng
+            String year = dateParts[0];
+            String month = dateParts[1];
+            String day = dateParts[2];
+
+            viewOutDate.getLbContent().setText(day + "/" + month + "/" + year);
+        } else {
+            viewOutDate.getLbContent().setText("Chưa cập nhập");
+        }
+        if (modelProfile.getPhoneNumber() != null && !modelProfile.getPhoneNumber().isEmpty()) {
+            viewOutPhone.getLbContent().setText(modelProfile.getPhoneNumber());
+        } else {
+            viewOutPhone.getLbContent().setText("Chưa cập nhập");
+        }
+        if (modelProfile.getEmail() != null && !modelProfile.getEmail().isEmpty()) {
+            viewOutEmail.getLbContent().setText(modelProfile.getEmail());
+        } else {
+            viewOutEmail.getLbContent().setText("Chưa cập nhập");
+        }
+        if (modelProfile.getAddress() != null && !modelProfile.getAddress().isEmpty()) {
+            viewOutAddress.getLbContent().setText(modelProfile.getAddress());
+        } else {
+            viewOutAddress.getLbContent().setText("Chưa cập nhập");
+        }
+    }
+
+    private boolean checkDataUpdateProfile() {
+        String userName = viewUserName.getTxtContent().getText();
+        String gender = "";
+        String date = "";
+        String phone = viewPhone.getTxtContent().getText();
+        String email = viewEmail.getTxtContent().getText();
+        String address = viewAddress.getTxtContent().getText();
+        if (!modelProfile.getDate().equals("")) {
+            date = dateViewIn.getComboBoxYear().getSelectedItem().toString() + "-" + dateViewIn.getComboBoxMon().getSelectedItem().toString() + "-" + dateViewIn.getComBoxDay().getSelectedItem().toString();
+        }
+        if (!modelProfile.getGender().equals("")) {
+            gender = genderViewIn.getComboBoxGender().getSelectedItem().toString();
+        }
+        if (userName.equals(modelProfile.getUserName())
+                && gender.equals(modelProfile.getGender())
+                && date.equals(modelProfile.getDate())
+                && phone.equals(modelProfile.getPhoneNumber())
+                && email.equals(modelProfile.getEmail())
+                && address.equals(modelProfile.getAddress())) {
+            lbError.setVisible(true);
+            lbError.setText("Information hasn't changed!");
+            return false;
+        }
+        lbError.setVisible(false);
+        return true;
+    }
+
+    private boolean isBlankOrWhitespace(String input) {
+        // Loại bỏ dấu cách ở đầu và cuối chuỗi
+        String trimmedInput = input.trim();
+
+        // Kiểm tra xem chuỗi sau khi loại bỏ dấu cách có rỗng không
+        return trimmedInput.isEmpty();
     }
 
     @SuppressWarnings("unchecked")
@@ -90,21 +303,37 @@ public class View_Profile extends javax.swing.JPanel {
         cmdClose = new com.raven.component.OptionButton();
         scroll = new javax.swing.JScrollPane();
         MenuList = new javax.swing.JLayeredPane();
+        layoutName = new javax.swing.JLayeredPane();
+        panelName1 = new javax.swing.JPanel();
+        lbSetName = new javax.swing.JLabel();
+        cmdEditName = new com.raven.component.OptionButton();
+        panelName2 = new javax.swing.JPanel();
+        txtSetName = new javax.swing.JTextField();
+        cmdEditNameClose = new com.raven.component.OptionButton();
+        cmdEditNameOk = new com.raven.component.OptionButton();
         coverArt = new com.raven.swing.PictureCoverArt();
         avt = new com.raven.swing.ImageAvatar();
-        jPanel1 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
+        cmdSetCoverArt = new com.raven.component.OptionButton();
         information = new javax.swing.JLayeredPane();
         info1 = new javax.swing.JPanel();
+        viewOutGender = new com.raven.component.ViewOut();
+        viewOutDate = new com.raven.component.ViewOut();
+        viewOutPhone = new com.raven.component.ViewOut();
+        viewOutEmail = new com.raven.component.ViewOut();
+        viewOutAddress = new com.raven.component.ViewOut();
         info2 = new javax.swing.JPanel();
         genderViewIn = new com.raven.component.GenderViewIn();
         dateViewIn = new com.raven.component.DateViewIn();
         viewPhone = new com.raven.component.ViewIn();
         viewEmail = new com.raven.component.ViewIn();
         viewAddress = new com.raven.component.ViewIn();
+        lbError = new javax.swing.JLabel();
+        viewUserName = new com.raven.component.ViewIn();
         title1 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         cmdEditProfile = new com.raven.component.OptionButton();
+        cmdEditProfileClose = new com.raven.component.OptionButton();
+        cmdEditProfileOk = new com.raven.component.OptionButton();
 
         addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -155,47 +384,121 @@ public class View_Profile extends javax.swing.JPanel {
         MenuList.setForeground(new java.awt.Color(255, 255, 255));
         MenuList.setOpaque(true);
 
+        layoutName.setLayout(new java.awt.CardLayout());
+
+        panelName1.setBackground(new java.awt.Color(255, 255, 255));
+        panelName1.setLayout(new javax.swing.BoxLayout(panelName1, javax.swing.BoxLayout.LINE_AXIS));
+
+        lbSetName.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lbSetName.setForeground(new java.awt.Color(0, 0, 0));
+        lbSetName.setMaximumSize(new java.awt.Dimension(10000, 36));
+        lbSetName.setPreferredSize(new java.awt.Dimension(100, 36));
+        panelName1.add(lbSetName);
+
+        cmdEditName.setIconSelected(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/pen.png"))); // NOI18N
+        cmdEditName.setMaximumSize(new java.awt.Dimension(20, 20));
+        cmdEditName.setMinimumSize(new java.awt.Dimension(20, 20));
+        cmdEditName.setPreferredSize(new java.awt.Dimension(20, 20));
+        cmdEditName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmdEditNameActionPerformed(evt);
+            }
+        });
+        panelName1.add(cmdEditName);
+
+        layoutName.add(panelName1, "card3");
+
+        panelName2.setBackground(new java.awt.Color(255, 255, 255));
+        panelName2.setLayout(new javax.swing.BoxLayout(panelName2, javax.swing.BoxLayout.X_AXIS));
+
+        txtSetName.setMinimumSize(new java.awt.Dimension(200, 36));
+        txtSetName.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                // txtSetNameMouseClicked(evt);
+            }
+        });
+        txtSetName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                // txtSetNameActionPerformed(evt);
+            }
+        });
+        panelName2.add(txtSetName);
+
+        cmdEditNameClose.setIconSelected(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/delete_1.png"))); // NOI18N
+        cmdEditNameClose.setMaximumSize(new java.awt.Dimension(20, 20));
+        cmdEditNameClose.setPreferredSize(new java.awt.Dimension(20, 36));
+        cmdEditNameClose.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmdEditNameCloseActionPerformed(evt);
+            }
+        });
+        panelName2.add(cmdEditNameClose);
+
+        cmdEditNameOk.setIconSelected(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/tick_ok.png"))); // NOI18N
+        cmdEditNameOk.setMaximumSize(new java.awt.Dimension(20, 20));
+        cmdEditNameOk.setMinimumSize(new java.awt.Dimension(20, 20));
+        cmdEditNameOk.setPreferredSize(new java.awt.Dimension(20, 20));
+        cmdEditNameOk.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmdEditNameOkActionPerformed(evt);
+            }
+        });
+        panelName2.add(cmdEditNameOk);
+
+        layoutName.add(panelName2, "card2");
+
         coverArt.setImage(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/testing/dog.jpg"))); // NOI18N
 
         avt.setBorderColor(new java.awt.Color(255, 255, 255));
         avt.setBorderSize(4);
         avt.setImage(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/profile.png"))); // NOI18N
         avt.setPreferredSize(new java.awt.Dimension(100, 100));
+        avt.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                avtMouseClicked(evt);
+            }
+        });
         coverArt.add(avt);
         avt.setBounds(0, 100, 100, 100);
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel2.setText("Name");
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(85, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(16, 16, 16))
-        );
+        cmdSetCoverArt.setIconSelected(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/pictureSelected.png"))); // NOI18N
+        cmdSetCoverArt.setMaximumSize(new java.awt.Dimension(30, 30));
+        cmdSetCoverArt.setMinimumSize(new java.awt.Dimension(30, 30));
+        cmdSetCoverArt.setPreferredSize(new java.awt.Dimension(30, 30));
+        cmdSetCoverArt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmdSetCoverArtActionPerformed(evt);
+            }
+        });
+        coverArt.add(cmdSetCoverArt);
+        cmdSetCoverArt.setBounds(0, 0, 20, 20);
 
         information.setLayout(new java.awt.CardLayout());
 
-        info1.setLayout(new javax.swing.BoxLayout(info1, javax.swing.BoxLayout.Y_AXIS));
+        info1.setBackground(new java.awt.Color(255, 255, 255));
+        info1.setLayout(new java.awt.GridLayout(10, 1));
+        info1.add(viewOutGender);
+        info1.add(viewOutDate);
+        info1.add(viewOutPhone);
+        info1.add(viewOutEmail);
+        info1.add(viewOutAddress);
+
         information.add(info1, "card2");
 
+        info2.setBackground(new java.awt.Color(255, 255, 255));
         info2.setLayout(new java.awt.GridLayout(10, 1));
         info2.add(genderViewIn);
         info2.add(dateViewIn);
         info2.add(viewPhone);
         info2.add(viewEmail);
         info2.add(viewAddress);
+
+        lbError.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lbError.setForeground(new java.awt.Color(255, 51, 51));
+        lbError.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbError.setText("Lỗi!");
+        info2.add(lbError);
+        info2.add(viewUserName);
 
         information.add(info2, "card3");
 
@@ -218,23 +521,48 @@ public class View_Profile extends javax.swing.JPanel {
             }
         });
 
+        cmdEditProfileClose.setIconSelected(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/delete_1.png"))); // NOI18N
+        cmdEditProfileClose.setMaximumSize(new java.awt.Dimension(20, 20));
+        cmdEditProfileClose.setPreferredSize(new java.awt.Dimension(20, 36));
+        cmdEditProfileClose.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmdEditProfileCloseActionPerformed(evt);
+            }
+        });
+
+        cmdEditProfileOk.setIconSelected(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/tick_ok.png"))); // NOI18N
+        cmdEditProfileOk.setMaximumSize(new java.awt.Dimension(20, 20));
+        cmdEditProfileOk.setMinimumSize(new java.awt.Dimension(20, 20));
+        cmdEditProfileOk.setPreferredSize(new java.awt.Dimension(20, 20));
+        cmdEditProfileOk.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmdEditProfileOkActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout title1Layout = new javax.swing.GroupLayout(title1);
         title1.setLayout(title1Layout);
         title1Layout.setHorizontalGroup(
             title1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(title1Layout.createSequentialGroup()
-                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 192, Short.MAX_VALUE)
-                .addComponent(cmdEditProfile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cmdEditProfile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 177, Short.MAX_VALUE)
+                .addComponent(cmdEditProfileClose, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(cmdEditProfileOk, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         title1Layout.setVerticalGroup(
             title1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addComponent(cmdEditProfile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(cmdEditProfileClose, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(cmdEditProfileOk, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
+        MenuList.setLayer(layoutName, javax.swing.JLayeredPane.DEFAULT_LAYER);
         MenuList.setLayer(coverArt, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        MenuList.setLayer(jPanel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
         MenuList.setLayer(information, javax.swing.JLayeredPane.DEFAULT_LAYER);
         MenuList.setLayer(title1, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
@@ -247,12 +575,14 @@ public class View_Profile extends javax.swing.JPanel {
                     .addComponent(information, javax.swing.GroupLayout.PREFERRED_SIZE, 358, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(MenuListLayout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(MenuListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(coverArt, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(coverArt, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(203, 203, 203))
             .addGroup(MenuListLayout.createSequentialGroup()
-                .addComponent(title1, javax.swing.GroupLayout.PREFERRED_SIZE, 348, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(MenuListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(MenuListLayout.createSequentialGroup()
+                        .addGap(120, 120, 120)
+                        .addComponent(layoutName, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(title1, javax.swing.GroupLayout.PREFERRED_SIZE, 348, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         MenuListLayout.setVerticalGroup(
@@ -260,12 +590,12 @@ public class View_Profile extends javax.swing.JPanel {
             .addGroup(MenuListLayout.createSequentialGroup()
                 .addComponent(coverArt, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(1, 1, 1)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10)
+                .addComponent(layoutName, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(title1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(information, javax.swing.GroupLayout.PREFERRED_SIZE, 289, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(information, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         scroll.setViewportView(MenuList);
@@ -324,35 +654,219 @@ public class View_Profile extends javax.swing.JPanel {
     }//GEN-LAST:event_titleMousePressed
 
     private void cmdEditProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdEditProfileActionPerformed
-        if (info1.isVisible()) {
-            info1.setVisible(false);
-            info2.setVisible(true);
 
-        } else {
-            info2.setVisible(false);
-            info1.setVisible(true);
-
-        }
+        info1.setVisible(false);
+        info2.setVisible(true);
+        //
+        cmdEditProfile.setVisible(false);
+        cmdEditProfileClose.setVisible(true);
+        cmdEditProfileOk.setVisible(true);
     }//GEN-LAST:event_cmdEditProfileActionPerformed
 
     private void title1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_title1MousePressed
         // TODO add your handling code here:
     }//GEN-LAST:event_title1MousePressed
 
-    @Override
-    protected void paintComponent(Graphics grphcs) {
-        Graphics2D g2 = (Graphics2D) grphcs;
-        g2.setColor(new Color(0, 0, 0, 150));
-        g2.fillRect(0, 0, getWidth(), getHeight());
-        super.paintComponent(grphcs);
+    private void cmdEditNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdEditNameActionPerformed
+        panelName1.setVisible(false);
+        panelName2.setVisible(true);
+    }//GEN-LAST:event_cmdEditNameActionPerformed
+
+    private void cmdEditNameCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdEditNameCloseActionPerformed
+        panelName2.setVisible(false);
+        panelName1.setVisible(true);
+    }//GEN-LAST:event_cmdEditNameCloseActionPerformed
+
+    private void cmdEditNameOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdEditNameOkActionPerformed
+        //Kiểm tra và lấy input
+        if (txtSetName.getText().equals("")) {
+            txtSetName.grabFocus();
+            return;
+        }
+        if (txtSetName.getText().equals(modelProfile.getName())) {
+            txtSetName.grabFocus();
+            return;
+        }
+        //Xử lí
+        Model_Name_Update d = new Model_Name_Update();
+        d.setUserID(modelProfile.getUserID());
+        d.setName(txtSetName.getText());
+        PublicEvent.getInstance().getEventProfile().updateName(d);
+
+        panelName2.setVisible(false);
+        panelName1.setVisible(true);
+        lbSetName.setText(txtSetName.getText());
+        modelProfile.setName(txtSetName.getText());
+        PublicEvent.getInstance().getEventMain().updateProfile(modelProfile);
+        PublicEvent.getInstance().getEventMain().setTitleName(txtSetName.getText());
+
+    }//GEN-LAST:event_cmdEditNameOkActionPerformed
+
+
+    private void cmdEditProfileCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdEditProfileCloseActionPerformed
+        info2.setVisible(false);
+        info1.setVisible(true);
+        //
+        cmdEditProfile.setVisible(true);
+        cmdEditProfileClose.setVisible(false);
+        cmdEditProfileOk.setVisible(false);
+
+    }//GEN-LAST:event_cmdEditProfileCloseActionPerformed
+
+    private void cmdEditProfileOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdEditProfileOkActionPerformed
+        boolean b = checkDataUpdateProfile();
+        if (!b) {
+            return;
+        }
+
+        String userName = viewUserName.getTxtContent().getText();
+        if (isBlankOrWhitespace(userName)) {
+            viewUserName.getTxtContent().grabFocus();
+            lbError.setVisible(true);
+            lbError.setText("The input is empty!");
+            return;
+        }
+        String gender = genderViewIn.getComboBoxGender().getSelectedItem().toString();
+        String date = dateViewIn.getComboBoxYear().getSelectedItem().toString() + "-" + dateViewIn.getComboBoxMon().getSelectedItem().toString() + "-" + dateViewIn.getComBoxDay().getSelectedItem().toString();
+
+        String phone = viewPhone.getTxtContent().getText();
+        if (isBlankOrWhitespace(phone)) {
+            viewPhone.getTxtContent().grabFocus();
+            lbError.setVisible(true);
+            lbError.setText("The input is empty!");
+            return;
+        }
+        String email = viewEmail.getTxtContent().getText();
+        String address = viewAddress.getTxtContent().getText();
+        //
+        Model_Profile_Update data = new Model_Profile_Update(modelProfile.getUserID(), userName, gender, phone, date, email, address);
+        PublicEvent.getInstance().getEventProfile().updateProfile(data);
+        //
+        info2.setVisible(false);
+        info1.setVisible(true);
+        //
+        cmdEditProfile.setVisible(true);
+        cmdEditProfileClose.setVisible(false);
+        cmdEditProfileOk.setVisible(false);
+        modelProfile.setUserName(userName);
+        modelProfile.setGender(gender);
+        modelProfile.setDate(date);
+        modelProfile.setEmail(email);
+        modelProfile.setPhoneNumber(phone);
+        modelProfile.setAddress(address);
+        setDataView();
+    }//GEN-LAST:event_cmdEditProfileOkActionPerformed
+
+    private void avtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_avtMouseClicked
+        if (modelProfile.getUserID() == Service.getInstance().getUser().getUserID()) {
+            File selectedFile = selectedImage();
+            if (selectedFile == null) {
+                return;
+            }
+            String imageBase64 = null;
+            try {
+                byte[] fileData = readFileToByteArray(selectedFile);
+                imageBase64 = Base64.getEncoder().encodeToString(fileData);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+            Model_Image_Update data = new Model_Image_Update();
+            data.setUserID(modelProfile.getUserID());
+            if (imageBase64 == null) {
+                return;
+            }
+            data.setImageData(imageBase64);
+            PublicEvent.getInstance().getEventProfile().updateAavatar(data);
+            avt.setImage(PublicEvent.getInstance().getEventProfile().createImage(imageBase64));
+            modelProfile.setImage(imageBase64);
+            PublicEvent.getInstance().getEventMain().updateProfile(modelProfile);
+        }
+    }//GEN-LAST:event_avtMouseClicked
+
+    private void cmdSetCoverArtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdSetCoverArtActionPerformed
+        File selectedFile = selectedImage();
+        if (selectedFile == null) {
+            return;
+        }
+        String imageBase64 = null;
+        try {
+            byte[] fileData = readFileToByteArray(selectedFile);
+            imageBase64 = Base64.getEncoder().encodeToString(fileData);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+        Model_Image_Update data = new Model_Image_Update();
+        data.setUserID(modelProfile.getUserID());
+        if (imageBase64 == null) {
+            return;
+        }
+        data.setImageData(imageBase64);
+        PublicEvent.getInstance().getEventProfile().updateCoverArt(data);
+
+        coverArt.setImage(PublicEvent.getInstance().getEventProfile().createImage(imageBase64));
+        modelProfile.setCoverArt(imageBase64);
+        PublicEvent.getInstance().getEventMain().updateProfile(modelProfile);
+    }//GEN-LAST:event_cmdSetCoverArtActionPerformed
+
+    private File selectedImage() {
+        JFileChooser ch = new JFileChooser();
+        ch.setMultiSelectionEnabled(false); // Chỉ cho phép chọn một tệp duy nhất
+        ch.setFileFilter(new FileFilter() {
+            @Override
+            public boolean accept(File file) {
+                return file.isDirectory() || isImageFile(file);
+            }
+
+            @Override
+            public String getDescription() {
+                return "Image File";
+            }
+        });
+
+        int option = ch.showOpenDialog(Main.getFrames()[0]);
+        if (option == JFileChooser.APPROVE_OPTION) {
+            return ch.getSelectedFile();
+        }
+        return null;
     }
+
+
+
+    private boolean isImageFile(File file) {
+    String name = file.getName().toLowerCase();
+    return name.endsWith(".jpg") || name.endsWith(".png") || name.endsWith(".jpeg") || name.endsWith(".gif");
+}
+
+    private byte[] readFileToByteArray(File file) throws IOException {
+    FileInputStream fileInputStream = new FileInputStream(file);
+    byte[] fileData = new byte[(int) file.length()];
+    fileInputStream.read(fileData);
+    fileInputStream.close();
+    return fileData;
+}
+
+    @Override
+protected void paintComponent(Graphics grphcs) {
+    Graphics2D g2 = (Graphics2D) grphcs;
+    g2.setColor(new Color(0, 0, 0, 150));
+    g2.fillRect(0, 0, getWidth(), getHeight());
+    super.paintComponent(grphcs);
+}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLayeredPane MenuList;
     private com.raven.swing.ImageAvatar avt;
     private javax.swing.JPanel body;
     private com.raven.component.OptionButton cmdClose;
+    private com.raven.component.OptionButton cmdEditName;
+    private com.raven.component.OptionButton cmdEditNameClose;
+    private com.raven.component.OptionButton cmdEditNameOk;
     private com.raven.component.OptionButton cmdEditProfile;
+    private com.raven.component.OptionButton cmdEditProfileClose;
+    private com.raven.component.OptionButton cmdEditProfileOk;
+    private com.raven.component.OptionButton cmdSetCoverArt;
     private com.raven.swing.PictureCoverArt coverArt;
     private com.raven.component.DateViewIn dateViewIn;
     private com.raven.component.GenderViewIn genderViewIn;
@@ -360,14 +874,24 @@ public class View_Profile extends javax.swing.JPanel {
     private javax.swing.JPanel info2;
     private javax.swing.JLayeredPane information;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JLayeredPane layoutName;
+    private javax.swing.JLabel lbError;
+    private javax.swing.JLabel lbSetName;
+    private javax.swing.JPanel panelName1;
+    private javax.swing.JPanel panelName2;
     private javax.swing.JScrollPane scroll;
     private javax.swing.JPanel title;
     private javax.swing.JPanel title1;
+    private javax.swing.JTextField txtSetName;
     private com.raven.component.ViewIn viewAddress;
     private com.raven.component.ViewIn viewEmail;
+    private com.raven.component.ViewOut viewOutAddress;
+    private com.raven.component.ViewOut viewOutDate;
+    private com.raven.component.ViewOut viewOutEmail;
+    private com.raven.component.ViewOut viewOutGender;
+    private com.raven.component.ViewOut viewOutPhone;
     private com.raven.component.ViewIn viewPhone;
+    private com.raven.component.ViewIn viewUserName;
     // End of variables declaration//GEN-END:variables
 }

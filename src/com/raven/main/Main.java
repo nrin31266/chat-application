@@ -14,7 +14,10 @@ import com.raven.event.EventProfile;
 import com.raven.event.PublicEvent;
 import com.raven.form.Chat;
 import com.raven.model.Model_File_Sender;
+import com.raven.model.Model_Image_Update;
+import com.raven.model.Model_Name_Update;
 import com.raven.model.Model_Profile;
+import com.raven.model.Model_Profile_Update;
 import com.raven.model.Model_Receive_File;
 import com.raven.model.Model_Receive_Image;
 import com.raven.model.Model_User_Account;
@@ -32,6 +35,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Base64;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
@@ -93,6 +97,19 @@ public class Main extends javax.swing.JFrame {
             public void updateUser(Model_User_Account user) {
                 home.updateUser(user);
             }
+
+            @Override
+            public void updateProfile(Model_Profile dataPr) {
+                home.setModelProfile(dataPr);
+            }
+
+            @Override
+            public void setTitleName(String s) {
+                if (s != null && !s.isEmpty()) {
+                    lbTitleName.setText("-" + s);
+                }
+            }
+
         });
         PublicEvent.getInstance().addEventProfile(new EventProfile() {
             @Override
@@ -103,10 +120,8 @@ public class Main extends javax.swing.JFrame {
                         if (os.length > 0) {
                             Model_Profile dataPro = (Model_Profile) new Model_Profile(os[0]);
                             home.setModelProfile(dataPro);
-                            System.out.println("Nhan profile thanh cong");
-
+                            PublicEvent.getInstance().getEventMain().setTitleName(dataPro.getName());
                         } else {
-                            System.out.println("Ko nhan dc thong tin profile");
                         }
                     }
 
@@ -133,7 +148,6 @@ public class Main extends javax.swing.JFrame {
                     return imageIcon;
                 } catch (IllegalArgumentException e) {
                     // Xử lý nếu có lỗi trong quá trình giải mã Base64
-                    System.out.println("String anh loi gi r");
                     e.printStackTrace(); // Hoặc thực hiện xử lý lỗi khác phù hợp
                     return null;
                 }
@@ -159,6 +173,70 @@ public class Main extends javax.swing.JFrame {
                 });
 
                 return future;
+            }
+
+            @Override
+            public void updateProfile(Model_Profile_Update dataPr) {
+                Service.getInstance().getClient().emit("update_profile_profile", dataPr.toJsonObject(), new Ack() {
+                    @Override
+                    public void call(Object... os) {
+                        if (os.length > 0) {
+                            System.out.println("Da update profile");
+                        } else {
+                            System.out.println("Ko the update");
+                        }
+                    }
+                });
+                
+            }
+
+            @Override
+            public void updateAavatar(Model_Image_Update dataImage) {
+                CompletableFuture<Boolean> future = new CompletableFuture<>();
+
+                Service.getInstance().getClient().emit("update_avatar_profile", dataImage.toJsonObject(), new Ack() {
+                    @Override
+                    public void call(Object... os) {
+                        if (os.length > 0) {
+                            System.out.println("Da update profile");
+                        } else {
+                            System.out.println("Ko the update");
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void updateName(Model_Name_Update name) {
+                CompletableFuture<Boolean> future = new CompletableFuture<>();
+
+                Service.getInstance().getClient().emit("update_name_profile", name.toJsonObject(), new Ack() {
+                    @Override
+                    public void call(Object... os) {
+                        if (os.length > 0) {
+                            System.out.println("Da update profile");
+                        } else {
+                            System.out.println("Ko the update");
+                        }
+                    }
+                });
+
+            }
+
+            @Override
+            public void updateCoverArt(Model_Image_Update dataImage) {
+                CompletableFuture<Boolean> future = new CompletableFuture<>();
+
+                Service.getInstance().getClient().emit("update_coverart_profile", dataImage.toJsonObject(), new Ack() {
+                    @Override
+                    public void call(Object... os) {
+                        if (os.length > 0) {
+                            System.out.println("Da update profile");
+                        } else {
+                            System.out.println("Ko the update");
+                        }
+                    }
+                });
             }
 
         });
@@ -340,6 +418,7 @@ public class Main extends javax.swing.JFrame {
         cmdClose = new com.raven.component.OptionButton();
         cmdMaximize = new com.raven.component.OptionButton();
         cmdMinimize = new com.raven.component.OptionButton();
+        lbTitleName = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -448,12 +527,16 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
+        lbTitleName.setFont(new java.awt.Font("Arial", 2, 12)); // NOI18N
+        lbTitleName.setForeground(new java.awt.Color(0, 102, 153));
+
         javax.swing.GroupLayout title_mLayout = new javax.swing.GroupLayout(title_m);
         title_m.setLayout(title_mLayout);
         title_mLayout.setHorizontalGroup(
             title_mLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, title_mLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lbTitleName, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(cmdMaximize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cmdMinimize, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -462,9 +545,10 @@ public class Main extends javax.swing.JFrame {
         );
         title_mLayout.setVerticalGroup(
             title_mLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(cmdMaximize, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 22, Short.MAX_VALUE)
+            .addComponent(cmdMaximize, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(cmdMinimize, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(cmdClose, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(lbTitleName, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         javax.swing.GroupLayout backgroundLayout = new javax.swing.GroupLayout(background);
@@ -484,7 +568,7 @@ public class Main extends javax.swing.JFrame {
                     .addComponent(title_m, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(title_a, javax.swing.GroupLayout.DEFAULT_SIZE, 22, Short.MAX_VALUE))
                 .addGap(0, 0, 0)
-                .addComponent(body, javax.swing.GroupLayout.DEFAULT_SIZE, 438, Short.MAX_VALUE)
+                .addComponent(body, javax.swing.GroupLayout.PREFERRED_SIZE, 438, Short.MAX_VALUE)
                 .addGap(0, 0, 0))
         );
 
@@ -599,6 +683,7 @@ public class Main extends javax.swing.JFrame {
     private com.raven.component.OptionButton cmdMinimize;
     private com.raven.form.Home home;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel lbTitleName;
     private com.raven.form.Loading loading;
     private com.raven.form.Login login;
     private javax.swing.JPanel title_a;

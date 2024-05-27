@@ -200,6 +200,7 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
+                          <Component id="lbTitleName" min="-2" pref="299" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
                           <Component id="cmdMaximize" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
@@ -211,9 +212,10 @@
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="cmdMaximize" alignment="1" pref="22" max="32767" attributes="0"/>
+                      <Component id="cmdMaximize" alignment="1" max="32767" attributes="0"/>
                       <Component id="cmdMinimize" alignment="0" max="32767" attributes="0"/>
                       <Component id="cmdClose" alignment="0" max="32767" attributes="0"/>
+                      <Component id="lbTitleName" alignment="0" min="-2" pref="22" max="-2" attributes="0"/>
                   </Group>
                 </DimensionLayout>
               </Layout>
@@ -289,6 +291,16 @@
                     <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="cmdMinimizeMouseExited"/>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cmdMinimizeActionPerformed"/>
                   </Events>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbTitleName">
+                  <Properties>
+                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                      <Font name="Arial" size="12" style="2"/>
+                    </Property>
+                    <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                      <Color blue="99" green="66" red="0" type="rgb"/>
+                    </Property>
+                  </Properties>
                 </Component>
               </SubComponents>
             </Container>

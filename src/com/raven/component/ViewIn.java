@@ -17,13 +17,15 @@ public class ViewIn extends javax.swing.JPanel {
         initComponents();
     }
 
-    public JTextField getLbContent() {
-        return lbContent;
+    public JTextField getTxtContent() {
+        return txtContent;
     }
 
-    public void setLbContent(JTextField lbContent) {
-        this.lbContent = lbContent;
+    public void setTxtContent(JTextField txtContent) {
+        this.txtContent = txtContent;
     }
+
+
 
     public JLabel getLbName() {
         return lbName;
@@ -39,8 +41,9 @@ public class ViewIn extends javax.swing.JPanel {
     private void initComponents() {
 
         lbName = new javax.swing.JLabel();
-        lbContent = new javax.swing.JTextField();
+        txtContent = new javax.swing.JTextField();
 
+        setBackground(new java.awt.Color(255, 255, 255));
         setMinimumSize(new java.awt.Dimension(105, 25));
         setPreferredSize(new java.awt.Dimension(263, 25));
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.LINE_AXIS));
@@ -49,21 +52,21 @@ public class ViewIn extends javax.swing.JPanel {
         lbName.setText("jLabel1");
         add(lbName);
 
-        lbContent.addActionListener(new java.awt.event.ActionListener() {
+        txtContent.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                lbContentActionPerformed(evt);
+                txtContentActionPerformed(evt);
             }
         });
-        add(lbContent);
+        add(txtContent);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void lbContentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lbContentActionPerformed
+    private void txtContentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtContentActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_lbContentActionPerformed
+    }//GEN-LAST:event_txtContentActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField lbContent;
     private javax.swing.JLabel lbName;
+    private javax.swing.JTextField txtContent;
     // End of variables declaration//GEN-END:variables
 }
