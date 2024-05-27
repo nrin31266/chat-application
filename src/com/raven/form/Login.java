@@ -15,6 +15,9 @@ import javax.print.attribute.standard.Severity;
 
 public class Login extends javax.swing.JPanel {
 
+    
+    
+    
     public Login() {
         initComponents();
         init();
@@ -28,12 +31,12 @@ public class Login extends javax.swing.JPanel {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        
+                        PublicEvent.getInstance().getEventMain().showLoading(true);
                         Service.getInstance().getClient().emit("login", data.toJsonObject(), new Ack() {
                             @Override
                             public void call(Object... os) {
                                 try {
-                                    PublicEvent.getInstance().getEventMain().showLoading(true);
+                                    
                                     Thread.sleep(300);
                                     System.err.println("Da nhan dc phan hoi tu server");
                                     if (os.length > 0) {
@@ -43,8 +46,10 @@ public class Login extends javax.swing.JPanel {
                                             Model_User_Account user= new Model_User_Account(os[1]);
                                             Service.getInstance().setUser(user);
                                             
-                                            PublicEvent.getInstance().getEventProfile().getProfileMe(user);
-                                            System.err.println("Da chay qu cau lenh goi profile");
+                                            
+                                            
+                                            PublicEvent.getInstance().getEventProfile().setProfile(user);
+                                            
                                             
                                             PublicEvent.getInstance().getEventMain().showLoading(false);
                                             PublicEvent.getInstance().getEventMain().initChat();

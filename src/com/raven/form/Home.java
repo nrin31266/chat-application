@@ -18,7 +18,7 @@ public class Home extends javax.swing.JLayeredPane {
     public void setModelProfile(Model_Profile modelProfile) {
         this.modelProfile = modelProfile;
         menu.setModelProfile(modelProfile);
-        PublicEvent.getInstance().getEventViewProfile().setProfileMe(modelProfile);
+        
     }
     
     public Home() {

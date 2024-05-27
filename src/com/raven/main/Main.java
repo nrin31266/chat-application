@@ -31,6 +31,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Base64;
+import java.util.concurrent.CompletableFuture;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
@@ -95,8 +96,7 @@ public class Main extends javax.swing.JFrame {
         });
         PublicEvent.getInstance().addEventProfile(new EventProfile() {
             @Override
-            public Model_Profile getProfileMe(Model_User_Account data) {
-                
+            public void setProfile(Model_User_Account data) {
                 Service.getInstance().getClient().emit("get_info", data.toJsonObject(), new Ack() {
                     @Override
                     public void call(Object... os) {
@@ -104,17 +104,17 @@ public class Main extends javax.swing.JFrame {
                             Model_Profile dataPro = (Model_Profile) new Model_Profile(os[0]);
                             home.setModelProfile(dataPro);
                             System.out.println("Nhan profile thanh cong");
+
                         } else {
-                            System.out.println("Ko nhan dc thong tin ca nhan");
+                            System.out.println("Ko nhan dc thong tin profile");
                         }
                     }
 
                 });
-                return null;
             }
 
             @Override
-            public void viewProfile(Model_Profile data) {
+            public void viewProfile() {
                 view_Profile.viewProfile();
             }
 
@@ -138,6 +138,27 @@ public class Main extends javax.swing.JFrame {
                     return null;
                 }
 
+            }
+
+            @Override
+            public CompletableFuture<Model_Profile> getProfileAsync(Model_User_Account data) {
+                CompletableFuture<Model_Profile> future = new CompletableFuture<>();
+
+                Service.getInstance().getClient().emit("get_info", data.toJsonObject(), new Ack() {
+                    @Override
+                    public void call(Object... os) {
+                        if (os.length > 0) {
+                            Model_Profile dataPro = new Model_Profile(os[0]);
+                            System.out.println("Nhận profile thành công");
+                            future.complete(dataPro);
+                        } else {
+                            System.out.println("Không nhận được thông tin profile");
+                            future.completeExceptionally(new Exception("Không nhận được thông tin profile"));
+                        }
+                    }
+                });
+
+                return future;
             }
 
         });

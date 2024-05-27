@@ -4,5 +4,5 @@ package com.raven.event;
 import com.raven.model.Model_Profile;
 
 public interface EventViewProfile {
-    public void setProfileMe(Model_Profile dataPr);
+    public void setProfile(Model_Profile dataPr, int mode);
 }

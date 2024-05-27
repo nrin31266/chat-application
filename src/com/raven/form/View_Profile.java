@@ -9,47 +9,55 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Label;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
 public class View_Profile extends javax.swing.JPanel {
-    private Model_Profile modelProfileMe;
-
-    public Model_Profile getModelProfileMain() {
-        return modelProfileMe;
-    }
-
-    public void setModelProfile(Model_Profile modelProfileMe) {
-        this.modelProfileMe = modelProfileMe;
-    }
-    
+    private final String pathAvatarBasic="/com/raven/icon/profile.png";
+    private final String pathCoverArtBasic="/com/raven/icon/testing/dog.jpg";
     
     public View_Profile() {
         initComponents();
+        initEdit();
         scroll.setVerticalScrollBar(new ScrollBar());
         setOpaque(false);
         stackAvatarOnCoverArt();
-        info2.setVisible(true);
+        info2.setVisible(false);
         info1.setVisible(true);
-        info1.add(new Label("1"));
-        info2.add(new Label("2"));
-        PublicEvent.getInstance().addEventViewProfile(new EventViewProfile(){
+        
+        PublicEvent.getInstance().addEventViewProfile(new EventViewProfile() {
             @Override
-            public void setProfileMe(Model_Profile dataPr) {
-                modelProfileMe=dataPr;
-                if(dataPr.getImage()!=null&&!dataPr.getImage().isEmpty()){
-                    avt.setImage(PublicEvent.getInstance().getEventProfile().createImage(dataPr.getImage()));
-                    avt.repaint();
+            public void setProfile(Model_Profile dataPr, int mode) {
+                refreshView();
+                if (mode == 1) {
+                    if (dataPr.getImage() != null && !dataPr.getImage().isEmpty()) {
+                        avt.setImage(PublicEvent.getInstance().getEventProfile().createImage(dataPr.getImage()));
+                        avt.repaint();
+                    }
+                    if (dataPr.getCoverArt() != null && !dataPr.getCoverArt().isEmpty()) {
+                        coverArt.setImage(PublicEvent.getInstance().getEventProfile().createImage(dataPr.getCoverArt()));
+                        coverArt.repaint();
+                    }
+                }else if(mode==2){
+                    if (dataPr.getImage() != null && !dataPr.getImage().isEmpty()) {
+                        avt.setImage(PublicEvent.getInstance().getEventProfile().createImage(dataPr.getImage()));
+                        avt.repaint();
+                    }
+                    if (dataPr.getCoverArt() != null && !dataPr.getCoverArt().isEmpty()) {
+                        coverArt.setImage(PublicEvent.getInstance().getEventProfile().createImage(dataPr.getCoverArt()));
+                        coverArt.repaint();
+                    }
                 }
-                if(dataPr.getCoverArt()!=null&&!dataPr.getCoverArt().isEmpty()){
-                    coverArt.setImage(PublicEvent.getInstance().getEventProfile().createImage(dataPr.getCoverArt()));
-                    coverArt.repaint();
-                }
-                
-                
             }
+
         });
     }
-    
+    public void initEdit(){
+        viewPhone.getLbName().setText("Sđt");
+        viewEmail.getLbName().setText("Email");
+        viewAddress.getLbName().setText("Địa chỉ");
+    }
+
     public void stackAvatarOnCoverArt() {
         int coverArtWidth = 350;
         int coverArtHeight = 150;
@@ -65,6 +73,11 @@ public class View_Profile extends javax.swing.JPanel {
 
     public void viewProfile() {
         setVisible(true);
+    }
+    public void refreshView(){
+        avt.setImage(new ImageIcon(getClass().getResource(pathAvatarBasic)));
+        coverArt.setImage(new ImageIcon(getClass().getResource(pathCoverArtBasic)));
+        
     }
 
     @SuppressWarnings("unchecked")
@@ -84,6 +97,11 @@ public class View_Profile extends javax.swing.JPanel {
         information = new javax.swing.JLayeredPane();
         info1 = new javax.swing.JPanel();
         info2 = new javax.swing.JPanel();
+        genderViewIn = new com.raven.component.GenderViewIn();
+        dateViewIn = new com.raven.component.DateViewIn();
+        viewPhone = new com.raven.component.ViewIn();
+        viewEmail = new com.raven.component.ViewIn();
+        viewAddress = new com.raven.component.ViewIn();
         title1 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         cmdEditProfile = new com.raven.component.OptionButton();
@@ -172,7 +190,13 @@ public class View_Profile extends javax.swing.JPanel {
         info1.setLayout(new javax.swing.BoxLayout(info1, javax.swing.BoxLayout.Y_AXIS));
         information.add(info1, "card2");
 
-        info2.setLayout(new javax.swing.BoxLayout(info2, javax.swing.BoxLayout.Y_AXIS));
+        info2.setLayout(new java.awt.GridLayout(10, 1));
+        info2.add(genderViewIn);
+        info2.add(dateViewIn);
+        info2.add(viewPhone);
+        info2.add(viewEmail);
+        info2.add(viewAddress);
+
         information.add(info2, "card3");
 
         title1.setBackground(new java.awt.Color(255, 255, 255));
@@ -240,7 +264,7 @@ public class View_Profile extends javax.swing.JPanel {
                 .addGap(10, 10, 10)
                 .addComponent(title1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(information, javax.swing.GroupLayout.DEFAULT_SIZE, 289, Short.MAX_VALUE)
+                .addComponent(information, javax.swing.GroupLayout.PREFERRED_SIZE, 289, Short.MAX_VALUE)
                 .addGap(0, 0, 0))
         );
 
@@ -258,7 +282,7 @@ public class View_Profile extends javax.swing.JPanel {
         );
         bodyLayout.setVerticalGroup(
             bodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 544, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
             .addGroup(bodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bodyLayout.createSequentialGroup()
                     .addGap(0, 29, Short.MAX_VALUE)
@@ -296,25 +320,24 @@ public class View_Profile extends javax.swing.JPanel {
     }//GEN-LAST:event_formMousePressed
 
     private void titleMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_titleMousePressed
-        
+
     }//GEN-LAST:event_titleMousePressed
 
     private void cmdEditProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdEditProfileActionPerformed
-        if(info1.isVisible()){
+        if (info1.isVisible()) {
             info1.setVisible(false);
-            info2.setVisible(true);  
-            
-        }else{
+            info2.setVisible(true);
+
+        } else {
             info2.setVisible(false);
             info1.setVisible(true);
-            
+
         }
     }//GEN-LAST:event_cmdEditProfileActionPerformed
 
     private void title1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_title1MousePressed
         // TODO add your handling code here:
     }//GEN-LAST:event_title1MousePressed
-    
 
     @Override
     protected void paintComponent(Graphics grphcs) {
@@ -331,6 +354,8 @@ public class View_Profile extends javax.swing.JPanel {
     private com.raven.component.OptionButton cmdClose;
     private com.raven.component.OptionButton cmdEditProfile;
     private com.raven.swing.PictureCoverArt coverArt;
+    private com.raven.component.DateViewIn dateViewIn;
+    private com.raven.component.GenderViewIn genderViewIn;
     private javax.swing.JPanel info1;
     private javax.swing.JPanel info2;
     private javax.swing.JLayeredPane information;
@@ -341,5 +366,8 @@ public class View_Profile extends javax.swing.JPanel {
     private javax.swing.JScrollPane scroll;
     private javax.swing.JPanel title;
     private javax.swing.JPanel title1;
+    private com.raven.component.ViewIn viewAddress;
+    private com.raven.component.ViewIn viewEmail;
+    private com.raven.component.ViewIn viewPhone;
     // End of variables declaration//GEN-END:variables
 }

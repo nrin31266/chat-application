@@ -22,11 +22,16 @@ public class Item_People extends javax.swing.JPanel {
         
         
         initComponents();
+        
         lbName.setText(user.getUserName());
         activeStatus.setActive(user.isStatus());
+        if(user.getImage()!=null && !user.getImage().equals("")){
+            imageAvatar.setImage(PublicEvent.getInstance().getEventProfile().createImage(user.getImage()));
+            imageAvatar.repaint();
+        }
         init();
         
-   
+        
     }
 
     public void updateStatus() {
@@ -35,10 +40,7 @@ public class Item_People extends javax.swing.JPanel {
     }
 
     private void init() {
-        if(user.getImage()!=null && !user.getImage().equals("")){
-            imageAvatar.setImage(PublicEvent.getInstance().getEventProfile().createImage(user.getImage()));
-            imageAvatar.repaint();
-        }
+        
         
         addMouseListener(new MouseAdapter() {
             @Override
