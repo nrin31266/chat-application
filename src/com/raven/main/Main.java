@@ -13,6 +13,7 @@ import com.raven.event.EventMain;
 import com.raven.event.EventProfile;
 import com.raven.event.PublicEvent;
 import com.raven.form.Chat;
+import com.raven.form.Home;
 import com.raven.model.Model_File_Sender;
 import com.raven.model.Model_Image_Update;
 import com.raven.model.Model_Name_Update;
@@ -21,9 +22,11 @@ import com.raven.model.Model_Profile_Update;
 import com.raven.model.Model_Receive_File;
 import com.raven.model.Model_Receive_Image;
 import com.raven.model.Model_User_Account;
+import com.raven.model.UserIDToJSON;
 import com.raven.service.Service;
 import com.raven.swing.ComponentResizer;
 import io.socket.client.Ack;
+import io.socket.emitter.Emitter;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
@@ -33,7 +36,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import javax.swing.Icon;
@@ -43,6 +48,7 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.plaf.basic.BasicLookAndFeel;
+import org.json.JSONObject;
 
 public class Main extends javax.swing.JFrame {
 
@@ -110,23 +116,13 @@ public class Main extends javax.swing.JFrame {
                 }
             }
 
+            @Override
+            public Home getHome() {
+                return home;
+            }
+
         });
         PublicEvent.getInstance().addEventProfile(new EventProfile() {
-            @Override
-            public void setProfile(Model_User_Account data) {
-                Service.getInstance().getClient().emit("get_info", data.toJsonObject(), new Ack() {
-                    @Override
-                    public void call(Object... os) {
-                        if (os.length > 0) {
-                            Model_Profile dataPro = (Model_Profile) new Model_Profile(os[0]);
-                            home.setModelProfile(dataPro);
-                            PublicEvent.getInstance().getEventMain().setTitleName(dataPro.getName());
-                        } else {
-                        }
-                    }
-
-                });
-            }
 
             @Override
             public void viewProfile() {
@@ -187,28 +183,34 @@ public class Main extends javax.swing.JFrame {
                         }
                     }
                 });
-                
+
             }
 
             @Override
-            public void updateAavatar(Model_Image_Update dataImage) {
+            public boolean updateAavatar(Model_Image_Update dataImage) {
                 CompletableFuture<Boolean> future = new CompletableFuture<>();
+                List<Model_Image_Update> chunks = createChunks(dataImage.getUserID(), dataImage.getImageData());
 
-                Service.getInstance().getClient().emit("update_avatar_profile", dataImage.toJsonObject(), new Ack() {
-                    @Override
-                    public void call(Object... os) {
-                        if (os.length > 0) {
-                            System.out.println("Da update profile");
-                        } else {
-                            System.out.println("Ko the update");
+                for (Model_Image_Update chunk : chunks) {
+                    Service.getInstance().getClient().emit("update_avatar", chunk.toJsonObject(), new Ack() {
+                        @Override
+                        public void call(Object... os) {
+                            if (os.length > 0 && (boolean) os[0]) {
+                                System.out.println("Da update profile chunk");
+                            } else {
+                                System.out.println("Ko the update chunk");
+                                future.complete(false);
+                            }
                         }
-                    }
-                });
+                    });
+                }
+
+                future.complete(true);
+                return future.join();
             }
 
             @Override
             public void updateName(Model_Name_Update name) {
-                CompletableFuture<Boolean> future = new CompletableFuture<>();
 
                 Service.getInstance().getClient().emit("update_name_profile", name.toJsonObject(), new Ack() {
                     @Override
@@ -220,27 +222,120 @@ public class Main extends javax.swing.JFrame {
                         }
                     }
                 });
+            }
 
+            public List<Model_Image_Update> createChunks(int userID, String imageData) {
+                int chunkSize = 30000; // Kích thước mỗi chunk
+                List<Model_Image_Update> chunks = new ArrayList<>();
+                for (int i = 0; i < imageData.length(); i += chunkSize) {
+                    String chunk = imageData.substring(i, Math.min(imageData.length(), i + chunkSize));
+                    boolean isLastChunk = (i + chunkSize) >= imageData.length();
+                    chunks.add(new Model_Image_Update(userID, chunk, isLastChunk));
+                }
+                return chunks;
             }
 
             @Override
-            public void updateCoverArt(Model_Image_Update dataImage) {
+            public boolean updateCoverArt(Model_Image_Update dataImage) {
                 CompletableFuture<Boolean> future = new CompletableFuture<>();
+                List<Model_Image_Update> chunks = createChunks(dataImage.getUserID(), dataImage.getImageData());
 
-                Service.getInstance().getClient().emit("update_coverart_profile", dataImage.toJsonObject(), new Ack() {
+                for (Model_Image_Update chunk : chunks) {
+                    Service.getInstance().getClient().emit("update_coverart", chunk.toJsonObject(), new Ack() {
+                        @Override
+                        public void call(Object... os) {
+                            if (os.length > 0 && (boolean) os[0]) {
+                                System.out.println("Da update profile chunk");
+                            } else {
+                                System.out.println("Ko the update chunk");
+                                future.complete(false);
+                            }
+                        }
+                    });
+                }
+
+                future.complete(true);
+                return future.join();
+            }
+
+            @Override
+            public CompletableFuture<String> getCoverArt(UserIDToJSON userID) {
+                CompletableFuture<String> future = new CompletableFuture<>();
+                StringBuilder receivedDataBuilder = new StringBuilder();
+
+                Service.getInstance().getClient().on("get_cover_chunk", new Emitter.Listener() {
                     @Override
-                    public void call(Object... os) {
-                        if (os.length > 0) {
-                            System.out.println("Da update profile");
+                    public void call(Object... args) {
+                        if (args.length > 0) {
+                            Model_Image_Update d = new Model_Image_Update(args[0]);
+                            String chunkData = d.getImageData();
+                            boolean isLastChunk = d.isLastChunk();
+
+                            // Ghép chunk vào StringBuilder
+                            receivedDataBuilder.append(chunkData);
+
+                            if (isLastChunk) {
+                                // Nếu là chunk cuối, hoàn thành CompletableFuture
+                                future.complete(receivedDataBuilder.toString());
+                            }
                         } else {
-                            System.out.println("Ko the update");
+                            future.completeExceptionally(new Exception("Invalid chunk received"));
+                        }
+                    }
+                });//
+
+                // Gửi yêu cầu lấy ảnh đại diện
+                Service.getInstance().getClient().emit("get_image_cover", userID.toJsonObject(), new Ack() {
+                    @Override
+                    public void call(Object... args) {
+                        if (args.length == 0) {
+                            future.completeExceptionally(new Exception("No response from server"));
                         }
                     }
                 });
+                return future;
+            }
+
+            @Override
+            public CompletableFuture<String> getAvt(UserIDToJSON userID) {
+                CompletableFuture<String> future = new CompletableFuture<>();
+                StringBuilder receivedDataBuilder = new StringBuilder();
+
+                Service.getInstance().getClient().on("image_avt_chunk", new Emitter.Listener() {
+                    @Override
+                    public void call(Object... args) {
+                        if (args.length > 0) {
+                            Model_Image_Update d = new Model_Image_Update(args[0]);
+                            String chunkData = d.getImageData();
+                            boolean isLastChunk = d.isLastChunk();
+
+                            // Ghép chunk vào StringBuilder
+                            receivedDataBuilder.append(chunkData);
+
+                            if (isLastChunk) {
+                                // Nếu là chunk cuối, hoàn thành CompletableFuture
+                                future.complete(receivedDataBuilder.toString());
+                            }
+                        } else {
+                            future.completeExceptionally(new Exception("Invalid chunk received"));
+                        }
+                    }
+                });//get_image_cover
+
+                // Gửi yêu cầu lấy ảnh đại diện
+                Service.getInstance().getClient().emit("get_image_avt", userID.toJsonObject(), new Ack() {
+                    @Override
+                    public void call(Object... args) {
+                        if (args.length == 0) {
+                            future.completeExceptionally(new Exception("No response from server"));
+                        }
+                    }
+                });
+
+                return future;
             }
 
         });
-
         PublicEvent.getInstance().addEventImageView(new EventImageView() {
             @Override
             public void viewImage(Icon image, String mode, Model_Receive_Image data) {
@@ -253,14 +348,10 @@ public class Main extends javax.swing.JFrame {
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
                 String defaultFileName = data.getFileName();
-
                 fileChooser.setSelectedFile(new File(defaultFileName));
-
                 int result = fileChooser.showSaveDialog(Main.this);
-
                 if (result == JFileChooser.APPROVE_OPTION) {
                     File selectedFile = fileChooser.getSelectedFile();
-
                     selectedFile = getUniqueFileName(selectedFile);
                     try {
                         Files.copy(new File(filePath).toPath(), selectedFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
@@ -647,6 +738,7 @@ public class Main extends javax.swing.JFrame {
 
     private void cmdMinimizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdMinimizeActionPerformed
         this.setState(JFrame.ICONIFIED);
+
     }//GEN-LAST:event_cmdMinimizeActionPerformed
 
     private void cmdMaximizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdMaximizeActionPerformed

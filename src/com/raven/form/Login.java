@@ -5,19 +5,20 @@ import com.raven.event.EventMessage;
 import com.raven.event.PublicEvent;
 import com.raven.model.Model_Login;
 import com.raven.model.Model_Message;
+import com.raven.model.Model_Profile;
 import com.raven.model.Model_Register;
 import com.raven.model.Model_User_Account;
+import com.raven.model.UserIDToJSON;
 import com.raven.service.Service;
 import io.socket.client.Ack;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.print.attribute.standard.Severity;
 
 public class Login extends javax.swing.JPanel {
 
-    
-    
-    
     public Login() {
         initComponents();
         init();
@@ -26,7 +27,6 @@ public class Login extends javax.swing.JPanel {
     private void init() {
         PublicEvent.getInstance().addEventLogin(new EventLogin() {
             @Override
-
             public void login(Model_Login data) {
                 new Thread(new Runnable() {
                     @Override
@@ -36,25 +36,45 @@ public class Login extends javax.swing.JPanel {
                             @Override
                             public void call(Object... os) {
                                 try {
-                                    
-                                    Thread.sleep(300);
+                                    Thread.sleep(0);
                                     System.err.println("Da nhan dc phan hoi tu server");
                                     if (os.length > 0) {
                                         boolean action = (Boolean) os[0];
-                                        
+
                                         if (action) {
-                                            Model_User_Account user= new Model_User_Account(os[1]);
+                                            Model_User_Account user = new Model_User_Account(os[1]);
                                             Service.getInstance().setUser(user);
-                                            
-                                            
-                                            
-                                            PublicEvent.getInstance().getEventProfile().setProfile(user);
-                                            
-                                            
-                                            PublicEvent.getInstance().getEventMain().showLoading(false);
-                                            PublicEvent.getInstance().getEventMain().initChat();
+                                            CompletableFuture<Model_Profile> profileFuture = PublicEvent.getInstance().getEventProfile().getProfileAsync(user);
+
+                                            profileFuture.thenCompose(profile -> {
+                                                CompletableFuture<String> avatarFuture = PublicEvent.getInstance().getEventProfile().getAvt(new UserIDToJSON(user.getUserID()));
+                                                return avatarFuture.handle((avatar, ex) -> {
+                                                    if (ex != null) {
+                                                        avatar = "";
+                                                    }
+                                                    profile.setImage(avatar);
+                                                    return profile;
+                                                });
+                                            }).thenCompose(profile -> {
+                                                CompletableFuture<String> coverArtFuture = PublicEvent.getInstance().getEventProfile().getCoverArt(new UserIDToJSON(user.getUserID()));
+                                                return coverArtFuture.handle((cover, ex) -> {
+                                                    if (ex != null) {
+                                                        cover = "";
+                                                    }
+                                                    profile.setCoverArt(cover);
+                                                    return profile;
+                                                });
+                                            }).thenAccept(profile -> {
+                                                PublicEvent.getInstance().getEventMain().getHome().setModelProfile(profile);
+                                                PublicEvent.getInstance().getEventMain().initChat();
+                                                PublicEvent.getInstance().getEventMain().showLoading(false);
+                                            }).exceptionally(ex -> {
+                                                PublicEvent.getInstance().getEventMain().showLoading(false);
+                                                System.err.println("Error: " + ex.getMessage());
+                                                return null;
+                                            });
                                         } else {
-                                            //  password wrong
+                                            // Password wrong
                                             PublicEvent.getInstance().getEventMain().showLoading(false);
                                         }
                                     } else {
@@ -66,7 +86,6 @@ public class Login extends javax.swing.JPanel {
                                 }
                             }
                         });
-
                     }
                 }).start();
             }

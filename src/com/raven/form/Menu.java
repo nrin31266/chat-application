@@ -11,6 +11,12 @@ public class Menu extends javax.swing.JPanel {
     public Model_Profile getModelProfile() {
         return modelProfile;
     }
+    public void setAvatar(String s){
+        if(s!=null&&!s.isEmpty()){
+            imageAvatar.setImage(PublicEvent.getInstance().getEventProfile().createImage(modelProfile.getImage()));
+            imageAvatar.repaint();
+        }
+    }
 
     public void setModelProfile(Model_Profile modelProfile) {
         this.modelProfile = modelProfile;

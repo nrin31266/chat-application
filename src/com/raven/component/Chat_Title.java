@@ -3,14 +3,16 @@ package com.raven.component;
 import com.raven.event.PublicEvent;
 import com.raven.model.Model_Profile;
 import com.raven.model.Model_User_Account;
+import com.raven.model.UserIDToJSON;
 import java.awt.Color;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import javax.swing.ImageIcon;
 
 public class Chat_Title extends javax.swing.JPanel {
 
     private Model_User_Account user;
-    private final String pathAvatarBasic="/com/raven/icon/profile.png";
+    private final String pathAvatarBasic = "/com/raven/icon/profile.png";
 
     public Model_User_Account getUser() {
         return user;
@@ -19,11 +21,11 @@ public class Chat_Title extends javax.swing.JPanel {
     public Chat_Title() {
         initComponents();
     }
-    public void refreshUser(){
+
+    public void refreshUser() {
         imageAvatar.setImage(new ImageIcon(getClass().getResource(pathAvatarBasic)));
         imageAvatar.repaint();
     }
-    
 
     public void setUserName(Model_User_Account user) {
         this.user = user;
@@ -35,7 +37,7 @@ public class Chat_Title extends javax.swing.JPanel {
         } else {
             setStatusText("Ngoại tuyến");
         }
-        if(user.getImage()!=null && !user.getImage().equals("")){
+        if (user.getImage() != null && !user.getImage().equals("")) {
             imageAvatar.setImage(PublicEvent.getInstance().getEventProfile().createImage(user.getImage()));
             imageAvatar.repaint();
         }
@@ -61,6 +63,7 @@ public class Chat_Title extends javax.swing.JPanel {
         lbStatus.setText(text);
         lbStatus.setForeground(new Color(160, 160, 160));
     }
+    private Model_Profile modelProfile;
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -106,6 +109,11 @@ public class Chat_Title extends javax.swing.JPanel {
         cmdProfile.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 cmdProfileMouseClicked(evt);
+            }
+        });
+        cmdProfile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmdProfileActionPerformed(evt);
             }
         });
 
@@ -170,18 +178,57 @@ public class Chat_Title extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void cmdProfileMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cmdProfileMouseClicked
-        CompletableFuture<Model_Profile> profileFuture =PublicEvent.getInstance().getEventProfile().getProfileAsync(user);
-        // Xử lý profile khi nhận được kết quả
-        profileFuture.thenAccept(profile -> {
-            // Xử lý profile nhận được
-            PublicEvent.getInstance().getEventViewProfile().setProfile(profile, 2);
-        }).exceptionally(ex -> {
-            // Xử lý lỗi khi nhận kết quả
-            System.err.println("Lỗi: " + ex.getMessage());
-            return null;
-        });
+        PublicEvent.getInstance().getEventMain().showLoading(true);
+
+        CompletableFuture<Model_Profile> profileFuture = PublicEvent.getInstance().getEventProfile().getProfileAsync(user);
+        Model_Profile profile = profileFuture.join();
+
+        CompletableFuture<String> avatarFuture = PublicEvent.getInstance().getEventProfile().getAvt(new UserIDToJSON(user.getUserID()));
+
+        String avatar = null;
+
+        try {
+            avatar = avatarFuture.join();
+            profile.setImage(avatar);
+        } catch (CompletionException ex) {
+            if (ex.getCause() instanceof Exception) {
+                Exception cause = (Exception) ex.getCause();
+                if (cause.getMessage().equals("No response from server")) {
+                    profile.setImage("");
+                } else {
+                    profile.setImage("");
+                }
+            } else {
+                profile.setImage("");
+            }
+        }
+        CompletableFuture<String> coverArtFuture = PublicEvent.getInstance().getEventProfile().getCoverArt(new UserIDToJSON(user.getUserID()));
+        String cover = null;
+        try {
+            cover = coverArtFuture.join();
+            profile.setCoverArt(cover);
+        } catch (CompletionException ex) {
+            if (ex.getCause() instanceof Exception) {
+                Exception cause = (Exception) ex.getCause();
+                if (cause.getMessage().equals("No response from server")) {
+                    
+                } else {
+                    
+                }
+            } else {
+                profile.setCoverArt("");
+            }
+        }
+
+        PublicEvent.getInstance().getEventViewProfile().setProfile(profile, 2);
         PublicEvent.getInstance().getEventProfile().viewProfile();
+        PublicEvent.getInstance().getEventMain().showLoading(false);
+
     }//GEN-LAST:event_cmdProfileMouseClicked
+
+    private void cmdProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdProfileActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmdProfileActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

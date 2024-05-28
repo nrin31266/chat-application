@@ -1,21 +1,32 @@
-
 package com.raven.model;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
 public class Model_Image_Update {
     private int userID;
     private String imageData;
+    private boolean lastChunk; // Thêm thuộc tính này
 
     public Model_Image_Update() {
     }
-
-    public Model_Image_Update(int userID, String imageData) {
+    public Model_Image_Update(Object json){
+        JSONObject obj = (JSONObject) json;
+        try {
+            userID=obj.getInt("userID");
+            imageData=obj.getString("imageData");
+            lastChunk=obj.getBoolean("lastChunk");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public Model_Image_Update(int userID, String imageData, boolean lastChunk) {
         this.userID = userID;
         this.imageData = imageData;
-    } 
+        this.lastChunk = lastChunk;
+    }
+
     public int getUserID() {
         return userID;
     }
@@ -31,18 +42,26 @@ public class Model_Image_Update {
     public void setImageData(String imageData) {
         this.imageData = imageData;
     }
-    public JSONObject toJsonObject(){
-        JSONObject json= new JSONObject();
-        try {
-            json.put("userID", userID);
-            
-            json.put("imageData", imageData);
-            return json;
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return null;
-        }
-        
+
+    public boolean isLastChunk() {
+        return lastChunk;
     }
-    
+
+    public void setLastChunk(boolean lastChunk) {
+        this.lastChunk = lastChunk;
+    }
+
+    public JSONObject toJsonObject() {
+    JSONObject json = new JSONObject();
+    try {
+        json.put("userID", userID);
+        json.put("imageData", imageData);
+        json.put("lastChunk", lastChunk);
+        return json;
+    } catch (JSONException e) {
+        e.printStackTrace();
+        return null;
+    }
+}
+
 }

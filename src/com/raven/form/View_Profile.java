@@ -1,4 +1,3 @@
-
 package com.raven.form;
 
 import com.raven.app.MessageType;
@@ -32,9 +31,10 @@ import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 
 public class View_Profile extends javax.swing.JPanel {
 
@@ -777,10 +777,13 @@ public class View_Profile extends javax.swing.JPanel {
                 return;
             }
             data.setImageData(imageBase64);
-            PublicEvent.getInstance().getEventProfile().updateAavatar(data);
-            avt.setImage(PublicEvent.getInstance().getEventProfile().createImage(imageBase64));
-            modelProfile.setImage(imageBase64);
-            PublicEvent.getInstance().getEventMain().updateProfile(modelProfile);
+            boolean b = PublicEvent.getInstance().getEventProfile().updateAavatar(data);
+            if (b) {
+                avt.setImage(PublicEvent.getInstance().getEventProfile().createImage(imageBase64));
+                avt.repaint();
+                modelProfile.setImage(imageBase64);
+                PublicEvent.getInstance().getEventMain().updateProfile(modelProfile);
+            }
         }
     }//GEN-LAST:event_avtMouseClicked
 
@@ -803,11 +806,12 @@ public class View_Profile extends javax.swing.JPanel {
             return;
         }
         data.setImageData(imageBase64);
-        PublicEvent.getInstance().getEventProfile().updateCoverArt(data);
-
-        coverArt.setImage(PublicEvent.getInstance().getEventProfile().createImage(imageBase64));
-        modelProfile.setCoverArt(imageBase64);
-        PublicEvent.getInstance().getEventMain().updateProfile(modelProfile);
+        boolean b = PublicEvent.getInstance().getEventProfile().updateCoverArt(data);
+        if (b) {
+            coverArt.setImage(PublicEvent.getInstance().getEventProfile().createImage(imageBase64));
+            modelProfile.setCoverArt(imageBase64);
+            PublicEvent.getInstance().getEventMain().updateProfile(modelProfile);
+        }
     }//GEN-LAST:event_cmdSetCoverArtActionPerformed
 
     private File selectedImage() {
@@ -832,28 +836,28 @@ public class View_Profile extends javax.swing.JPanel {
         return null;
     }
 
-
+    
 
     private boolean isImageFile(File file) {
-    String name = file.getName().toLowerCase();
-    return name.endsWith(".jpg") || name.endsWith(".png") || name.endsWith(".jpeg") || name.endsWith(".gif");
-}
+        String name = file.getName().toLowerCase();
+        return name.endsWith(".jpg") || name.endsWith(".png") || name.endsWith(".jpeg") || name.endsWith(".gif");
+    }
 
     private byte[] readFileToByteArray(File file) throws IOException {
-    FileInputStream fileInputStream = new FileInputStream(file);
-    byte[] fileData = new byte[(int) file.length()];
-    fileInputStream.read(fileData);
-    fileInputStream.close();
-    return fileData;
-}
+        FileInputStream fileInputStream = new FileInputStream(file);
+        byte[] fileData = new byte[(int) file.length()];
+        fileInputStream.read(fileData);
+        fileInputStream.close();
+        return fileData;
+    }
 
     @Override
-protected void paintComponent(Graphics grphcs) {
-    Graphics2D g2 = (Graphics2D) grphcs;
-    g2.setColor(new Color(0, 0, 0, 150));
-    g2.fillRect(0, 0, getWidth(), getHeight());
-    super.paintComponent(grphcs);
-}
+    protected void paintComponent(Graphics grphcs) {
+        Graphics2D g2 = (Graphics2D) grphcs;
+        g2.setColor(new Color(0, 0, 0, 150));
+        g2.fillRect(0, 0, getWidth(), getHeight());
+        super.paintComponent(grphcs);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLayeredPane MenuList;

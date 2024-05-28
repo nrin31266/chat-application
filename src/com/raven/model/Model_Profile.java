@@ -1,6 +1,7 @@
 package com.raven.model;
 
 import java.sql.Date;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Model_Profile {
@@ -46,21 +47,16 @@ public class Model_Profile {
             if(obj.has("gender")){
                 gender = obj.getString("gender");
             }
-            
-
             if (obj.has("image")) {
                 image = obj.getString("image");
             }
             if(obj.has("imageString")){
                 imageString = obj.getString("imageString");
-            }
-            
-            status = obj.getBoolean("status");
-            
+            }            
+            status = obj.getBoolean("status");          
             if(obj.has("name")){
                 name = obj.getString("name");
-            }
-            
+            }            
             if(obj.has("phoneNumber")){
                 phoneNumber = obj.getString("phoneNumber");
             }
@@ -76,9 +72,8 @@ public class Model_Profile {
             }
             if(obj.has("address")){
                 address = obj.getString("address");
-            }
-            
-        } catch (Exception e) {
+            }        
+        } catch (JSONException e) {
             e.printStackTrace();
         }
     }
