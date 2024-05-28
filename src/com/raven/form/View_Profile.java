@@ -10,6 +10,7 @@ import com.raven.model.Model_Profile;
 import com.raven.model.Model_Profile_Update;
 import com.raven.model.Model_Receive_Image;
 import com.raven.model.Model_Send_Message;
+import com.raven.model.Model_User_Account;
 import com.raven.service.Service;
 import com.raven.swing.ScrollBar;
 import java.awt.Color;
@@ -37,23 +38,23 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class View_Profile extends javax.swing.JPanel {
-
+    
     private final String pathAvatarBasic = "/com/raven/icon/profile.png";
     private final String pathCoverArtBasic = "/com/raven/icon/testing/dog.jpg";
     private Model_Profile modelProfile;
-
+    
     public Model_Profile getModelProfile() {
         return modelProfile;
     }
-
+    
     public void setModelProfile(Model_Profile modelProfile) {
         this.modelProfile = modelProfile;
     }
-
+    
     public View_Profile() {
         initComponents();
         init();
-
+        
         PublicEvent.getInstance().addEventViewProfile(new EventViewProfile() {
             @Override
             public void setProfile(Model_Profile dataPr, int mode) {
@@ -73,7 +74,7 @@ public class View_Profile extends javax.swing.JPanel {
                 //
                 if (dataPr.getName() != null && !dataPr.getName().equals("")) {
                     lbSetName.setText(dataPr.getName());
-                    txtSetName.setText(dataPr.getName());
+                    
                 }
                 if (mode == 1) {
 
@@ -111,10 +112,10 @@ public class View_Profile extends javax.swing.JPanel {
                     }
                 }
             }
-
+            
         });
     }
-
+    
     public void refreshView() {
         avt.setImage(new ImageIcon(getClass().getResource(pathAvatarBasic)));
         coverArt.setImage(new ImageIcon(getClass().getResource(pathCoverArtBasic)));
@@ -124,9 +125,9 @@ public class View_Profile extends javax.swing.JPanel {
         viewOutEmail.getLbContent().setText("Chưa cập nhập");
         viewOutGender.getLbContent().setText("Chưa cập nhập");
         viewOutPhone.getLbContent().setText("Chưa cập nhập");
-
+        
     }
-
+    
     public void init() {
         scroll.setVerticalScrollBar(new ScrollBar());
         setOpaque(false);
@@ -152,7 +153,7 @@ public class View_Profile extends javax.swing.JPanel {
         //
         lbError.setVisible(false);
     }
-
+    
     public void stackAvatarOnCoverArt() {
         int coverArtWidth = 350;
         int coverArtHeight = 150;
@@ -165,11 +166,11 @@ public class View_Profile extends javax.swing.JPanel {
         MenuList.add(avt, javax.swing.JLayeredPane.PALETTE_LAYER);
         avt.setBounds(avatarX, avatarY, avatarWidth, avatarHeight);
     }
-
+    
     public void viewProfile() {
         setVisible(true);
     }
-
+    
     private void setDataViewEdit() {
         if (modelProfile == null) {
             return;
@@ -209,9 +210,9 @@ public class View_Profile extends javax.swing.JPanel {
         viewPhone.getTxtContent().setText(modelProfile.getPhoneNumber());
         viewEmail.getTxtContent().setText(modelProfile.getEmail());
         viewAddress.getTxtContent().setText(modelProfile.getAddress());
-
+        
     }
-
+    
     private void setDataView() {
         if (modelProfile == null) {
             return;
@@ -236,7 +237,7 @@ public class View_Profile extends javax.swing.JPanel {
             String year = dateParts[0];
             String month = dateParts[1];
             String day = dateParts[2];
-
+            
             viewOutDate.getLbContent().setText(day + "/" + month + "/" + year);
         } else {
             viewOutDate.getLbContent().setText("Chưa cập nhập");
@@ -257,7 +258,7 @@ public class View_Profile extends javax.swing.JPanel {
             viewOutAddress.getLbContent().setText("Chưa cập nhập");
         }
     }
-
+    
     private boolean checkDataUpdateProfile() {
         String userName = viewUserName.getTxtContent().getText();
         String gender = "";
@@ -284,7 +285,7 @@ public class View_Profile extends javax.swing.JPanel {
         lbError.setVisible(false);
         return true;
     }
-
+    
     private boolean isBlankOrWhitespace(String input) {
         // Loại bỏ dấu cách ở đầu và cuối chuỗi
         String trimmedInput = input.trim();
@@ -292,7 +293,7 @@ public class View_Profile extends javax.swing.JPanel {
         // Kiểm tra xem chuỗi sau khi loại bỏ dấu cách có rỗng không
         return trimmedInput.isEmpty();
     }
-
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -718,7 +719,7 @@ public class View_Profile extends javax.swing.JPanel {
     }//GEN-LAST:event_titleMousePressed
 
     private void cmdEditProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdEditProfileActionPerformed
-
+        
         info1.setVisible(false);
         info2.setVisible(true);
         //
@@ -732,6 +733,7 @@ public class View_Profile extends javax.swing.JPanel {
     }//GEN-LAST:event_title1MousePressed
 
     private void cmdEditNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdEditNameActionPerformed
+        txtSetName.setText(modelProfile.getName());
         panelName1.setVisible(false);
         panelName2.setVisible(true);
     }//GEN-LAST:event_cmdEditNameActionPerformed
@@ -756,7 +758,7 @@ public class View_Profile extends javax.swing.JPanel {
         d.setUserID(modelProfile.getUserID());
         d.setName(txtSetName.getText());
         PublicEvent.getInstance().getEventProfile().updateName(d);
-
+        
         panelName2.setVisible(false);
         panelName1.setVisible(true);
         lbSetName.setText(txtSetName.getText());
@@ -765,7 +767,7 @@ public class View_Profile extends javax.swing.JPanel {
         PublicEvent.getInstance().getEventMain().setTitleName(txtSetName.getText());
 
     }//GEN-LAST:event_cmdEditNameOkActionPerformed
-
+    
 
     private void cmdEditProfileCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdEditProfileCloseActionPerformed
         info2.setVisible(false);
@@ -782,7 +784,7 @@ public class View_Profile extends javax.swing.JPanel {
         if (!b) {
             return;
         }
-
+        
         String userName = viewUserName.getTxtContent().getText();
         if (isBlankOrWhitespace(userName)) {
             viewUserName.getTxtContent().grabFocus();
@@ -792,7 +794,7 @@ public class View_Profile extends javax.swing.JPanel {
         }
         String gender = genderViewIn.getComboBoxGender().getSelectedItem().toString();
         String date = dateViewIn.getComboBoxYear().getSelectedItem().toString() + "-" + dateViewIn.getComboBoxMon().getSelectedItem().toString() + "-" + dateViewIn.getComBoxDay().getSelectedItem().toString();
-
+        
         String phone = viewPhone.getTxtContent().getText();
         if (isBlankOrWhitespace(phone)) {
             viewPhone.getTxtContent().grabFocus();
@@ -828,8 +830,9 @@ public class View_Profile extends javax.swing.JPanel {
                 return;
             }
             String imageBase64 = null;
+            byte[] fileData;
             try {
-                byte[] fileData = readFileToByteArray(selectedFile);
+                fileData = readFileToByteArray(selectedFile);
                 imageBase64 = Base64.getEncoder().encodeToString(fileData);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -843,10 +846,18 @@ public class View_Profile extends javax.swing.JPanel {
             data.setImageData(imageBase64);
             boolean b = PublicEvent.getInstance().getEventProfile().updateAavatar(data);
             if (b) {
-                avt.setImage(PublicEvent.getInstance().getEventProfile().createImage(imageBase64));
-                avt.repaint();
-                modelProfile.setImage(imageBase64);
-                PublicEvent.getInstance().getEventMain().updateProfile(modelProfile);
+                try {
+                    avt.setImage(PublicEvent.getInstance().getEventProfile().createImage(imageBase64));
+                    avt.repaint();
+                    modelProfile.setImage(imageBase64);
+                    PublicEvent.getInstance().getEventMain().updateProfile(modelProfile);
+                    //
+                    String strImage=PublicEvent.getInstance().getEventMain().processImage(fileData);
+                    Model_Image_Update dataImageUpdate= new Model_Image_Update(modelProfile.getUserID(), imageBase64, true);
+                    Service.getInstance().getClient().emit("user_updated_image", dataImageUpdate.toJsonObject());
+                } catch (IOException ex) {
+                    Logger.getLogger(View_Profile.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
     }//GEN-LAST:event_avtMouseClicked
@@ -923,17 +934,17 @@ public class View_Profile extends javax.swing.JPanel {
     }//GEN-LAST:event_cmdEditProfileCloseMouseEntered
 
     private void cmdEditProfileCloseMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cmdEditProfileCloseMouseExited
-         cmdEditProfileClose.setContentAreaFilled(false);
+        cmdEditProfileClose.setContentAreaFilled(false);
     }//GEN-LAST:event_cmdEditProfileCloseMouseExited
 
     private void cmdEditProfileOkMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cmdEditProfileOkMouseEntered
-         cmdEditProfileOk.setContentAreaFilled(true);
+        cmdEditProfileOk.setContentAreaFilled(true);
     }//GEN-LAST:event_cmdEditProfileOkMouseEntered
 
     private void cmdEditProfileOkMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cmdEditProfileOkMouseExited
         cmdEditProfileOk.setContentAreaFilled(false);
     }//GEN-LAST:event_cmdEditProfileOkMouseExited
-
+    
     private File selectedImage() {
         JFileChooser ch = new JFileChooser();
         ch.setMultiSelectionEnabled(false); // Chỉ cho phép chọn một tệp duy nhất
@@ -942,27 +953,25 @@ public class View_Profile extends javax.swing.JPanel {
             public boolean accept(File file) {
                 return file.isDirectory() || isImageFile(file);
             }
-
+            
             @Override
             public String getDescription() {
                 return "Image File";
             }
         });
-
+        
         int option = ch.showOpenDialog(Main.getFrames()[0]);
         if (option == JFileChooser.APPROVE_OPTION) {
             return ch.getSelectedFile();
         }
         return null;
     }
-
     
-
     private boolean isImageFile(File file) {
         String name = file.getName().toLowerCase();
         return name.endsWith(".jpg") || name.endsWith(".png") || name.endsWith(".jpeg") || name.endsWith(".gif");
     }
-
+    
     private byte[] readFileToByteArray(File file) throws IOException {
         FileInputStream fileInputStream = new FileInputStream(file);
         byte[] fileData = new byte[(int) file.length()];
@@ -970,7 +979,7 @@ public class View_Profile extends javax.swing.JPanel {
         fileInputStream.close();
         return fileData;
     }
-
+    
     @Override
     protected void paintComponent(Graphics grphcs) {
         Graphics2D g2 = (Graphics2D) grphcs;

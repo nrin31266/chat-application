@@ -6,6 +6,7 @@ import com.raven.swing.ImageAvatar;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.Icon;
 
 public class Item_People extends javax.swing.JPanel {
 
@@ -37,6 +38,12 @@ public class Item_People extends javax.swing.JPanel {
     public void updateStatus() {
         activeStatus.setActive(user.isStatus());
         repaint();
+    }
+    public void setAvatar(String image){
+        Icon icon= PublicEvent.getInstance().getEventProfile().createImage(image);
+        imageAvatar.setImage(icon);
+        imageAvatar.repaint();
+        imageAvatar.revalidate();
     }
 
     private void init() {

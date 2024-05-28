@@ -31,6 +31,9 @@ import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -43,6 +46,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
@@ -50,6 +54,7 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.plaf.basic.BasicLookAndFeel;
+import net.coobird.thumbnailator.Thumbnails;
 import org.json.JSONObject;
 
 public class Main extends javax.swing.JFrame {
@@ -94,13 +99,12 @@ public class Main extends javax.swing.JFrame {
                     Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 home.setVisible(true);
-                
+
                 login.setVisible(false);
-                
+
                 loading.setVisible(false);
                 title_a.setBackground(new Color(220, 205, 223));
 
-                
             }
 
             @Override
@@ -129,6 +133,31 @@ public class Main extends javax.swing.JFrame {
             public Home getHome() {
                 return home;
             }
+
+            @Override
+            public String processImage(byte[] imageBytes) throws IOException{
+                // Đọc ảnh từ mảng byte
+                ByteArrayInputStream inputStream = new ByteArrayInputStream(imageBytes);
+                BufferedImage originalImage = ImageIO.read(inputStream);
+
+                // Thay đổi kích thước và nén ảnh
+                BufferedImage resizedImage = Thumbnails.of(originalImage)
+                        .size(80, 80) // Thay đổi kích thước
+                        .outputQuality(0.85) // Chất lượng nén
+                        .asBufferedImage();
+
+                // Ghi ảnh ra ByteArrayOutputStream
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                ImageIO.write(resizedImage, "jpg", outputStream);
+
+                // Chuyển đổi ByteArrayOutputStream thành chuỗi Base64
+                byte[] compressedImageBytes = outputStream.toByteArray();
+                String base64Image = Base64.getEncoder().encodeToString(compressedImageBytes);
+
+                return base64Image;
+            }
+
+            
 
         });
         PublicEvent.getInstance().addEventProfile(new EventProfile() {

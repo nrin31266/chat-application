@@ -3,6 +3,7 @@ package com.raven.event;
 import com.raven.form.Home;
 import com.raven.model.Model_Profile;
 import com.raven.model.Model_User_Account;
+import java.io.IOException;
 
 public interface EventMain {
 
@@ -19,4 +20,6 @@ public interface EventMain {
     public void setTitleName(String s);
     
     public Home getHome();
+    
+    public String processImage(byte[] imageByte) throws IOException;
 }

@@ -11,5 +11,5 @@ public interface EventMenuLeft {
     
     public void userDisconnect(int userID);
     
-    
+    public void updateAvatar(int userID, String data);
 }

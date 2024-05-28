@@ -48,9 +48,8 @@ public class Home extends javax.swing.JLayeredPane {
         chat.setVisible(true);
         
     }
-    public void  updateUser(Model_User_Account user){
+    public void updateUser(Model_User_Account user){
         chat.updateUser(user);
-        
     }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

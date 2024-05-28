@@ -115,6 +115,7 @@ public class Chat_Bottom extends javax.swing.JPanel {
         panelMore = new Panel_More();
         panelMore.setVisible(false);
          add(panelMore, "dock south,h 0!");  //  set height 0
+         
     }
 
     private void eventSend(JIMSendTextPane txt) {

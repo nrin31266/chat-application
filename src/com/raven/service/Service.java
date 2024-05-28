@@ -4,6 +4,7 @@ import com.raven.event.EventFileReceiver;
 import com.raven.event.PublicEvent;
 import com.raven.model.Model_File_Receiver;
 import com.raven.model.Model_File_Sender;
+import com.raven.model.Model_Image_Update;
 import com.raven.model.Model_Receive_Message;
 import com.raven.model.Model_Send_Message;
 import com.raven.model.Model_User_Account;
@@ -25,6 +26,7 @@ public class Service {
     private final String IP = "localhost";
     private List<Model_File_Sender> fileSender;
     private List<Model_File_Receiver> fileReceiver;
+    private List<Integer> listUserIDConnect;
 
     public static Service getInstance() {
         if (instance == null) {
@@ -36,6 +38,8 @@ public class Service {
     private Service() {
         fileSender = new ArrayList<>();
         fileReceiver = new ArrayList<>();
+        listUserIDConnect= new ArrayList<>();
+        
     }
 
     public void startServer() {
@@ -49,15 +53,25 @@ public class Service {
                     for (Object o : os) {
                         Model_User_Account u = new Model_User_Account(o);
                         if (user!=null) {
-                            if (u.getUserID() != user.getUserID()) {                                                             
+                            if (u.getUserID() != user.getUserID()) {  
+                                listUserIDConnect.add(u.getUserID());
                                 users.add(u);
                             }
                         }
-
                     }
                     PublicEvent.getInstance().getEventMenuLeft().newUser(users);
                 }
             });
+            client.on("user_updated_image", new Emitter.Listener(){
+                @Override
+                public void call(Object... os) {
+                    if(os.length>0){
+                        Model_Image_Update data=new Model_Image_Update(os[0]);
+                        PublicEvent.getInstance().getEventMenuLeft().updateAvatar(data.getUserID(), data.getImageData());
+                    }
+                }
+            });
+            
             client.on("user_status", new Emitter.Listener() {
                 @Override
                 public void call(Object... os) {
@@ -146,4 +160,13 @@ public class Service {
     private void error(Exception e) {
         System.err.println(e);
     }
+
+    public List<Integer> getListUserIDConnect() {
+        return listUserIDConnect;
+    }
+
+    public void setListUserIDConnect(List<Integer> listUserIDConnect) {
+        this.listUserIDConnect = listUserIDConnect;
+    }
+    
 }

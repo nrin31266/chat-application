@@ -24,6 +24,7 @@ public class Menu_Left extends javax.swing.JPanel {
     public void setModel_profile(Model_Profile model_profile) {
         this.model_profile = model_profile;
     }
+
     public Menu_Left() {
         initComponents();
         init();
@@ -33,8 +34,7 @@ public class Menu_Left extends javax.swing.JPanel {
         sp.setVerticalScrollBar(new ScrollBar());
         menuList.setLayout(new MigLayout("fillx", "0[]0", "0[]0"));
         userAccount = new ArrayList<>();
-        
-        
+
         /////
         PublicEvent.getInstance().addEventMenuLeft(new EventMenuLeft() {
             @Override
@@ -82,6 +82,23 @@ public class Menu_Left extends javax.swing.JPanel {
                             item.updateStatus();
                             break;
                         }
+                    }
+                }
+            }
+
+            @Override
+            public void updateAvatar(int userID, String dataImage) {
+                for (Model_User_Account u : userAccount) {
+                    if (u.getUserID() == userID) {
+                        u.setImage(dataImage);
+                        break;
+                    }
+                }
+                for (Component com : menuList.getComponents()) {
+                    Item_People item = (Item_People) com;
+                    if (item.getUser().getUserID() == userID) {
+                        item.setAvatar(dataImage);
+                        break;
                     }
                 }
             }
