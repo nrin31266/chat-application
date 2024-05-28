@@ -46,11 +46,10 @@ public class Service {
                 public void call(Object... os) {
                     // list_user
                     List<Model_User_Account> users = new ArrayList<>();
-                    System.err.println("Nhan list");
                     for (Object o : os) {
                         Model_User_Account u = new Model_User_Account(o);
                         if (user!=null) {
-                            if (u.getUserID() != user.getUserID()) {
+                            if (u.getUserID() != user.getUserID()) {                                                             
                                 users.add(u);
                             }
                         }

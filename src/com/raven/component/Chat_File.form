@@ -20,9 +20,9 @@
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="pic" max="32767" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Component id="jPanel1" min="-2" pref="123" max="-2" attributes="0"/>
+              <Component id="jPanel1" pref="129" max="32767" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Component id="jLayeredPane1" min="-2" pref="25" max="-2" attributes="0"/>
+              <Component id="jLayeredPane1" min="-2" pref="19" max="-2" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -134,7 +134,7 @@
         <Component class="com.raven.component.OptionButton" name="cmdDow">
           <Properties>
             <Property name="iconSelected" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/com/raven/icon/download.png"/>
+              <Image iconType="3" name="/com/raven/icon/down_black.png"/>
             </Property>
           </Properties>
         </Component>

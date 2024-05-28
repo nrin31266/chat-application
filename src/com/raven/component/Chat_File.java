@@ -211,7 +211,7 @@ public class Chat_File extends javax.swing.JPanel {
         });
         jLayeredPane1.add(cmdLocation);
 
-        cmdDow.setIconSelected(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/download.png"))); // NOI18N
+        cmdDow.setIconSelected(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/down_black.png"))); // NOI18N
         jLayeredPane1.add(cmdDow);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -222,9 +222,9 @@ public class Chat_File extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(pic, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 129, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
