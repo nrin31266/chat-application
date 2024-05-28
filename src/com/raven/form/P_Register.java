@@ -135,6 +135,7 @@ public class P_Register extends javax.swing.JPanel {
                 public void callMessage(Model_Message message) {
                     if (!message.isAction()) {
                         lbError.setText(message.getMessage());
+                        PublicEvent.getInstance().getEventMain().showLoading(false);
                     } else {
                         //
                         PublicEvent.getInstance().getEventMain().initChat();

@@ -67,7 +67,7 @@ public class Login extends javax.swing.JPanel {
                                             }).thenAccept(profile -> {
                                                 PublicEvent.getInstance().getEventMain().getHome().setModelProfile(profile);
                                                 PublicEvent.getInstance().getEventMain().initChat();
-                                                PublicEvent.getInstance().getEventMain().showLoading(false);
+//                                                PublicEvent.getInstance().getEventMain().showLoading(false);
                                             }).exceptionally(ex -> {
                                                 PublicEvent.getInstance().getEventMain().showLoading(false);
                                                 System.err.println("Error: " + ex.getMessage());
@@ -92,10 +92,12 @@ public class Login extends javax.swing.JPanel {
 
             @Override
             public void register(Model_Register data, EventMessage message) {
+                PublicEvent.getInstance().getEventMain().showLoading(true);
                 Service.getInstance().getClient().emit("register", data.toJsonObject(), new Ack() {
                     @Override
                     public void call(Object... os) {
                         if (os.length > 0) {
+                            
                             Model_Message ms = new Model_Message((boolean) os[0], os[1].toString());
 
                             if (ms.isAction()) {
@@ -104,7 +106,6 @@ public class Login extends javax.swing.JPanel {
                             }
                             message.callMessage(ms);
                             //  call message back when done register
-
                         }
                     }
                 });

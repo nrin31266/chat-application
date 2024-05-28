@@ -50,14 +50,14 @@ public class Panel_More extends javax.swing.JPanel {
         panelHeader.add(getButtonImage());
 //        panelHeader.setBackground(new Color(220, 205, 223));
         panelHeader.add(getButtonFile());
-        
-
         panelHeader.add(getEmojiStyle1());
+        
+        //
         panelHeader.add(getEmojiStyle2());
         panelHeader.setLayout(new BoxLayout(panelHeader, BoxLayout.X_AXIS));
         panelHeader.setAlignmentX(Component.LEFT_ALIGNMENT);
         add(panelHeader, "w 100%, h 30!, wrap");
-        
+
         panelDetail = new JPanel();
         panelDetail.setBackground(new Color(235, 235, 235));
         JScrollPane ch = new JScrollPane(panelDetail);
@@ -68,6 +68,11 @@ public class Panel_More extends javax.swing.JPanel {
         add(ch, "w 100%, h 100%");
 
         panelDetail.setLayout(new WrapLayout(WrapLayout.LEFT));
+        for (Model_Emoji d : Emoji.getInstance().getStyle1()) {
+            panelDetail.add(getButton(d));
+        }
+//        panelDetail.repaint();
+//        panelDetail.revalidate();
 
     }
 
@@ -113,7 +118,7 @@ public class Panel_More extends javax.swing.JPanel {
     private JButton getButtonFile() {
         OptionButton cmd = new OptionButton();
         cmd.setIconSelected(new ImageIcon(getClass().getResource("/com/raven/icon/link.png")));
-        cmd.addActionListener(new ActionListener() { 
+        cmd.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ape) {
                 JFileChooser ch = new JFileChooser();
@@ -156,7 +161,7 @@ public class Panel_More extends javax.swing.JPanel {
             }
 
         });
-
+        cmd.setSelected(true);
         return cmd;
     }
 

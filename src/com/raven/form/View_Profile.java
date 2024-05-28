@@ -354,8 +354,17 @@ public class View_Profile extends javax.swing.JPanel {
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
         jLabel1.setText(" Thông tin tài khoản:");
 
+        cmdClose.setBackground(new java.awt.Color(218, 218, 218));
         cmdClose.setIconSelected(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/close_panel.png"))); // NOI18N
         cmdClose.setPreferredSize(new java.awt.Dimension(25, 25));
+        cmdClose.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                cmdCloseMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                cmdCloseMouseExited(evt);
+            }
+        });
         cmdClose.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmdCloseActionPerformed(evt);
@@ -395,10 +404,19 @@ public class View_Profile extends javax.swing.JPanel {
         lbSetName.setPreferredSize(new java.awt.Dimension(100, 36));
         panelName1.add(lbSetName);
 
+        cmdEditName.setBackground(new java.awt.Color(218, 218, 218));
         cmdEditName.setIconSelected(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/pen.png"))); // NOI18N
         cmdEditName.setMaximumSize(new java.awt.Dimension(20, 20));
         cmdEditName.setMinimumSize(new java.awt.Dimension(20, 20));
         cmdEditName.setPreferredSize(new java.awt.Dimension(20, 20));
+        cmdEditName.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                cmdEditNameMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                cmdEditNameMouseExited(evt);
+            }
+        });
         cmdEditName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmdEditNameActionPerformed(evt);
@@ -415,6 +433,7 @@ public class View_Profile extends javax.swing.JPanel {
         txtSetName.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 // txtSetNameMouseClicked(evt);
+                //dcmm
             }
         });
         txtSetName.addActionListener(new java.awt.event.ActionListener() {
@@ -424,9 +443,18 @@ public class View_Profile extends javax.swing.JPanel {
         });
         panelName2.add(txtSetName);
 
+        cmdEditNameClose.setForeground(new java.awt.Color(218, 218, 218));
         cmdEditNameClose.setIconSelected(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/delete_1.png"))); // NOI18N
         cmdEditNameClose.setMaximumSize(new java.awt.Dimension(20, 20));
         cmdEditNameClose.setPreferredSize(new java.awt.Dimension(20, 36));
+        cmdEditNameClose.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                cmdEditNameCloseMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                cmdEditNameCloseMouseExited(evt);
+            }
+        });
         cmdEditNameClose.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmdEditNameCloseActionPerformed(evt);
@@ -434,10 +462,19 @@ public class View_Profile extends javax.swing.JPanel {
         });
         panelName2.add(cmdEditNameClose);
 
+        cmdEditNameOk.setBackground(new java.awt.Color(183, 232, 183));
         cmdEditNameOk.setIconSelected(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/tick_ok.png"))); // NOI18N
         cmdEditNameOk.setMaximumSize(new java.awt.Dimension(20, 20));
         cmdEditNameOk.setMinimumSize(new java.awt.Dimension(20, 20));
         cmdEditNameOk.setPreferredSize(new java.awt.Dimension(20, 20));
+        cmdEditNameOk.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                cmdEditNameOkMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                cmdEditNameOkMouseExited(evt);
+            }
+        });
         cmdEditNameOk.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmdEditNameOkActionPerformed(evt);
@@ -513,27 +550,54 @@ public class View_Profile extends javax.swing.JPanel {
         jLabel3.setForeground(new java.awt.Color(0, 0, 0));
         jLabel3.setText(" Thông tin cá nhân:");
 
+        cmdEditProfile.setBackground(new java.awt.Color(218, 218, 218));
         cmdEditProfile.setIconSelected(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/edit_profile.png"))); // NOI18N
         cmdEditProfile.setPreferredSize(new java.awt.Dimension(25, 25));
+        cmdEditProfile.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                cmdEditProfileMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                cmdEditProfileMouseExited(evt);
+            }
+        });
         cmdEditProfile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmdEditProfileActionPerformed(evt);
             }
         });
 
+        cmdEditProfileClose.setBackground(new java.awt.Color(218, 218, 218));
         cmdEditProfileClose.setIconSelected(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/delete_1.png"))); // NOI18N
         cmdEditProfileClose.setMaximumSize(new java.awt.Dimension(20, 20));
         cmdEditProfileClose.setPreferredSize(new java.awt.Dimension(20, 36));
+        cmdEditProfileClose.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                cmdEditProfileCloseMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                cmdEditProfileCloseMouseExited(evt);
+            }
+        });
         cmdEditProfileClose.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmdEditProfileCloseActionPerformed(evt);
             }
         });
 
+        cmdEditProfileOk.setBackground(new java.awt.Color(183, 232, 183));
         cmdEditProfileOk.setIconSelected(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/tick_ok.png"))); // NOI18N
         cmdEditProfileOk.setMaximumSize(new java.awt.Dimension(20, 20));
         cmdEditProfileOk.setMinimumSize(new java.awt.Dimension(20, 20));
         cmdEditProfileOk.setPreferredSize(new java.awt.Dimension(20, 20));
+        cmdEditProfileOk.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                cmdEditProfileOkMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                cmdEditProfileOkMouseExited(evt);
+            }
+        });
         cmdEditProfileOk.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmdEditProfileOkActionPerformed(evt);
@@ -813,6 +877,62 @@ public class View_Profile extends javax.swing.JPanel {
             PublicEvent.getInstance().getEventMain().updateProfile(modelProfile);
         }
     }//GEN-LAST:event_cmdSetCoverArtActionPerformed
+
+    private void cmdCloseMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cmdCloseMouseEntered
+        cmdClose.setContentAreaFilled(true);
+    }//GEN-LAST:event_cmdCloseMouseEntered
+
+    private void cmdCloseMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cmdCloseMouseExited
+        cmdClose.setContentAreaFilled(false);
+    }//GEN-LAST:event_cmdCloseMouseExited
+
+    private void cmdEditNameMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cmdEditNameMouseEntered
+        cmdEditName.setContentAreaFilled(true);
+    }//GEN-LAST:event_cmdEditNameMouseEntered
+
+    private void cmdEditNameMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cmdEditNameMouseExited
+        cmdEditName.setContentAreaFilled(false);
+    }//GEN-LAST:event_cmdEditNameMouseExited
+
+    private void cmdEditNameCloseMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cmdEditNameCloseMouseEntered
+        cmdEditNameClose.setContentAreaFilled(true);
+    }//GEN-LAST:event_cmdEditNameCloseMouseEntered
+
+    private void cmdEditNameCloseMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cmdEditNameCloseMouseExited
+        cmdEditNameClose.setContentAreaFilled(false);
+    }//GEN-LAST:event_cmdEditNameCloseMouseExited
+
+    private void cmdEditNameOkMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cmdEditNameOkMouseEntered
+        cmdEditNameOk.setContentAreaFilled(true);
+    }//GEN-LAST:event_cmdEditNameOkMouseEntered
+
+    private void cmdEditNameOkMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cmdEditNameOkMouseExited
+        cmdEditNameOk.setContentAreaFilled(false);
+    }//GEN-LAST:event_cmdEditNameOkMouseExited
+
+    private void cmdEditProfileMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cmdEditProfileMouseEntered
+        cmdEditProfile.setContentAreaFilled(true);
+    }//GEN-LAST:event_cmdEditProfileMouseEntered
+
+    private void cmdEditProfileMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cmdEditProfileMouseExited
+        cmdEditProfile.setContentAreaFilled(false);
+    }//GEN-LAST:event_cmdEditProfileMouseExited
+
+    private void cmdEditProfileCloseMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cmdEditProfileCloseMouseEntered
+        cmdEditProfileClose.setContentAreaFilled(true);
+    }//GEN-LAST:event_cmdEditProfileCloseMouseEntered
+
+    private void cmdEditProfileCloseMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cmdEditProfileCloseMouseExited
+         cmdEditProfileClose.setContentAreaFilled(false);
+    }//GEN-LAST:event_cmdEditProfileCloseMouseExited
+
+    private void cmdEditProfileOkMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cmdEditProfileOkMouseEntered
+         cmdEditProfileOk.setContentAreaFilled(true);
+    }//GEN-LAST:event_cmdEditProfileOkMouseEntered
+
+    private void cmdEditProfileOkMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cmdEditProfileOkMouseExited
+        cmdEditProfileOk.setContentAreaFilled(false);
+    }//GEN-LAST:event_cmdEditProfileOkMouseExited
 
     private File selectedImage() {
         JFileChooser ch = new JFileChooser();

@@ -201,18 +201,50 @@ public class Chat_File extends javax.swing.JPanel {
         lbFileSize.setText("size=?");
         jPanel1.add(lbFileSize);
 
-        jLayeredPane1.setLayout(new javax.swing.BoxLayout(jLayeredPane1, javax.swing.BoxLayout.Y_AXIS));
-
+        cmdLocation.setBackground(new java.awt.Color(218, 218, 218));
         cmdLocation.setIconSelected(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/folder.png"))); // NOI18N
+        cmdLocation.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                cmdLocationMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                cmdLocationMouseExited(evt);
+            }
+        });
         cmdLocation.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmdLocationActionPerformed(evt);
             }
         });
-        jLayeredPane1.add(cmdLocation);
 
+        cmdDow.setBackground(new java.awt.Color(218, 218, 218));
         cmdDow.setIconSelected(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/down_black.png"))); // NOI18N
-        jLayeredPane1.add(cmdDow);
+        cmdDow.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                cmdDowMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                cmdDowMouseExited(evt);
+            }
+        });
+
+        jLayeredPane1.setLayer(cmdLocation, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane1.setLayer(cmdDow, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        javax.swing.GroupLayout jLayeredPane1Layout = new javax.swing.GroupLayout(jLayeredPane1);
+        jLayeredPane1.setLayout(jLayeredPane1Layout);
+        jLayeredPane1Layout.setHorizontalGroup(
+            jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(cmdLocation, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(cmdDow, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+        jLayeredPane1Layout.setVerticalGroup(
+            jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jLayeredPane1Layout.createSequentialGroup()
+                .addComponent(cmdLocation, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(cmdDow, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -224,7 +256,7 @@ public class Chat_File extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 129, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -233,7 +265,7 @@ public class Chat_File extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(pic, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -242,6 +274,23 @@ public class Chat_File extends javax.swing.JPanel {
     private void cmdLocationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdLocationActionPerformed
 
     }//GEN-LAST:event_cmdLocationActionPerformed
+
+    private void cmdLocationMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cmdLocationMouseEntered
+        // TODO add your handling code here:
+        cmdLocation.setContentAreaFilled(true);
+    }//GEN-LAST:event_cmdLocationMouseEntered
+
+    private void cmdLocationMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cmdLocationMouseExited
+        cmdLocation.setContentAreaFilled(false);
+    }//GEN-LAST:event_cmdLocationMouseExited
+
+    private void cmdDowMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cmdDowMouseEntered
+        cmdDow.setContentAreaFilled(true);
+    }//GEN-LAST:event_cmdDowMouseEntered
+
+    private void cmdDowMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cmdDowMouseExited
+        cmdDow.setContentAreaFilled(false);
+    }//GEN-LAST:event_cmdDowMouseExited
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

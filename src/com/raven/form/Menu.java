@@ -3,6 +3,7 @@ package com.raven.form;
 import com.raven.event.PublicEvent;
 import com.raven.model.Model_Profile;
 import com.raven.service.Service;
+import java.awt.Cursor;
 public class Menu extends javax.swing.JPanel {
 
     private Model_Profile modelProfile;
@@ -28,6 +29,7 @@ public class Menu extends javax.swing.JPanel {
     
     public Menu() {
         initComponents();
+        imageAvatar.setCursor(new Cursor(Cursor.HAND_CURSOR));
     }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
