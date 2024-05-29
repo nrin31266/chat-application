@@ -1,6 +1,7 @@
 package com.raven.component;
 
 import com.raven.model.Model_File_Sender;
+import com.raven.model.Model_HistoryChat;
 import java.awt.Color;
 import javax.swing.Icon;
 
@@ -24,6 +25,12 @@ public class Chat_Right extends javax.swing.JLayeredPane {
         txt.hideText();
         txt.setEmoji(true, icon);
     }
+    public void setImage(Model_HistoryChat data){
+        txt.setImage(true, data);
+    }
+    public void setFile(Model_HistoryChat data){
+        txt.setFile(true, data, 0);
+    }
     public void setImage(Model_File_Sender fileSender) {
         txt.setImage(true, fileSender);
     }
@@ -38,6 +45,9 @@ public class Chat_Right extends javax.swing.JLayeredPane {
 
     public void setTime() {
         txt.setTime();    //  Testing
+    }
+    public void setTime(String time){
+        txt.setTime(time);
     }
 
     @SuppressWarnings("unchecked")

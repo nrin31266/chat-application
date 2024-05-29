@@ -4,6 +4,7 @@ import com.raven.event.EventFileReceiver;
 import com.raven.event.PublicEvent;
 import com.raven.model.Model_File_Receiver;
 import com.raven.model.Model_File_Sender;
+import com.raven.model.Model_HistoryChat;
 import com.raven.model.Model_Image_Update;
 import com.raven.model.Model_Receive_Message;
 import com.raven.model.Model_Send_Message;
@@ -38,8 +39,8 @@ public class Service {
     private Service() {
         fileSender = new ArrayList<>();
         fileReceiver = new ArrayList<>();
-        listUserIDConnect= new ArrayList<>();
-        
+        listUserIDConnect = new ArrayList<>();
+
     }
 
     public void startServer() {
@@ -52,8 +53,8 @@ public class Service {
                     List<Model_User_Account> users = new ArrayList<>();
                     for (Object o : os) {
                         Model_User_Account u = new Model_User_Account(o);
-                        if (user!=null) {
-                            if (u.getUserID() != user.getUserID()) {  
+                        if (user != null) {
+                            if (u.getUserID() != user.getUserID()) {
                                 listUserIDConnect.add(u.getUserID());
                                 users.add(u);
                             }
@@ -62,16 +63,16 @@ public class Service {
                     PublicEvent.getInstance().getEventMenuLeft().newUser(users);
                 }
             });
-            client.on("user_updated_image", new Emitter.Listener(){
+            client.on("user_updated_image", new Emitter.Listener() {
                 @Override
                 public void call(Object... os) {
-                    if(os.length>0){
-                        Model_Image_Update data=new Model_Image_Update(os[0]);
+                    if (os.length > 0) {
+                        Model_Image_Update data = new Model_Image_Update(os[0]);
                         PublicEvent.getInstance().getEventMenuLeft().updateAvatar(data.getUserID(), data.getImageData());
                     }
                 }
             });
-            
+
             client.on("user_status", new Emitter.Listener() {
                 @Override
                 public void call(Object... os) {
@@ -94,7 +95,7 @@ public class Service {
                     PublicEvent.getInstance().getEventChat().receiveMessage(message);
                 }
             });
-            
+
             client.open();
         } catch (URISyntaxException e) {
             error(e);
@@ -122,11 +123,22 @@ public class Service {
 //cách gọi initSend() cho tệp tin tiếp theo trong danh sách.
 
     public void fileSendFinish(Model_File_Sender data) throws IOException {
+        //
+        Model_HistoryChat dataHs;
+        dataHs = new Model_HistoryChat(Service.getInstance().getUser().getUserID(), selectedUser.getUserID(), 4, "", data.getFile().getAbsolutePath(), "client_data/" + data.getFileID() + data.getFileExtensions(), data.getFileID(), data.getFileName(), data.getFileSize() + "");
+        if (isImageFile(data.getFileName())) {
+            dataHs.setType(3);
+        }
+        PublicEvent.getInstance().getEventBody().sendChatToHistoryChat(dataHs);
         fileSender.remove(data);
         if (!fileSender.isEmpty()) {
             // bắt đầu gửi một file mới khi file cũ hoàn thành
             fileSender.get(0).initSend();
         }
+    }
+
+    private boolean isImageFile(String name) {
+        return name.endsWith(".jpg") || name.endsWith(".png") || name.endsWith(".jpeg") || name.endsWith(".gif");
     }
 
     public void fileReceiverFinish(Model_File_Receiver data) throws IOException {
@@ -168,5 +180,14 @@ public class Service {
     public void setListUserIDConnect(List<Integer> listUserIDConnect) {
         this.listUserIDConnect = listUserIDConnect;
     }
-    
+    private Model_User_Account selectedUser;
+
+    public Model_User_Account getSelectedUser() {
+        return selectedUser;
+    }
+
+    public void setSelectedUser(Model_User_Account selectedUser) {
+        this.selectedUser = selectedUser;
+    }
+
 }

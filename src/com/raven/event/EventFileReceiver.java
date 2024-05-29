@@ -8,5 +8,5 @@ public interface EventFileReceiver {
     
     public void onStartReceiving();
     
-    public void onFinish(File file);
+    public void onFinish(File file,int fileID, String fileExcetion,String fileName,String fileSize);
 }

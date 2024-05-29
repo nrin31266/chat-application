@@ -1,9 +1,11 @@
 package com.raven.component;
 
+import com.raven.event.EventFile;
 import com.raven.event.EventFileReceiver;
 import com.raven.event.EventFileSender;
 import com.raven.event.PublicEvent;
 import com.raven.model.Model_File_Sender;
+import com.raven.model.Model_HistoryChat;
 import com.raven.model.Model_Receive_File;
 import com.raven.model.Model_Receive_Image;
 import com.raven.service.Service;
@@ -17,14 +19,107 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
 public class Chat_File extends javax.swing.JPanel {
+
     private int mode;
-    
+
     public Chat_File() {
         initComponents();
         setOpaque(false);
         cmdDow.setVisible(false);
         cmdLocation.setVisible(false);
         progress.setBorder(null);
+        PublicEvent.getInstance().addEventFile(new EventFile() {
+            @Override
+            public String fileSizeConversion(String fileSize) {
+                Double sizeBytes = Double.parseDouble(fileSize);
+                if (sizeBytes == 0) {
+                    return "0B";
+                }
+                String[] sizeUnits = {"B", "KB", "MB", "GB", "TB", "PB"};
+                int unitIndex = (int) (Math.log(sizeBytes) / Math.log(1024));
+                double convertedSize = sizeBytes / Math.pow(1024, unitIndex);
+                return String.format("%.2f %s", convertedSize, sizeUnits[unitIndex]);
+            }
+
+            @Override
+            public Icon getIconFile(String fEx) {
+                if (fEx.equals(".docx") || fEx.equals(".doc")) {
+                    return new ImageIcon(getClass().getResource("/com/raven/icon/doc_docx.png"));
+                } else if (fEx.equals(".pptx")) {
+                    return new ImageIcon(getClass().getResource("/com/raven/icon/pptx.png"));
+                } else if (fEx.equals(".txt")) {
+                    return new ImageIcon(getClass().getResource("/com/raven/icon/txt.png"));
+                } else if (fEx.equals(".mp3")) {
+                    return new ImageIcon(getClass().getResource("/com/raven/icon/mp3.png"));
+                } else if (fEx.equals(".mp4")) {
+                    return new ImageIcon(getClass().getResource("/com/raven/icon/mp4.png"));
+                } else if (fEx.equals(".pdf")) {
+                    return new ImageIcon(getClass().getResource("/com/raven/icon/pdf.png"));
+                } else if (fEx.equals(".html")) {
+                    return new ImageIcon(getClass().getResource("/com/raven/icon/html.png"));
+                } else if (fEx.equals(".css")) {
+                    return new ImageIcon(getClass().getResource("/com/raven/icon/css.png"));
+                } else if (fEx.equals(".zip")) {
+                    return new ImageIcon(getClass().getResource("/com/raven/icon/zip.png"));
+                } else if (fEx.equals(".7z")) {
+                    return new ImageIcon(getClass().getResource("/com/raven/icon/7z.png"));
+                } else if (fEx.equals(".jpg") || fEx.equals(".png") || fEx.equals(".jpeg") || fEx.equals(".gif")) {
+                    return new ImageIcon(getClass().getResource("/com/raven/icon/img.png"));
+                } else {
+                    return new ImageIcon(getClass().getResource("/com/raven/icon/file.png"));
+                }
+            }
+
+            @Override
+            public String getFileExtension(String fileName) {
+                if (fileName == null || fileName.lastIndexOf('.') == -1) {
+                    return ""; // Trả về chuỗi rỗng nếu không có phần mở rộng
+                }
+                int lastDotIndex = fileName.lastIndexOf('.');
+                return fileName.substring(lastDotIndex);
+            }
+        });
+
+    }
+
+    public void setFileGHistory(Model_HistoryChat data, int mode) {
+        if (mode == 0) {
+            mode = 0;
+            progress.setVisible(false);
+//                cmdDow.setVisible(true);
+            lbName.setText(data.getFileName());
+            lbFileSize.setText(PublicEvent.getInstance().getEventFile().fileSizeConversion(data.getFileSize()));
+            pic.setImage(PublicEvent.getInstance().getEventFile().getIconFile(PublicEvent.getInstance().getEventFile().getFileExtension(data.getSenderFilePath())));
+            cmdLocation.setVisible(true);
+            cmdLocation.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    PublicEvent.getInstance().getEventDownFile().localFileSender(data.getFileID(), PublicEvent.getInstance().getEventFile().getFileExtension(data.getSenderFilePath()), data.getSenderFilePath());
+                }
+            });
+        } else if (mode == 1) {
+            mode = 1;
+            //
+            progress.setVisible(false);
+            cmdDow.setVisible(true);
+            cmdLocation.setVisible(true);
+            lbName.setText(data.getFileName());
+            lbFileSize.setText(PublicEvent.getInstance().getEventFile().fileSizeConversion(data.getFileSize()));
+            pic.setImage(PublicEvent.getInstance().getEventFile().getIconFile(PublicEvent.getInstance().getEventFile().getFileExtension(data.getSenderFilePath())));
+            cmdLocation.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    PublicEvent.getInstance().getEventDownFile().localFileReceiver(data.getFileID(), PublicEvent.getInstance().getEventFile().getFileExtension(data.getSenderFilePath()));
+                }
+            });
+            cmdDow.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    PublicEvent.getInstance().getEventDownFile().downFile(data.getFileID(), PublicEvent.getInstance().getEventFile().getFileExtension(data.getSenderFilePath()), data.getFileName());
+                }
+
+            });
+        }
     }
 
     public void setFile(Model_File_Sender fileSender) {
@@ -41,19 +136,18 @@ public class Chat_File extends javax.swing.JPanel {
 
             @Override
             public void onFinish() {
-                mode=0;
+                mode = 0;
                 progress.setVisible(false);
 //                cmdDow.setVisible(true);
-                lbFileSize.setText(fileSizeConversion(fileSender.getFileSize() + ""));
                 lbName.setText(fileSender.getFileName());
-                setIconPic(fileSender.getFileExtensions());
+                lbFileSize.setText(PublicEvent.getInstance().getEventFile().fileSizeConversion(fileSender.getFileSize() + ""));
+                pic.setImage(PublicEvent.getInstance().getEventFile().getIconFile(fileSender.getFileExtensions()));
                 cmdLocation.setVisible(true);
-                cmdLocation.addActionListener(new ActionListener(){
+                cmdLocation.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        PublicEvent.getInstance().getEventDownFile().localFileSender(fileSender);
+                        PublicEvent.getInstance().getEventDownFile().localFileSender(fileSender.getFileID(), fileSender.getFileExtensions(), fileSender.getFile().getAbsolutePath());
                     }
-                    
                 });
             }
 
@@ -75,79 +169,33 @@ public class Chat_File extends javax.swing.JPanel {
                 }
 
                 @Override
-                public void onFinish(File file) {
-                    mode=1;
-                    //
-                    String fileName = data.getFileName();
-                    String fileSize = data.getFileSize();
-                    String fileExtension = data.getFileExtension();
+                public void onFinish(File file, int fileID, String fileExtension, String fileName, String fileSize) {
+                    mode = 1;
                     //
                     progress.setVisible(false);
                     cmdDow.setVisible(true);
                     cmdLocation.setVisible(true);
                     lbName.setText(fileName);
-                    lbFileSize.setText(fileSizeConversion(fileSize));
-                    setIconPic(fileExtension);
-                    cmdLocation.addActionListener(new ActionListener(){
+
+                    lbFileSize.setText(PublicEvent.getInstance().getEventFile().fileSizeConversion(fileSize));
+                    pic.setImage(PublicEvent.getInstance().getEventFile().getIconFile(fileExtension));
+                    cmdLocation.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            PublicEvent.getInstance().getEventDownFile().localFileReceiver(data);
-                        }     
-                    });
-                    cmdDow.addActionListener(new ActionListener(){
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            PublicEvent.getInstance().getEventDownFile().downFile(data);
+                            PublicEvent.getInstance().getEventDownFile().localFileReceiver(fileID, fileExtension);
                         }
-                        
+                    });
+                    cmdDow.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            PublicEvent.getInstance().getEventDownFile().downFile(fileID, fileExtension, fileName);
+                        }
+
                     });
                 }
             });
         } catch (IOException e) {
             e.printStackTrace();
-        }
-    }
-
-    private String fileSizeConversion(String fileSize) {
-
-        Double sizeBytes = Double.parseDouble(fileSize);
-
-        if (sizeBytes == 0) {
-            return "0B";
-        }
-
-        String[] sizeUnits = {"B", "KB", "MB", "GB", "TB", "PB"};
-        int unitIndex = (int) (Math.log(sizeBytes) / Math.log(1024));
-        double convertedSize = sizeBytes / Math.pow(1024, unitIndex);
-        return String.format("%.2f %s", convertedSize, sizeUnits[unitIndex]);
-    }
-    
-    public void setIconPic(String fEx) {
-        if (fEx.equals(".docx") || fEx.equals(".doc")) {
-            pic.setImage(new ImageIcon(getClass().getResource("/com/raven/icon/doc_docx.png")));
-
-        } else if(fEx.equals(".pptx")){
-            pic.setImage(new ImageIcon(getClass().getResource("/com/raven/icon/pptx.png")));
-        }else if(fEx.equals(".txt")){
-            pic.setImage(new ImageIcon(getClass().getResource("/com/raven/icon/txt.png")));
-        }
-        else if(fEx.equals(".mp3")){
-            pic.setImage(new ImageIcon(getClass().getResource("/com/raven/icon/mp3.png")));
-        }else if(fEx.equals(".mp4")){
-            pic.setImage(new ImageIcon(getClass().getResource("/com/raven/icon/mp4.png")));
-        }else if(fEx.equals(".pdf")){
-            pic.setImage(new ImageIcon(getClass().getResource("/com/raven/icon/pdf.png")));
-        }
-        else if(fEx.equals(".html")){
-            pic.setImage(new ImageIcon(getClass().getResource("/com/raven/icon/html.png")));
-        }else if(fEx.equals(".css")){
-            pic.setImage(new ImageIcon(getClass().getResource("/com/raven/icon/css.png")));
-        }else if(fEx.equals(".zip")){
-            pic.setImage(new ImageIcon(getClass().getResource("/com/raven/icon/zip.png")));
-        }else if(fEx.equals(".7z")){
-            pic.setImage(new ImageIcon(getClass().getResource("/com/raven/icon/7z.png")));
-        }else if(fEx.equals(".jpg")||fEx.equals(".png")||fEx.equals(".jpeg")||fEx.equals(".gif")){
-            pic.setImage(new ImageIcon(getClass().getResource("/com/raven/icon/img.png")));
         }
     }
 
@@ -291,7 +339,7 @@ public class Chat_File extends javax.swing.JPanel {
     private void cmdDowMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cmdDowMouseExited
         cmdDow.setContentAreaFilled(false);
     }//GEN-LAST:event_cmdDowMouseExited
-    
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.raven.component.OptionButton cmdDow;

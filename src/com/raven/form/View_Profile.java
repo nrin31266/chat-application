@@ -846,18 +846,11 @@ public class View_Profile extends javax.swing.JPanel {
             data.setImageData(imageBase64);
             boolean b = PublicEvent.getInstance().getEventProfile().updateAavatar(data);
             if (b) {
-                try {
-                    avt.setImage(PublicEvent.getInstance().getEventProfile().createImage(imageBase64));
-                    avt.repaint();
-                    modelProfile.setImage(imageBase64);
-                    PublicEvent.getInstance().getEventMain().updateProfile(modelProfile);
-                    //
-                    String strImage=PublicEvent.getInstance().getEventMain().processImage(fileData);
-                    Model_Image_Update dataImageUpdate= new Model_Image_Update(modelProfile.getUserID(), imageBase64, true);
-                    Service.getInstance().getClient().emit("user_updated_image", dataImageUpdate.toJsonObject());
-                } catch (IOException ex) {
-                    Logger.getLogger(View_Profile.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                avt.setImage(PublicEvent.getInstance().getEventProfile().createImage(imageBase64));
+                avt.repaint();
+                modelProfile.setImage(imageBase64);
+                PublicEvent.getInstance().getEventMain().updateProfile(modelProfile);
+                //
             }
         }
     }//GEN-LAST:event_avtMouseClicked

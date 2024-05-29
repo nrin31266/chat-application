@@ -5,9 +5,9 @@ import javax.swing.Icon;
 
 public interface EventImageView {
 
-    public void viewImage(Icon image,String mode, Model_Receive_Image data);
+    public void viewImage(Icon image, String mode, int fileID, String fileExcetion, String fileName);
 
-    public void saveImage(Icon image,String mode,Model_Receive_Image data);
+    public void saveImage(int fileId, String fileExcetion, String fileName);
     
-    public void viewLocation(Icon image,String mode,Model_Receive_Image data);
+    public void viewLocation(String mode, int fileId, String fileExcetion, String fileName);
 }

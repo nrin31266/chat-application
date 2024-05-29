@@ -65,6 +65,7 @@ public class Login extends javax.swing.JPanel {
                                                     return profile;
                                                 });
                                             }).thenAccept(profile -> {
+                                                PublicEvent.getInstance().getEventMain().setTitleName(profile.getName());
                                                 PublicEvent.getInstance().getEventMain().getHome().setModelProfile(profile);
                                                 PublicEvent.getInstance().getEventMain().initChat();
 //                                                PublicEvent.getInstance().getEventMain().showLoading(false);

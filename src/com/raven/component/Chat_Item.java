@@ -1,6 +1,8 @@
 package com.raven.component;
 
+import com.raven.event.PublicEvent;
 import com.raven.model.Model_File_Sender;
+import com.raven.model.Model_HistoryChat;
 import com.raven.model.Model_Receive_File;
 import com.raven.model.Model_Receive_Image;
 import com.raven.swing.PictureBox;
@@ -30,7 +32,41 @@ public class Chat_Item extends javax.swing.JLayeredPane {
         txt.setBackground(new Color(0, 0, 0, 0));
         txt.setOpaque(false);
     }
-
+    //add item chat history
+    public void setImage(boolean right, Model_HistoryChat data){
+        JLayeredPane layer = new JLayeredPane();
+        layer.setLayout(new FlowLayout(right ? FlowLayout.RIGHT : FlowLayout.LEFT));
+        layer.setBorder(new EmptyBorder(0, 5, 0, 5));
+        Chat_Image chatImage = new Chat_Image(right);
+        if(right){
+            chatImage.addImageChatHistorySender(data);
+        }else{
+            chatImage.addImageChatHistoryReceiver(data);
+        }    
+        layer.add(chatImage);
+        add(layer);
+    }
+    public void setFile(boolean right,Model_HistoryChat data,int mode ){
+        JLayeredPane layer = new JLayeredPane();
+        layer.setLayout(new FlowLayout(right ? FlowLayout.RIGHT : FlowLayout.LEFT));
+        layer.setBorder(new EmptyBorder(0, 5, 0, 5));
+        Chat_File chatFile = new Chat_File();
+        chatFile.setFileGHistory(data, mode);
+        layer.add(chatFile);
+        add(layer);
+    }
+    public void setTime(String time){
+        JLayeredPane layer = new JLayeredPane();
+        layer.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+        layer.setBorder(new EmptyBorder(0, 5, 10, 5));
+        label = new JLabel(time);
+        label.setForeground(new Color(110, 110, 110));
+        label.setHorizontalTextPosition(JLabel.LEFT);
+        layer.add(label);
+        add(layer);
+    }
+    
+    //
     public void setUserProfile(String user) {
         JLayeredPane layer = new JLayeredPane();
         layer.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
@@ -91,6 +127,7 @@ public class Chat_Item extends javax.swing.JLayeredPane {
         layer.add(chatFile);
         add(layer);
     }
+    
 
     public void setFile(boolean right, Model_Receive_File data) {
         JLayeredPane layer = new JLayeredPane();
@@ -106,19 +143,12 @@ public class Chat_Item extends javax.swing.JLayeredPane {
         JLayeredPane layer = new JLayeredPane();
         layer.setLayout(new FlowLayout(right ? FlowLayout.RIGHT : FlowLayout.LEFT));
         layer.setBorder(new EmptyBorder(0, 5, 0, 5));
-
         PictureBox p = new PictureBox();
         p.setImage(icon);
         p.setPreferredSize(new Dimension(icon.getIconWidth(), icon.getIconHeight()));
-
         layer.add(p);
-
         add(layer);
         setBackground(null);
-
-        // Gọi lại phương thức revalidate() và repaint() để đảm bảo giao diện người dùng được cập nhật
-//    revalidate();
-//    repaint();
     }
     public String getCurrentTime() {
         LocalDateTime now = LocalDateTime.now();

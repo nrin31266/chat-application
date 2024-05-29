@@ -114,7 +114,6 @@ public class Chat_Title extends javax.swing.JPanel {
         imageAvatar.setImage(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/profile.png"))); // NOI18N
         imageAvatar.setMaximumSize(new java.awt.Dimension(50, 50));
         imageAvatar.setMinimumSize(new java.awt.Dimension(50, 50));
-        imageAvatar.setPreferredSize(new java.awt.Dimension(50, 50));
 
         javax.swing.GroupLayout imageAvatarLayout = new javax.swing.GroupLayout(imageAvatar);
         imageAvatar.setLayout(imageAvatarLayout);

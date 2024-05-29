@@ -6,6 +6,7 @@ import com.raven.model.Model_File_Sender;
 import com.raven.model.Model_Receive_Image;
 import com.raven.service.Service;
 import com.raven.swing.PictureBox;
+import com.raven.swing.Progress;
 import com.raven.swing.blurHash.BlurHash;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -20,13 +21,21 @@ public class Image_Item extends javax.swing.JLayeredPane {
         progress.setBorder(null);
     }
 
+    public void setProgress(Progress progress) {
+        this.progress = progress;
+    }
 
+    public Progress getProgress() {
+        return progress;
+    }
+    
 
-    
-    
-    
+    public void setImage(Icon image) {
+        pic.setImage(image);
+    }
+
     public void setImage(Icon image, Model_File_Sender fileSender) {
-        fileSender.addEvent(new EventFileSender(){
+        fileSender.addEvent(new EventFileSender() {
             @Override
             public void onSending(double percentage) {
                 progress.setValue((int) percentage);
@@ -34,14 +43,14 @@ public class Image_Item extends javax.swing.JLayeredPane {
 
             @Override
             public void onStartSending() {
-            
+
             }
 
             @Override
             public void onFinish() {
                 progress.setVisible(false);
             }
-            
+
         });
         pic.setImage(image);
     }
@@ -58,36 +67,36 @@ public class Image_Item extends javax.swing.JLayeredPane {
             Service.getInstance().addFileReceiver(dataImage.getFileID(), new EventFileReceiver() {
                 @Override
                 public void onReceiving(double percentage) {
-                     progress.setValue(((int) percentage));
+                    progress.setValue(((int) percentage));
                 }
 
                 @Override
                 public void onStartReceiving() {
-                    
+
                 }
 
                 @Override
-                public void onFinish(File file) {
+                public void onFinish(File file, int fileID, String fileExcetion, String fileName, String fileSize) {
                     progress.setVisible(false);
-                    Icon icon= new ImageIcon(file.getAbsolutePath());
+                    Icon icon = new ImageIcon(file.getAbsolutePath());
                     pic.setImage(icon);
-                    getChat_Image().addEvent(Image_Item.this, icon, "receiver",dataImage );
+                    getChat_Image().addEvent(Image_Item.this, icon, "receiver", fileID, fileExcetion, fileName);
                 }
             });
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    public Chat_Image getChat_Image(){
+
+    public Chat_Image getChat_Image() {
         return chatImage;
     }
 
     public void setChatImage(Chat_Image chatImage) {
         this.chatImage = chatImage;
     }
-    
-    private Chat_Image chatImage;
 
+    private Chat_Image chatImage;
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

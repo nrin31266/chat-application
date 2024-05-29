@@ -16,16 +16,20 @@ public class VIew_Image extends javax.swing.JComponent {
 
     private Icon image;
     private String mode;
-    private Model_Receive_Image data;
-    
+    int fileID;
+    String fileExcetion;
+    String fileName;
 
-    public void viewImage(Icon image, String mode, Model_Receive_Image data) {
-        this.mode=mode;
-        this.data=data;
-        if(mode.equals("sender")){
+    public void viewImage(Icon image, String mode, int fileID, String fileExcetion, String fileName) {
+        this.mode = mode;
+        this.fileID=fileID;
+        this.fileExcetion=fileExcetion;
+        this.fileName=fileName;
+
+        if (mode.equals("sender")) {
             cmdSave.setVisible(false);
             cmdLocation.setVisible(true);
-        }else{
+        } else {
             cmdSave.setVisible(true);
             cmdLocation.setVisible(true);
         }
@@ -121,11 +125,11 @@ public class VIew_Image extends javax.swing.JComponent {
     }//GEN-LAST:event_picMousePressed
 
     private void cmdSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdSaveActionPerformed
-        PublicEvent.getInstance().getEventImageView().saveImage(image, mode, data);
+        PublicEvent.getInstance().getEventImageView().saveImage(fileID, fileExcetion, fileName);
     }//GEN-LAST:event_cmdSaveActionPerformed
 
     private void cmdLocationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdLocationActionPerformed
-        PublicEvent.getInstance().getEventImageView().viewLocation(image, mode, data);
+        PublicEvent.getInstance().getEventImageView().viewLocation(mode, fileID, fileExcetion, fileName);
     }//GEN-LAST:event_cmdLocationActionPerformed
 
     @Override

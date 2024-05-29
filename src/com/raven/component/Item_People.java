@@ -1,7 +1,9 @@
 package com.raven.component;
 
 import com.raven.event.PublicEvent;
+import com.raven.model.Model_Get_Chat_History;
 import com.raven.model.Model_User_Account;
+import com.raven.service.Service;
 import com.raven.swing.ImageAvatar;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
@@ -14,41 +16,38 @@ public class Item_People extends javax.swing.JPanel {
         return user;
     }
 
-    
     private boolean mouseOver;
     private final Model_User_Account user;
 
     public Item_People(Model_User_Account user) {
         this.user = user;
-        
-        
+
         initComponents();
-        
+
         lbName.setText(user.getUserName());
         activeStatus.setActive(user.isStatus());
-        if(user.getImage()!=null && !user.getImage().equals("")){
+        if (user.getImage() != null && !user.getImage().equals("")) {
             imageAvatar.setImage(PublicEvent.getInstance().getEventProfile().createImage(user.getImage()));
             imageAvatar.repaint();
         }
         init();
-        
-        
+
     }
 
     public void updateStatus() {
         activeStatus.setActive(user.isStatus());
         repaint();
     }
-    public void setAvatar(String image){
-        Icon icon= PublicEvent.getInstance().getEventProfile().createImage(image);
+
+    public void setAvatar(String image) {
+        Icon icon = PublicEvent.getInstance().getEventProfile().createImage(image);
         imageAvatar.setImage(icon);
         imageAvatar.repaint();
         imageAvatar.revalidate();
     }
 
     private void init() {
-        
-        
+
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent me) {
@@ -64,8 +63,25 @@ public class Item_People extends javax.swing.JPanel {
 
             @Override
             public void mouseReleased(MouseEvent me) {
+
                 if (mouseOver) {
-                    PublicEvent.getInstance().getEventMain().selectUser(user);
+                   
+                    
+                    if (Service.getInstance().getSelectedUser() != null) {
+
+                        if (Service.getInstance().getSelectedUser().getUserID() != user.getUserID()) {
+                            Service.getInstance().setSelectedUser(user);
+                            Model_Get_Chat_History d = new Model_Get_Chat_History(Service.getInstance().getUser().getUserID(), user.getUserID());
+                            PublicEvent.getInstance().getEventMain().selectUser(user);
+                            PublicEvent.getInstance().getEventBody().receiverChatHisTory(d);
+                        }
+                    } else {
+                        Service.getInstance().setSelectedUser(user);
+                        Model_Get_Chat_History d = new Model_Get_Chat_History(Service.getInstance().getUser().getUserID(), user.getUserID());
+                        PublicEvent.getInstance().getEventMain().selectUser(user);
+                        PublicEvent.getInstance().getEventBody().receiverChatHisTory(d);
+                    }
+                    
                 }
             }
         });

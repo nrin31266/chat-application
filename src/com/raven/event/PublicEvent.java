@@ -12,6 +12,17 @@ public class PublicEvent {
     private EventBody eventBody;
     private EventProfile eventProfile;
     private EventViewProfile eventViewProfile;
+    private EventFile eventFile;
+
+    public EventFile getEventFile() {
+        return eventFile;
+    }
+
+    public void addEventFile(EventFile eventFile) {
+        this.eventFile = eventFile;
+    }
+    
+    
 
     public EventViewProfile getEventViewProfile() {
         return eventViewProfile;

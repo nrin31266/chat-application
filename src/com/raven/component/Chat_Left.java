@@ -1,13 +1,14 @@
 package com.raven.component;
 
 import com.raven.model.Model_File_Sender;
+import com.raven.model.Model_HistoryChat;
 import com.raven.model.Model_Receive_File;
 import com.raven.model.Model_Receive_Image;
 import java.awt.Color;
 import javax.swing.Icon;
 
 public class Chat_Left extends javax.swing.JLayeredPane {
-
+    
     public Chat_Left() {
         initComponents();
         txt.setBackground(new Color(242, 242, 242));
@@ -19,26 +20,31 @@ public class Chat_Left extends javax.swing.JLayeredPane {
         } else {
             txt.setText(text);
         }
-
     }
 
     public void setEmoji(Icon icon) {
         txt.hideText();
-        txt.setEmoji(true, icon);
+        txt.setEmoji(false, icon);
+    }
+    public void setImage(Model_HistoryChat data){
+        txt.setImage(false, data);
+    }
+    public void setFile(Model_HistoryChat data){
+        txt.setFile(false, data, 1);
     }
 
     public void setImage(Model_Receive_Image dataImage) {
         txt.setImage(false, dataImage);
     }
-
-   
-
     public void setFile(Model_Receive_File data) {
         txt.setFile(false ,data);
     }
-
+    
     public void setTime() {
         txt.setTime();    //  Testing
+    }
+    public void setTime(String time){
+        txt.setTime(time);
     }
 
     @SuppressWarnings("unchecked")

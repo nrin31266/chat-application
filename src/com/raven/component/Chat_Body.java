@@ -4,6 +4,7 @@ import com.raven.app.MessageType;
 import com.raven.emoji.Emoji;
 import com.raven.event.EventBody;
 import com.raven.event.PublicEvent;
+import com.raven.model.Model_Get_Chat_History;
 import com.raven.model.Model_HistoryChat;
 import com.raven.model.Model_Login;
 import com.raven.model.Model_Receive_Message;
@@ -17,6 +18,10 @@ import java.awt.Adjustable;
 import java.awt.Color;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JScrollBar;
@@ -34,26 +39,128 @@ public class Chat_Body extends javax.swing.JPanel {
     public void setUser(Model_User_Account user) {
         this.user = user;
     }
-    
+
     public Chat_Body() {
         initComponents();
         init();
-   
-        
     }
 
     private void init() {
         body.setLayout(new MigLayout("fillx", "", "5[]5"));
         sp.setVerticalScrollBar(new ScrollBar());
         sp.getVerticalScrollBar().setBackground(Color.WHITE);
-        PublicEvent.getInstance().addEventBody(new EventBody(){
+
+        PublicEvent.getInstance().addEventBody(new EventBody() {
             @Override
             public void sendChatToHistoryChat(Model_HistoryChat data) {
                 Service.getInstance().getClient().emit("history", data.toJsonObject());
             }
-            
-        });
 
+            @Override
+            public void receiverChatHisTory(Model_Get_Chat_History d) {
+                System.out.println("Ham set tin nhan dc goi");
+                int receiverID = d.getReceiverID();
+                //
+
+                Service.getInstance().getClient().emit("get_chat_history", d.toJSONObject(), new Ack() {
+                    @Override
+                    public void call(Object... os) {
+                        if (os.length > 0) {
+                            List<Model_HistoryChat> historyList = new ArrayList<>();
+                            for (Object o : os) {
+                                Model_HistoryChat h = new Model_HistoryChat(o);
+                                historyList.add(h);
+                            }
+                            printChatHistory(historyList);
+                        }
+                    }
+                });
+
+            }
+        });
+    }
+
+    private boolean isSender_r(int idSender) {
+        if (Service.getInstance().getUser().getUserID() == idSender) {
+            return true;
+        }
+        return false;
+    }
+
+    // Hàm để in danh sách tin nhắn từ receiverID ra màn hình
+    public void printChatHistory(List<Model_HistoryChat> historyList) {
+        System.out.println("Da goi ham in");
+        if (historyList != null) {
+            for (int i = historyList.size() - 1; i >= 0; i--) {
+                Model_HistoryChat h = historyList.get(i);
+                int id = h.getFromUser();
+                if (isSender_r(id)) {
+                    //Thêm lịch sử vào bên phải
+                    if (h.getType() == 1) {
+                        // Gửi văn bản
+                        Chat_Right item = new Chat_Right();
+                        item.setText(h.getTxt());
+                        body.add(item, "wrap, al right, w 100::80%");
+                        item.setTime(h.getTime());
+                    } else if (h.getType() == 2) {
+                        Chat_Right item = new Chat_Right();
+                        item.setEmoji(Emoji.getInstance().getImoji(Integer.valueOf(h.getTxt())).getIcon());
+                        body.add(item, "wrap, al right, w 100::80%");
+                        item.setTime(h.getTime());
+                    } else if (h.getType() == 3) {
+                        //Gửi image
+                        Chat_Right item = new Chat_Right();
+                        item.setText("");
+                        item.setImage(h);
+                        body.add(item, "wrap, al right, w 100::80%");
+                        item.setTime(h.getTime());
+
+                    } else if (h.getType() == 4) {
+                        //Gửi file
+                        Chat_Right item = new Chat_Right();
+                        item.setText("");
+                        item.setFile(h);
+                        body.add(item, "wrap, al right, w 100::80%");
+                        item.setTime();
+                    }
+                } else {
+                    //Thêm lịch sử vào bên trái
+                    if (h.getType() == 1) {
+                        // Gửi văn bản
+                        Chat_Left item = new Chat_Left();
+                        item.setText(h.getTxt());
+                        body.add(item, "wrap, al left, w 100::80%");
+                        item.setTime(h.getTime());
+                    } else if (h.getType() == 2) {
+                        //Gửi emoji
+                        Chat_Right item = new Chat_Right();
+                        item.setEmoji(Emoji.getInstance().getImoji(Integer.valueOf(h.getTxt())).getIcon());
+                        body.add(item, "wrap, w 5::80%");
+                        item.setTime(h.getTime());
+                    } else if (h.getType() == 3) {
+                        //Gửi image
+                        Chat_Left item = new Chat_Left();
+                        item.setText("");
+                        item.setImage(h);
+                        body.add(item, "wrap, w 5::80%");
+                        item.setTime(h.getTime());
+                    } else if (h.getType() == 4) {
+                        //Gửi file
+                        Chat_Left item = new Chat_Left();
+                        item.setText("");
+                        item.setFile(h);
+                        body.add(item, "wrap, w 5::80%");
+                        item.setTime();
+                    }
+                }
+            }
+        } else {
+            System.out.println("Không có lịch sử trò chuyện cho ");
+        }
+        PublicEvent.getInstance().getEventMain().showLoading(false);        
+        repaint();
+        revalidate();
+        scrollToBottom();
     }
 
     public void addItemLeft(Model_Receive_Message data) {
@@ -70,16 +177,15 @@ public class Chat_Body extends javax.swing.JPanel {
             body.add(item, "wrap, w 5::80%");
             //  ::80% set max with 80%
             item.setTime();
-        }else if(data.getMessageType()==MessageType.IMAGE){
+        } else if (data.getMessageType() == MessageType.IMAGE) {
             Chat_Left item = new Chat_Left();
             item.setText("");
-            System.out.println("Huhu "+data.getDataImage());
             item.setImage(data.getDataImage());
 
             body.add(item, "wrap, w 5::80%");
             //  ::80% set max with 80%
             item.setTime();
-        }else if(data.getMessageType()==MessageType.FILE){
+        } else if (data.getMessageType() == MessageType.FILE) {
             Chat_Left item = new Chat_Left();
             item.setText("");
             item.setFile(data.getDataFile());
@@ -126,36 +232,34 @@ public class Chat_Body extends javax.swing.JPanel {
             body.add(item, "wrap, al right, w 100::80%");
             item.setTime();
             //
-            Model_HistoryChat dataHs=new Model_HistoryChat(Service.getInstance().getUser().getUserID(), user.getUserID(), 1, data.getText(), "", "");
+            Model_HistoryChat dataHs = new Model_HistoryChat(Service.getInstance().getUser().getUserID(), user.getUserID(), 1, data.getText(), "", "", 0, "", "");
             PublicEvent.getInstance().getEventBody().sendChatToHistoryChat(dataHs);
-            
-            
+
         } else if (data.getMessageType() == MessageType.EMOJI) {
             Chat_Right item = new Chat_Right();
             item.setEmoji(Emoji.getInstance().getImoji(Integer.valueOf(data.getText())).getIcon());
             body.add(item, "wrap, al right, w 100::80%");
             item.setTime();//
-            Model_HistoryChat dataHs=new Model_HistoryChat(Service.getInstance().getUser().getUserID(), user.getUserID(), 2, data.getText(), "","");
+            Model_HistoryChat dataHs = new Model_HistoryChat(Service.getInstance().getUser().getUserID(), user.getUserID(), 2, data.getText(), "", "", 0, "", "");
             PublicEvent.getInstance().getEventBody().sendChatToHistoryChat(dataHs);
-            
+
         } else if (data.getMessageType() == MessageType.IMAGE) {
+
             Chat_Right item = new Chat_Right();
             item.setText("");
             item.setImage(data.getFile());
             body.add(item, "wrap, al right, w 100::80%");
             item.setTime();
-            //
-            Model_HistoryChat dataHs=new Model_HistoryChat(Service.getInstance().getUser().getUserID(), user.getUserID(), 3,"",data.getFile().getFile().getAbsolutePath(), "client_data/"+data.getFile().getFileID()+data.getFile().getFileExtensions());
-            PublicEvent.getInstance().getEventBody().sendChatToHistoryChat(dataHs);
-        }else if(data.getMessageType()==MessageType.FILE){
+//            Model_HistoryChat dataHs=new Model_HistoryChat(Service.getInstance().getUser().getUserID(), user.getUserID(), 3,"",data.getFile().getFile().getAbsolutePath(), "client_data/"+data.getFile().getFileID()+data.getFile().getFileExtensions(), data.getFile().getFileID(), "","");
+//            PublicEvent.getInstance().getEventBody().sendChatToHistoryChat(dataHs);
+        } else if (data.getMessageType() == MessageType.FILE) {
             Chat_Right item = new Chat_Right();
             item.setText("");
             item.setFile("file name", "file size", data.getFile());
             body.add(item, "wrap, al right, w 100::80%");
             item.setTime();
-             //
-            Model_HistoryChat dataHs=new Model_HistoryChat(Service.getInstance().getUser().getUserID(), user.getUserID(), 4,"",data.getFile().getFile().getAbsolutePath(), "client_data/"+data.getFile().getFileID()+data.getFile().getFileExtensions());
-            PublicEvent.getInstance().getEventBody().sendChatToHistoryChat(dataHs);
+//            Model_HistoryChat dataHs=new Model_HistoryChat(Service.getInstance().getUser().getUserID(), user.getUserID(), 4,"",data.getFile().getFile().getAbsolutePath(), "client_data/"+data.getFile().getFileID()+data.getFile().getFileExtensions(), data.getFile().getFileID(), data.getFile().getFileName(),data.getFile().getFileSize()+"");
+//            PublicEvent.getInstance().getEventBody().sendChatToHistoryChat(dataHs);
         }
         repaint();
         revalidate();
@@ -164,7 +268,6 @@ public class Chat_Body extends javax.swing.JPanel {
             verticalBar.setValue(verticalBar.getMaximum());
         });
     }
-
 
     public void addDate(String date) {
         Chat_Date item = new Chat_Date();
@@ -179,7 +282,6 @@ public class Chat_Body extends javax.swing.JPanel {
         repaint();
         revalidate();
     }
-    
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

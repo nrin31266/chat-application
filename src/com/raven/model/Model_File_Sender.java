@@ -11,6 +11,12 @@ import java.io.RandomAccessFile;
 
 public class Model_File_Sender {
 
+    @Override
+    public String toString() {
+        return "Model_File_Sender{" + "fileName=" + fileName + ", message=" + message + ", fileID=" + fileID + ", fileExtensions=" + fileExtensions + ", file=" + file + ", fileSize=" + fileSize + ", accFile=" + accFile + ", socket=" + socket + ", event=" + event + '}';
+    }
+
+    
     public Model_Send_Message getMessage() {
         return message;
     }
@@ -83,6 +89,7 @@ public class Model_File_Sender {
     private Model_Send_Message message; //Đối tượng chứa thông điệp cần gửi.
     private int fileID; //ID của tệp trên máy chủ sau khi được lưu trữ.
     private String fileExtensions; //Phần mở rộng của tên tệp.
+
     private File file; //Đối tượng File đại diện cho tệp cần gửi.
     private long fileSize; //Kích thước của tệp.
     private RandomAccessFile accFile; //Đối tượng RandomAccessFile để đọc dữ liệu từ tệp.
@@ -105,34 +112,29 @@ public class Model_File_Sender {
         }
     }
 
-    public void initSend() throws IOException { //Khởi tạo quá trình gửi tệp bằng cách gửi thông điệp đến máy chủ.
-        socket.emit("send_to_user", message.toJsonObject(), new Ack() {
-            @Override
-            public void call(Object... os) {
-                if (os.length > 0) {
-                    int fileID = (int) os[0];
-                    setFileID(fileID);
-                    int type = (int) os[1];
+    public void initSend() throws IOException { // Khởi tạo quá trình gửi tệp
+    socket.emit("send_to_user", message.toJsonObject(), new Ack() {
+        @Override
+        public void call(Object... os) {
+            if (os.length > 0) {
+                int receivedFileID = (int) os[0];
+                System.out.println(receivedFileID);
+                setFileID(receivedFileID);
+                int type = (int) os[1];
+                try {
                     if (type == MessageType.IMAGE.getValue()) {
-                        try {
-                            startSend(fileID, 4);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }else if(type== MessageType.FILE.getValue()){
-                        //Updata sau
-                        System.out.println("File will update ");
-                        try {
-                            startSend(fileID, 3);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        startSend(receivedFileID, 4);
+                    } else if (type == MessageType.FILE.getValue()) {
+                        startSend(receivedFileID, 3);
                     }
-
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
-        });
-    }
+        }
+    });
+}
+
 //startSend(int fileID): Phương thức này bắt đầu gửi tệp sau khi nhận được ID của tệp từ máy chủ. 
 //Sau khi nhận được ID, tệp sẽ được chia thành các gói dữ liệu nhỏ và gửi lần lượt đến máy chủ.
 
@@ -151,7 +153,7 @@ public class Model_File_Sender {
         data.setType(type);
         data.setFileID(fileID);
         data.setFileName(file.getName());
-        data.setFileSize(fileSize+"");
+        data.setFileSize(fileSize + "");
         data.setFileExtension(fileExtensions);
         byte[] bytes = readFile();
         if (bytes != null) {
@@ -203,6 +205,7 @@ public class Model_File_Sender {
     private String getExtensions(String fileName) { //Trích xuất phần mở rộng của tên tệp.
         return fileName.substring(fileName.lastIndexOf("."), fileName.length());
     }
+
     public String getFileName() { //Trích xuất phần mở rộng của tên tệp.
         return file.getName();
     }
@@ -211,9 +214,8 @@ public class Model_File_Sender {
         this.event = event;
     }
 
-
     public void setFileName(String fileName) {
         this.fileName = fileName;
     }
-    
+
 }

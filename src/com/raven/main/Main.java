@@ -142,8 +142,8 @@ public class Main extends javax.swing.JFrame {
 
                 // Thay đổi kích thước và nén ảnh
                 BufferedImage resizedImage = Thumbnails.of(originalImage)
-                        .size(80, 80) // Thay đổi kích thước
-                        .outputQuality(0.85) // Chất lượng nén
+                        .size(70, 50) // Thay đổi kích thước
+                        .outputQuality(0.5) // Chất lượng nén
                         .asBufferedImage();
 
                 // Ghi ảnh ra ByteArrayOutputStream
@@ -295,6 +295,7 @@ public class Main extends javax.swing.JFrame {
                 future.complete(true);
                 return future.join();
             }
+            
 
             @Override
             public CompletableFuture<String> getCoverArt(UserIDToJSON userID) {
@@ -376,16 +377,16 @@ public class Main extends javax.swing.JFrame {
         });
         PublicEvent.getInstance().addEventImageView(new EventImageView() {
             @Override
-            public void viewImage(Icon image, String mode, Model_Receive_Image data) {
-                vIew_Image.viewImage(image, mode, data);
+            public void viewImage(Icon image, String mode, int fileID, String fileExcetion, String fileName) {
+                vIew_Image.viewImage(image, mode, fileID, fileExcetion, fileName);
             }
 
             @Override
-            public void saveImage(Icon image, String mode, Model_Receive_Image data) {
-                String filePath = "client_data/" + data.getFileID() + data.getFileExtension();
+            public void saveImage(int fileId, String fileExcetion, String fileName) {
+                String filePath = "client_data/" + fileId + fileExcetion;
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
-                String defaultFileName = data.getFileName();
+                String defaultFileName = fileName;
                 fileChooser.setSelectedFile(new File(defaultFileName));
                 int result = fileChooser.showSaveDialog(Main.this);
                 if (result == JFileChooser.APPROVE_OPTION) {
@@ -401,33 +402,26 @@ public class Main extends javax.swing.JFrame {
             }
 
             @Override
-            public void viewLocation(Icon image, String mode, Model_Receive_Image data) {
+            public void viewLocation(String mode, int fileId, String fileExcetion, String fileName) {
                 if (mode.equals("sender")) {
-                    String filePath = data.getFile().getAbsolutePath();
-                    //
+                    String filePath = fileName;
                     System.out.println("FilePath=" + filePath);
                     File file = new File(filePath).getAbsoluteFile();
                     String absolutePath = file.getAbsolutePath();
-
                     String command = "explorer.exe /select," + absolutePath;
-
-                    try {
-                        // Chạy lệnh
+                    try {    // Chạy lệnh
                         Process process = Runtime.getRuntime().exec(command);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 } else {
                     String filePath = "client_data/";
-                    filePath += data.getFileID() + data.getFileExtension();
-                    //
+                    filePath +=fileId + fileExcetion;
                     System.out.println("FilePath_Relative=" + filePath);
                     File file = new File(filePath).getAbsoluteFile();
                     String absolutePath = file.getAbsolutePath();
-
                     // Tạo lệnh để mở File Explorer và chọn tệp
                     String command = "explorer.exe /select," + absolutePath;
-
                     try {
                         // Chạy lệnh
                         Process process = Runtime.getRuntime().exec(command);
@@ -440,13 +434,13 @@ public class Main extends javax.swing.JFrame {
         });
         PublicEvent.getInstance().addEventDownFile(new EventDownFile() {
             @Override
-            public void downFile(Model_Receive_File data) {
-                String filePath = "client_data/" + data.getFileID() + data.getFileExtension();
+            public void downFile(int fileID, String fileExcetion, String fileName) {
+                String filePath = "client_data/" + fileID + fileExcetion;
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
 
                 // Lấy tên file từ model và đặt làm tên file mặc định
-                String defaultFileName = data.getFileName(); // Đổi thành tên file từ model của bạn
+                String defaultFileName = fileName; // Đổi thành tên file từ model của bạn
 
                 // Đặt tên file mặc định cho hộp thoại lưu tệp
                 fileChooser.setSelectedFile(new File(defaultFileName));
@@ -472,9 +466,9 @@ public class Main extends javax.swing.JFrame {
             }
 
             @Override
-            public void localFileReceiver(Model_Receive_File data) {
+            public void localFileReceiver(int fileID, String fileExcetion) {
                 String filePath = "client_data/";
-                filePath += data.getFileID() + data.getFileExtension();
+                filePath += fileID+ fileExcetion;
                 //
                 System.out.println("FilePath=" + filePath);
                 File file = new File(filePath).getAbsoluteFile();
@@ -492,9 +486,9 @@ public class Main extends javax.swing.JFrame {
             }
 
             @Override
-            public void localFileSender(Model_File_Sender data) {
+            public void localFileSender(int fileID, String fileExcetion, String fileP) {
 
-                String filePath = data.getFile().getAbsolutePath();
+                String filePath = fileP;
                 //
                 System.out.println("FilePath=" + filePath);
                 File file = new File(filePath).getAbsoluteFile();
@@ -684,7 +678,7 @@ public class Main extends javax.swing.JFrame {
         background.setLayout(backgroundLayout);
         backgroundLayout.setHorizontalGroup(
             backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-            .addComponent(body, javax.swing.GroupLayout.DEFAULT_SIZE, 873, Short.MAX_VALUE)
+            .addComponent(body, javax.swing.GroupLayout.DEFAULT_SIZE, 1122, Short.MAX_VALUE)
             .addGroup(backgroundLayout.createSequentialGroup()
                 .addComponent(title_a, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
@@ -697,7 +691,7 @@ public class Main extends javax.swing.JFrame {
                     .addComponent(title_m, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(title_a, javax.swing.GroupLayout.DEFAULT_SIZE, 22, Short.MAX_VALUE))
                 .addGap(0, 0, 0)
-                .addComponent(body, javax.swing.GroupLayout.DEFAULT_SIZE, 587, Short.MAX_VALUE)
+                .addComponent(body, javax.swing.GroupLayout.DEFAULT_SIZE, 688, Short.MAX_VALUE)
                 .addGap(0, 0, 0))
         );
 
