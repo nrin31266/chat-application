@@ -125,7 +125,7 @@ public class Model_File_Receiver {
                         startSaveFile();
                     } else {
                         close();// Đảm bảo file được đón
-                        event.onFinish(new File(PATH_FILE + fileID + fileExtention), fileID, fileExtention, file.getName(), fileSize+"");
+                        event.onFinish(new File(PATH_FILE + fileID + fileExtention), fileID, fileExtention, fileName, fileSize+"");
                         //remove list
                         Service.getInstance().fileReceiverFinish(Model_File_Receiver.this);
                     }

@@ -38,6 +38,8 @@ public class Chat extends javax.swing.JPanel {
                 if (chatBottom.getUser() != null) {
                     if (chatBottom.getUser().getUserID() == data.getFromUserID()) {
                         chatBody.addItemLeft(data);
+                    }else{
+//                        chatBody.addItemLeft(data);
                     }
                 }
             }

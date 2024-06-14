@@ -8,6 +8,7 @@ import com.raven.swing.PictureBox;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Label;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -18,8 +19,7 @@ import net.miginfocom.swing.MigLayout;
 
 public class Chat_Image extends javax.swing.JLayeredPane {
 
-    private final String icon = "/com/raven/icon/errorimage.png";
-
+//    private final String icon = "/com/raven/icon/errorimage.png";
     public Chat_Image(boolean right) {
         initComponents();
         setLayout(new MigLayout("", "0[" + (right ? "right" : "left") + "]0", "3[]3"));
@@ -51,7 +51,9 @@ public class Chat_Image extends javax.swing.JLayeredPane {
         Image_Item pic = new Image_Item();
         pic.setPreferredSize(getAutoSize(image, 200, 200));
         if (image.getIconWidth() == -1) {
-            pic.setImage(new ImageIcon(getClass().getResource(icon)));
+//            pic.setImage(new ImageIcon(getClass().getResource(icon)));
+
+            add(new Label("Không thể mở ảnh do lỗi hoặc ảnh đã bị xóa!"));
         } else {
             pic.setImage(image);
 //            String fex = PublicEvent.getInstance().getEventFile().getFileExtension(data.getFileName());
@@ -92,7 +94,8 @@ public class Chat_Image extends javax.swing.JLayeredPane {
         Image_Item pic = new Image_Item();
         pic.setPreferredSize(getAutoSize(image, 200, 200));
         if (image.getIconWidth() == -1) {
-            pic.setImage(new ImageIcon(getClass().getResource(icon)));
+//            pic.setImage(new ImageIcon(getClass().getResource(icon)));
+            add(new Label("Không thể mở ảnh do lỗi hoặc ảnh đã bị xóa!"));
         } else {
             pic.setImage(image);
             String fileEx = getFileExtension(data.getFileName());

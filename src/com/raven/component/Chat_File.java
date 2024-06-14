@@ -21,7 +21,7 @@ import javax.swing.ImageIcon;
 public class Chat_File extends javax.swing.JPanel {
 
     private int mode;
-
+    
     public Chat_File() {
         initComponents();
         setOpaque(false);
@@ -124,6 +124,7 @@ public class Chat_File extends javax.swing.JPanel {
 
     public void setFile(Model_File_Sender fileSender) {
         fileSender.addEvent(new EventFileSender() {
+            private String fileName;
             @Override
             public void onSending(double percentage) {
                 progress.setValue((int) percentage);
@@ -158,6 +159,7 @@ public class Chat_File extends javax.swing.JPanel {
 
         try {
             Service.getInstance().addFileReceiver(data.getFileID(), new EventFileReceiver() {
+                private String fileName;
                 @Override
                 public void onReceiving(double percentage) {
                     progress.setValue(((int) percentage));
@@ -175,7 +177,7 @@ public class Chat_File extends javax.swing.JPanel {
                     progress.setVisible(false);
                     cmdDow.setVisible(true);
                     cmdLocation.setVisible(true);
-                    lbName.setText(fileName);
+                    lbName.setText(data.getFileName());
 
                     lbFileSize.setText(PublicEvent.getInstance().getEventFile().fileSizeConversion(fileSize));
                     pic.setImage(PublicEvent.getInstance().getEventFile().getIconFile(fileExtension));
