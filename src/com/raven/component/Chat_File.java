@@ -190,7 +190,7 @@ public class Chat_File extends javax.swing.JPanel {
                     cmdDow.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            PublicEvent.getInstance().getEventDownFile().downFile(fileID, fileExtension, fileName);
+                            PublicEvent.getInstance().getEventDownFile().downFile(fileID, PublicEvent.getInstance().getEventFile().getFileExtension(file.getName()), file.getName());
                         }
 
                     });

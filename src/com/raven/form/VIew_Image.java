@@ -125,7 +125,7 @@ public class VIew_Image extends javax.swing.JComponent {
     }//GEN-LAST:event_picMousePressed
 
     private void cmdSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdSaveActionPerformed
-        PublicEvent.getInstance().getEventImageView().saveImage(fileID, fileExcetion, fileName);
+        PublicEvent.getInstance().getEventImageView().saveImage(fileID, fileExcetion, fileID+"");
     }//GEN-LAST:event_cmdSaveActionPerformed
 
     private void cmdLocationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdLocationActionPerformed
