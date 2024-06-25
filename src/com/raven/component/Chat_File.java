@@ -1,5 +1,7 @@
 package com.raven.component;
 
+import com.mpatric.mp3agic.InvalidDataException;
+import com.mpatric.mp3agic.UnsupportedTagException;
 import com.raven.event.EventFile;
 import com.raven.event.EventFileReceiver;
 import com.raven.event.EventFileSender;
@@ -10,20 +12,33 @@ import com.raven.model.Model_Receive_File;
 import com.raven.model.Model_Receive_Image;
 import com.raven.service.Service;
 import com.raven.swing.blurHash.BlurHash;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.Timer;
+import javazoom.jl.decoder.JavaLayerException;
 
 public class Chat_File extends javax.swing.JPanel {
 
     private int mode;
-    
+    private MP3Player mp3Player;
+    private Timer timer;
+
     public Chat_File() {
         initComponents();
+        mp3Player = new MP3Player();
+        cmdPlayAndPause.setVisible(false);
+        timeLabel.setVisible(false);
+        //
         setOpaque(false);
         cmdDow.setVisible(false);
         cmdLocation.setVisible(false);
@@ -83,7 +98,12 @@ public class Chat_File extends javax.swing.JPanel {
     }
 
     public void setFileGHistory(Model_HistoryChat data, int mode) {
+
         if (mode == 0) {
+            if (!fileExists(data.getSenderFilePath(), 1)) {
+                setIfoFileError();
+                return;
+            }
             mode = 0;
             progress.setVisible(false);
 //                cmdDow.setVisible(true);
@@ -97,7 +117,16 @@ public class Chat_File extends javax.swing.JPanel {
                     PublicEvent.getInstance().getEventDownFile().localFileSender(data.getFileID(), PublicEvent.getInstance().getEventFile().getFileExtension(data.getSenderFilePath()), data.getSenderFilePath());
                 }
             });
+            if (PublicEvent.getInstance().getEventFile().getFileExtension(data.getSenderFilePath()).equals(".mp3")) {
+                timeLabel.setVisible(true);
+                cmdPlayAndPause.setVisible(true);
+                loadFileMp3(data.getSenderFilePath(), 1);
+            }
         } else if (mode == 1) {
+            if (!fileExists(data.getReceiverFilePath(), 2)) {
+                setIfoFileError();
+                return;
+            }
             mode = 1;
             //
             progress.setVisible(false);
@@ -119,12 +148,21 @@ public class Chat_File extends javax.swing.JPanel {
                 }
 
             });
+            if (PublicEvent.getInstance().getEventFile().getFileExtension(data.getSenderFilePath()).equals(".mp3")) {
+                cmdPlayAndPause.setVisible(true);
+                timeLabel.setVisible(true);
+                File file = new File(data.getReceiverFilePath());
+                String absolutePath = file.getAbsolutePath();
+                loadFileMp3(absolutePath, 2);
+            }
         }
+
     }
 
     public void setFile(Model_File_Sender fileSender) {
         fileSender.addEvent(new EventFileSender() {
             private String fileName;
+
             @Override
             public void onSending(double percentage) {
                 progress.setValue((int) percentage);
@@ -150,6 +188,11 @@ public class Chat_File extends javax.swing.JPanel {
                         PublicEvent.getInstance().getEventDownFile().localFileSender(fileSender.getFileID(), fileSender.getFileExtensions(), fileSender.getFile().getAbsolutePath());
                     }
                 });
+                if (fileSender.getFileExtensions().equals(".mp3")) {
+                    timeLabel.setVisible(true);
+                    cmdPlayAndPause.setVisible(true);
+                    loadFileMp3(fileSender.getFile().getPath(), 1);
+                }
             }
 
         });
@@ -160,6 +203,7 @@ public class Chat_File extends javax.swing.JPanel {
         try {
             Service.getInstance().addFileReceiver(data.getFileID(), new EventFileReceiver() {
                 private String fileName;
+
                 @Override
                 public void onReceiving(double percentage) {
                     progress.setValue(((int) percentage));
@@ -192,8 +236,16 @@ public class Chat_File extends javax.swing.JPanel {
                         public void actionPerformed(ActionEvent e) {
                             PublicEvent.getInstance().getEventDownFile().downFile(fileID, PublicEvent.getInstance().getEventFile().getFileExtension(file.getName()), file.getName());
                         }
-
                     });
+                    if (data.getFileExtension().equals(".mp3")) {
+                        timeLabel.setVisible(true);
+                        cmdPlayAndPause.setVisible(true);
+                        String filePath = "client_data/" + data.getFileID() + data.getFileExtension();
+                        File f = new File(filePath);
+                        String absolutePath = f.getAbsolutePath();
+                        System.out.println("file abs rc: " + absolutePath);
+                        loadFileMp3(absolutePath, 2);
+                    }
                 }
             });
         } catch (IOException e) {
@@ -213,6 +265,8 @@ public class Chat_File extends javax.swing.JPanel {
         jLayeredPane1 = new javax.swing.JLayeredPane();
         cmdLocation = new com.raven.component.OptionButton();
         cmdDow = new com.raven.component.OptionButton();
+        cmdPlayAndPause = new com.raven.component.OptionButton();
+        timeLabel = new javax.swing.JLabel();
 
         pic.setImage(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/file.png"))); // NOI18N
         pic.setMinimumSize(new java.awt.Dimension(48, 48));
@@ -268,7 +322,7 @@ public class Chat_File extends javax.swing.JPanel {
         });
 
         cmdDow.setBackground(new java.awt.Color(218, 218, 218));
-        cmdDow.setIconSelected(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/down_black.png"))); // NOI18N
+        cmdDow.setIconSelected(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/dow_blue.png"))); // NOI18N
         cmdDow.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 cmdDowMouseEntered(evt);
@@ -293,8 +347,27 @@ public class Chat_File extends javax.swing.JPanel {
             .addGroup(jLayeredPane1Layout.createSequentialGroup()
                 .addComponent(cmdLocation, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(cmdDow, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(cmdDow, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        cmdPlayAndPause.setBackground(new java.awt.Color(218, 218, 218));
+        cmdPlayAndPause.setIconSelected(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/play.png"))); // NOI18N
+        cmdPlayAndPause.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                cmdPlayAndPauseMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                cmdPlayAndPauseMouseExited(evt);
+            }
+        });
+        cmdPlayAndPause.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmdPlayAndPauseActionPerformed(evt);
+            }
+        });
+
+        timeLabel.setText("jLabel1");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -304,7 +377,11 @@ public class Chat_File extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(pic, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 129, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cmdPlayAndPause, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(timeLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -313,11 +390,16 @@ public class Chat_File extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(cmdPlayAndPause, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(timeLabel)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jLayeredPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 48, Short.MAX_VALUE)
                     .addComponent(pic, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -342,15 +424,115 @@ public class Chat_File extends javax.swing.JPanel {
         cmdDow.setContentAreaFilled(false);
     }//GEN-LAST:event_cmdDowMouseExited
 
+    private void cmdPlayAndPauseMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cmdPlayAndPauseMouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmdPlayAndPauseMouseEntered
+
+    private void cmdPlayAndPauseMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cmdPlayAndPauseMouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmdPlayAndPauseMouseExited
+
+    private void cmdPlayAndPauseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdPlayAndPauseActionPerformed
+        //Phát nhạc
+        if (mp3Player.isPlaying()) {
+            pauseMP3();
+        } else {
+            playMP3();
+        }
+    }//GEN-LAST:event_cmdPlayAndPauseActionPerformed
+    public void playMP3() {
+        new Thread(() -> {
+            try {
+                mp3Player.play();
+                cmdPlayAndPause.setIconSelected(new ImageIcon(getClass().getResource("/com/raven/icon/pause.png")));
+                startTimer();
+            } catch (FileNotFoundException | JavaLayerException e) {
+
+            }
+        }).start();
+    }
+
+    public void pauseMP3() {
+        mp3Player.pause();
+        cmdPlayAndPause.setIconSelected(new ImageIcon(getClass().getResource("/com/raven/icon/play.png")));
+        stopTimer();
+    }
+
+    private void loadFileMp3(String filePath, int model) {
+        try {
+            mp3Player.loadFile(filePath);
+            timeLabel.setText("00:00 / " + formatTime(mp3Player.getTotalDuration()));
+            cmdPlayAndPause.setEnabled(true);
+        } catch (IOException ex) {
+            Logger.getLogger(Chat_File.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InvalidDataException ex) {
+            Logger.getLogger(Chat_File.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnsupportedTagException ex) {
+            Logger.getLogger(Chat_File.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    private void startTimer() {
+        timer = new Timer(200, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!mp3Player.isPlaying()) {
+                    cmdPlayAndPause.setIconSelected(new ImageIcon(getClass().getResource("/com/raven/icon/play.png")));
+                    stopTimer();
+                }
+                updateTimer();
+//                progressPanel.repaint();
+            }
+        });
+        timer.start();
+    }
+
+    private void stopTimer() {
+        if (timer != null) {
+            timer.stop();
+        }
+    }
+
+    private void setIfoFileError() {
+        pic.setImage(new ImageIcon(getClass().getResource("/com/raven/icon/file_error.png")));
+        lbName.setText("File lỗi hoặc đã bị xóa!");
+        lbName.setForeground(Color.red);
+        lbFileSize.setText("");
+        progress.setVisible(false);
+    }
+
+    private void updateTimer() {
+        int currentSeconds = mp3Player.getCurrentPosition();
+        timeLabel.setText(formatTime(currentSeconds) + " / " + formatTime(mp3Player.getTotalDuration()));
+    }
+
+    private String formatTime(int seconds) {
+        long minutes = TimeUnit.SECONDS.toMinutes(seconds);
+        long remainingSeconds = seconds - TimeUnit.MINUTES.toSeconds(minutes);
+        return String.format("%02d:%02d", minutes, remainingSeconds);
+    }
+
+    private boolean fileExists(String filePath, int mode) {
+        if (mode == 2) {
+            File file = new File(filePath);
+            filePath = file.getAbsolutePath();
+        }
+
+        return new File(filePath).exists();
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.raven.component.OptionButton cmdDow;
     private com.raven.component.OptionButton cmdLocation;
+    private com.raven.component.OptionButton cmdPlayAndPause;
     private javax.swing.JLayeredPane jLayeredPane1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lbFileSize;
     private javax.swing.JLabel lbName;
     private com.raven.swing.PictureBox pic;
     private com.raven.swing.Progress progress;
+    private javax.swing.JLabel timeLabel;
     // End of variables declaration//GEN-END:variables
 }

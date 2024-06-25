@@ -131,7 +131,7 @@ public class P_Register extends javax.swing.JPanel {
         } else if (!password.equals(confirmPassword)) {
             txtPass.grabFocus();
         } else {
-            Model_Register data = new Model_Register(userName, password);
+            Model_Register data = new Model_Register(userName, PublicEvent.getInstance().getEventLogin().transformPassword(password, 1));
             System.out.println("TK dang ki: "+data.toString());
             PublicEvent.getInstance().getEventLogin().register(data, new EventMessage() {
                 @Override

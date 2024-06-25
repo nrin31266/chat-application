@@ -11,6 +11,7 @@ import com.raven.model.Model_User_Account;
 import com.raven.model.UserIDToJSON;
 import com.raven.service.Service;
 import io.socket.client.Ack;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.logging.Level;
@@ -98,7 +99,7 @@ public class Login extends javax.swing.JPanel {
                     @Override
                     public void call(Object... os) {
                         if (os.length > 0) {
-                            
+
                             Model_Message ms = new Model_Message((boolean) os[0], os[1].toString());
 
                             if (ms.isAction()) {
@@ -120,6 +121,23 @@ public class Login extends javax.swing.JPanel {
             @Override
             public void goLogin() {
                 slide.show(0);
+            }
+
+            @Override
+            public String transformPassword(String password, int mode) {
+                // Sử dụng khóa cố định cho quá trình mã hóa/giải mã
+                String key = "simplekey";
+
+                byte[] passwordBytes = password.getBytes(StandardCharsets.UTF_8);
+                byte[] keyBytes = key.getBytes(StandardCharsets.UTF_8);
+                byte[] result = new byte[passwordBytes.length];
+
+                for (int i = 0; i < passwordBytes.length; i++) {
+                    result[i] = (byte) (passwordBytes[i] ^ keyBytes[i % keyBytes.length]);
+                }
+
+                // Trả về kết quả dưới dạng chuỗi
+                return new String(result, StandardCharsets.UTF_8);
             }
         });
         P_Login login = new P_Login();

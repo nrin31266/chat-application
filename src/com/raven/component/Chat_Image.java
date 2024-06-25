@@ -5,6 +5,7 @@ import com.raven.model.Model_File_Sender;
 import com.raven.model.Model_HistoryChat;
 import com.raven.model.Model_Receive_Image;
 import com.raven.swing.PictureBox;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -52,8 +53,9 @@ public class Chat_Image extends javax.swing.JLayeredPane {
         pic.setPreferredSize(getAutoSize(image, 200, 200));
         if (image.getIconWidth() == -1) {
 //            pic.setImage(new ImageIcon(getClass().getResource(icon)));
-
-            add(new Label("Không thể mở ảnh do lỗi hoặc ảnh đã bị xóa!"));
+            Label lb= new Label("Không tìm thấy ảnh do lỗi!");
+            lb.setForeground(Color.red);
+            add(lb);
         } else {
             pic.setImage(image);
 //            String fex = PublicEvent.getInstance().getEventFile().getFileExtension(data.getFileName());
@@ -88,14 +90,15 @@ public class Chat_Image extends javax.swing.JLayeredPane {
         File file = new File(data.getReceiverFilePath());
         String absolutePath = file.getAbsolutePath();
 
-        // Tạo ImageIcon từ đường dẫn tuyệt đối
-        System.out.println(absolutePath);
+        
         Icon image = new ImageIcon(absolutePath);
         Image_Item pic = new Image_Item();
         pic.setPreferredSize(getAutoSize(image, 200, 200));
         if (image.getIconWidth() == -1) {
 //            pic.setImage(new ImageIcon(getClass().getResource(icon)));
-            add(new Label("Không thể mở ảnh do lỗi hoặc ảnh đã bị xóa!"));
+            Label lb= new Label("Không tìm thấy ảnh do lỗi!");
+            lb.setForeground(Color.red);
+            add(lb);
         } else {
             pic.setImage(image);
             String fileEx = getFileExtension(data.getFileName());

@@ -47,44 +47,53 @@ public class Item_People extends javax.swing.JPanel {
     }
 
     private void init() {
+        addMouseListener(mouseAdapter);
 
-        addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent me) {
-                setBackground(new Color(230, 230, 230));
-                mouseOver = true;
-            }
+    }
+    private MouseAdapter mouseAdapter = new MouseAdapter() {
+        @Override
+        public void mouseEntered(MouseEvent me) {
+            setBackground(new Color(230, 230, 230));
+            mouseOver = true;
+        }
 
-            @Override
-            public void mouseExited(MouseEvent me) {
-                setBackground(Color.white);
-                mouseOver = false;
-            }
+        @Override
+        public void mouseExited(MouseEvent me) {
+            setBackground(Color.white);
+            mouseOver = false;
+        }
 
-            @Override
-            public void mouseReleased(MouseEvent me) {
+        @Override
+        public void mouseReleased(MouseEvent me) {
+            handleMouseRelease();
+        }
+    };
 
-                if (mouseOver) {
-                   
-                    
-                    if (Service.getInstance().getSelectedUser() != null) {
+    public void performMouseReleasedAction() {
 
-                        if (Service.getInstance().getSelectedUser().getUserID() != user.getUserID()) {
-                            Service.getInstance().setSelectedUser(user);
-                            Model_Get_Chat_History d = new Model_Get_Chat_History(Service.getInstance().getUser().getUserID(), user.getUserID());
-                            PublicEvent.getInstance().getEventMain().selectUser(user);
-                            PublicEvent.getInstance().getEventBody().receiverChatHisTory(d);
-                        }
-                    } else {
-                        Service.getInstance().setSelectedUser(user);
-                        Model_Get_Chat_History d = new Model_Get_Chat_History(Service.getInstance().getUser().getUserID(), user.getUserID());
-                        PublicEvent.getInstance().getEventMain().selectUser(user);
-                        PublicEvent.getInstance().getEventBody().receiverChatHisTory(d);
-                    }
-                    
+        Service.getInstance().setSelectedUser(user);
+        Model_Get_Chat_History d = new Model_Get_Chat_History(Service.getInstance().getUser().getUserID(), user.getUserID());
+        PublicEvent.getInstance().getEventMain().selectUser(user);
+        PublicEvent.getInstance().getEventBody().receiverChatHisTory(d);
+
+    }
+
+    private void handleMouseRelease() {
+        if (mouseOver) {
+            if (Service.getInstance().getSelectedUser() != null) {
+                if (Service.getInstance().getSelectedUser().getUserID() != user.getUserID()) {
+                    Service.getInstance().setSelectedUser(user);
+                    Model_Get_Chat_History d = new Model_Get_Chat_History(Service.getInstance().getUser().getUserID(), user.getUserID());
+                    PublicEvent.getInstance().getEventMain().selectUser(user);
+                    PublicEvent.getInstance().getEventBody().receiverChatHisTory(d);
                 }
+            } else {
+                Service.getInstance().setSelectedUser(user);
+                Model_Get_Chat_History d = new Model_Get_Chat_History(Service.getInstance().getUser().getUserID(), user.getUserID());
+                PublicEvent.getInstance().getEventMain().selectUser(user);
+                PublicEvent.getInstance().getEventBody().receiverChatHisTory(d);
             }
-        });
+        }
     }
 
     @SuppressWarnings("unchecked")

@@ -52,6 +52,7 @@ public class Chat_Title extends javax.swing.JPanel {
                 setStatusText("Ngoại tuyến");
             }
         }
+        System.out.println("Da update trang thai");
     }
 
     private void statusActive() {

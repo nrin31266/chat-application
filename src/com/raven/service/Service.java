@@ -76,13 +76,16 @@ public class Service {
             client.on("user_status", new Emitter.Listener() {
                 @Override
                 public void call(Object... os) {
+                    
                     int userID = (Integer) os[0];
                     boolean status = (Boolean) os[1];
                     if (status) {
                         // Kết nối
+                        System.out.println("1 user da thay doi tt kn");
                         PublicEvent.getInstance().getEventMenuLeft().userConnect(userID);
                     } else {
                         // Ngắt kết nối
+                        System.out.println("1 user da thay doi tt hkn");
                         PublicEvent.getInstance().getEventMenuLeft().userDisconnect(userID);
                     }
                 }

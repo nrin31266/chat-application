@@ -39,10 +39,24 @@ public class Menu_Left extends javax.swing.JPanel {
         PublicEvent.getInstance().addEventMenuLeft(new EventMenuLeft() {
             @Override
             public void newUser(List<Model_User_Account> users) {
-                for (Model_User_Account d : users) {
-                    userAccount.add(d);
-                    menuList.add(new Item_People(d), "wrap");
-                    refreshMenuList();
+//                for (Model_User_Account d : users) {
+//                    userAccount.add(d);
+//                    menuList.add(new Item_People(d), "wrap");
+//                    refreshMenuList();
+//                }
+//                
+                if (!users.isEmpty()) {
+                    Model_User_Account firstUser = users.get(0);
+                    Item_People item = new Item_People(firstUser);
+                    menuList.add(item, "wrap");
+                    userAccount.add(firstUser);
+                    // Gọi phương thức performMouseReleasedAction() thay vì mouseReleased()
+                    item.performMouseReleasedAction();
+                }
+                for (int i = 1; i < users.size(); i++) {
+                    Model_User_Account user = users.get(i);
+                    userAccount.add(user);
+                    menuList.add(new Item_People(user), "wrap");
                 }
             }
 
@@ -107,13 +121,17 @@ public class Menu_Left extends javax.swing.JPanel {
     }
 
     private void showMessage() {
-        //  test data
-        menuList.removeAll();
-        for (Model_User_Account d : userAccount) {
-            menuList.add(new Item_People(d), "wrap");
-        }
-        refreshMenuList();
+    // Xóa hết các item cũ trong menuList
+    menuList.removeAll();
+    // Thêm các item còn lại từ vị trí 1 trong danh sách userAccount vào menuList
+    for (int i = 0; i < userAccount.size(); i++) {
+        Model_User_Account user = userAccount.get(i);
+        menuList.add(new Item_People(user), "wrap");
     }
+    // Cập nhật lại giao diện menuList
+    refreshMenuList();
+}
+
 
     private void showGroup() {
         //  test data
