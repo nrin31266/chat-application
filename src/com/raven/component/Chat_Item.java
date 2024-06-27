@@ -32,6 +32,9 @@ public class Chat_Item extends javax.swing.JLayeredPane {
         txt.setBackground(new Color(0, 0, 0, 0));
         txt.setOpaque(false);
     }
+    public com.raven.swing.JIMSendTextPane getTxt(){
+        return txt;
+    }
     //add item chat history
     public void setImage(boolean right, Model_HistoryChat data){
         JLayeredPane layer = new JLayeredPane();

@@ -22,6 +22,7 @@ import javax.swing.text.ViewFactory;
 public class JIMSendTextPane extends JTextPane {
 
     public String getHintText() {
+        
         return hintText;
     }
 

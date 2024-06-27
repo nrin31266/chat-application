@@ -31,6 +31,7 @@ import net.miginfocom.swing.MigLayout;
 public class Chat_Body extends javax.swing.JPanel {
 
     private Model_User_Account user;
+    List<Model_HistoryChat> historyMain = null;
 
     public Model_User_Account getUser() {
         return user;
@@ -71,11 +72,16 @@ public class Chat_Body extends javax.swing.JPanel {
                                 Model_HistoryChat h = new Model_HistoryChat(o);
                                 historyList.add(h);
                             }
-                            printChatHistory(historyList);
+                            printChatHistory(historyList, null);
                         }
                     }
                 });
+            }
 
+            @Override
+            public void searchMes(String content) {
+                clearChat();
+                printChatHistory(historyMain, content);
             }
         });
     }
@@ -88,8 +94,10 @@ public class Chat_Body extends javax.swing.JPanel {
     }
 
     // Hàm để in danh sách tin nhắn từ receiverID ra màn hình
-    public void printChatHistory(List<Model_HistoryChat> historyList) {
+    public void printChatHistory(List<Model_HistoryChat> historyList, String txt) {
         System.out.println("Da goi ham in");
+        this.historyMain = historyList;
+
         if (historyList != null) {
             for (int i = historyList.size() - 1; i >= 0; i--) {
                 Model_HistoryChat h = historyList.get(i);
@@ -100,6 +108,11 @@ public class Chat_Body extends javax.swing.JPanel {
                         // Gửi văn bản
                         Chat_Right item = new Chat_Right();
                         item.setText(h.getTxt());
+                        if (txt!=null&& h.getTxt().contains(txt)) {
+                            item.getItem().setBackground(Color.GREEN);
+                            System.out.println("a");
+                        }
+
                         body.add(item, "wrap, al right, w 100::80%");
                         item.setTime(h.getTime());
                     } else if (h.getType() == 2) {
@@ -129,6 +142,11 @@ public class Chat_Body extends javax.swing.JPanel {
                         // Gửi văn bản
                         Chat_Left item = new Chat_Left();
                         item.setText(h.getTxt());
+                        if (txt!=null&& h.getTxt().contains(txt)) {
+                            item.getItem().setBackground(Color.GREEN);
+                            System.out.println("a");
+                        }
+
                         body.add(item, "wrap, al left, w 100::80%");
                         item.setTime(h.getTime());
                     } else if (h.getType() == 2) {
@@ -157,7 +175,7 @@ public class Chat_Body extends javax.swing.JPanel {
         } else {
             System.out.println("Không có lịch sử trò chuyện cho ");
         }
-        PublicEvent.getInstance().getEventMain().showLoading(false);        
+        PublicEvent.getInstance().getEventMain().showLoading(false);
         repaint();
         revalidate();
         scrollToBottom();

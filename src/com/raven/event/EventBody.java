@@ -8,4 +8,6 @@ public interface EventBody {
     public void sendChatToHistoryChat(Model_HistoryChat data);
     
     public void receiverChatHisTory(Model_Get_Chat_History d);
+    
+    public void searchMes(String content);
 }

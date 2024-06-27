@@ -42,6 +42,8 @@ public class View_Profile extends javax.swing.JPanel {
     private final String pathAvatarBasic = "/com/raven/icon/profile.png";
     private final String pathCoverArtBasic = "/com/raven/icon/testing/dog.jpg";
     private Model_Profile modelProfile;
+//    private boolean xemngaysinh=false;
+    
     
     public Model_Profile getModelProfile() {
         return modelProfile;
@@ -100,6 +102,7 @@ public class View_Profile extends javax.swing.JPanel {
                     cmdEditProfile.setVisible(false);
                     cmdEditProfileClose.setVisible(false);
                     cmdEditProfileOk.setVisible(false);
+                    
                     //
 
                     if (dataPr.getImage() != null && !dataPr.getImage().isEmpty()) {
@@ -242,6 +245,9 @@ public class View_Profile extends javax.swing.JPanel {
         } else {
             viewOutDate.getLbContent().setText("Chưa cập nhập");
         }
+//        if(!xemngaysinh){
+//            viewOutDate.getLbContent().setText("Nguoi dung ko hien thi ngay sinh!");
+//        } 
         if (modelProfile.getPhoneNumber() != null && !modelProfile.getPhoneNumber().isEmpty()) {
             viewOutPhone.getLbContent().setText(modelProfile.getPhoneNumber());
         } else {
@@ -434,7 +440,6 @@ public class View_Profile extends javax.swing.JPanel {
         txtSetName.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 // txtSetNameMouseClicked(evt);
-                //dcmm
             }
         });
         txtSetName.addActionListener(new java.awt.event.ActionListener() {
@@ -620,10 +625,13 @@ public class View_Profile extends javax.swing.JPanel {
         );
         title1Layout.setVerticalGroup(
             title1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(cmdEditProfile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(cmdEditProfileClose, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(cmdEditProfileOk, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(title1Layout.createSequentialGroup()
+                .addGroup(title1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmdEditProfile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmdEditProfileClose, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmdEditProfileOk, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(2, 2, 2))
         );
 
         MenuList.setLayer(layoutName, javax.swing.JLayeredPane.DEFAULT_LAYER);

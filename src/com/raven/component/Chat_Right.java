@@ -11,6 +11,10 @@ public class Chat_Right extends javax.swing.JLayeredPane {
         initComponents();
         txt.setBackground(new Color(179, 233, 255));
     }
+    
+    public Chat_Item getItem(){
+        return txt;
+    }
 
     public void setText(String text) {
         if (text.equals("")) {
@@ -74,4 +78,8 @@ public class Chat_Right extends javax.swing.JLayeredPane {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.raven.component.Chat_Item txt;
     // End of variables declaration//GEN-END:variables
+
+    void setFont(Color green) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }
